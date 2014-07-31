@@ -407,67 +407,39 @@ void HUDDisplay::setBloodAlpha(float alpha)
 	gfxBloodStreak.SetVariable("_root.blood.alpha", alpha);
 }
 
+
 void HUDDisplay::eventShowPlayerListContextMenu(r3dScaleformMovie* pMove, const Scaleform::GFx::Value* args, unsigned argCount)
 {
-
 	r3d_assert(argCount == 1);
 
-	//r3dOutToLog("PlrSelect : %s",args[0].GetString());
-
-
-	/*
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", 2, "");
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", 3, "");
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", 4, "$HUD_PlayerAction_Kick");
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", 5, "$HUD_PlayerAction_Ban");
-	*/
-
-
 	int isDev = gUserProfile.ProfileData.isDevAccount;
-	Scaleform::GFx::Value var[3];
+	Scaleform::GFx::Value var[6];
 
-
-
-
-	/*if(isDev && gUserProfile.CustomerID != 1000243)
+	if(isDev && gUserProfile.CustomerID != 1000243)
 	{
-	/*var[0].SetInt(2);
-	var[1].SetString("DEV MENU");
-	var[2].SetInt(2);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
+		var[0].SetInt(2);
+		var[1].SetString("TELEPORT TO");
+		var[2].SetInt(2);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
+		var[0].SetInt(3);
+		var[1].SetString("TELEPORT PLAYER");
+		var[2].SetInt(3);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
+		var[0].SetInt(4);
+		var[1].SetString("KICK PLAYER");
+		var[2].SetInt(4);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
-
-	var[0].SetInt(2);
-	var[1].SetString("TELEPORT TO");
-	var[2].SetInt(2);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-
-	var[0].SetInt(3);
-	var[1].SetString("TELEPORT PLAYER");
-	var[2].SetInt(3);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-
-
-	var[0].SetInt(4);
-	var[1].SetString("KICK PLAYER");
-	var[2].SetInt(4);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-
-
-
-
-	//var[0].SetInt(5);
-	//var[1].SetString("BAN ACCOUNT");
-	//var[2].SetInt(5);
-	//gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-
-
+		var[0].SetInt(5);
+		var[1].SetString("BAN ACCOUNT");
+		var[2].SetInt(5);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 	}
 	else 
-	{*/
-	for (int i=0; i<8;i++)
+	{
+		for (int i=0; i<8;i++)
 	{
 		var[0].SetInt(i);
 		var[1].SetString("");
@@ -513,89 +485,102 @@ void HUDDisplay::eventShowPlayerListContextMenu(r3dScaleformMovie* pMove, const 
 			}
 		}
 	}
-	/*var[0].SetInt(3);
-	var[1].SetString("ACCEPT INVITE GROUPS");
-	var[2].SetInt(3);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
+		var[0].SetInt(4);
+		var[1].SetString("");
+		var[2].SetInt(4);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
-	var[0].SetInt(4);
-	var[1].SetString("Decline INVITE GROUPS");
-	var[2].SetInt(4);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);*/
+		var[0].SetInt(5);
+		var[1].SetString("");
+		var[2].SetInt(5);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
-
-	/*var[0].SetInt(6);
-	var[1].SetString("");
-	var[2].SetInt(6);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);*/
-	//}
-
-	/*	char plrUserName[64]; gClientLogic().localPlayer_->GetUserName(plrUserName);
-	if (!strcmp(plrUserName, args[0].GetString())) // Not for localplayer
-	{
-	for(int i=0; i<R3D_ARRAYSIZE(gClientLogic().playerNames); i++)
-	{
-	if (strcmp(gClientLogic().playerNames[i].Gamertag, args[0].GetString()))
-	{
-	if(!gClientLogic().playerNames[i].isMute) 
-	{
-	var[0].SetInt(5);
-	var[1].SetString("MUTE");
-	var[2].SetInt(5);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 	}
-	else
-	{
-	var[0].SetInt(5);
-	var[1].SetString("UNMUTE");
-	var[2].SetInt(5);
-	gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-	}
-	return;
-	}
-	}
-	}*/
+
 	gfxHUD.Invoke("_root.api.showPlayerListContextMenu", "");
 }
 
 void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform::GFx::Value* args, unsigned argCount)
 {
-	// REPORT
-	// ""
-	// ""
-	// KICK
-	// BAN
 	int action = args[0].GetInt();
 	const	char* pName = args[1].GetString();
-	//  char msg[128];
-
-
-	//sprintf(msg, "Action: %d, pName: %s", action, pName);
-	//addChatMessage(0, "system", msg, 0);
-	// END Close the List
-	/*
-	if(action == 1)
-	{
-	showChatInput();
-
-
-	char ffReport[128];
-	sprintf(ffReport, "FairFight %s ", pName);
-	//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
-
-
-	chatVisible = true;
-	Scaleform::GFx::Value var[3];
-	var[0].SetBoolean(true);
-	var[1].SetBoolean(true);
-	var[2].SetString(ffReport);
-	gfxHUD.Invoke("_root.api.showChat", var, 3);
-	chatVisibleUntilTime = r3dGetTime() + 20.0f;
-	}*/
 
 	int isDev = gUserProfile.ProfileData.isDevAccount;
-	if (gClientLogic().localPlayer_)
+	if(isDev)
+	// Developer Tab Key HUD Menu
+	{
+	int isDev = gUserProfile.ProfileData.isDevAccount;
+		if(action == 2) // Teleport To Player
+		{
+			showChatInput();
+
+
+			char cmGoto[128];
+			sprintf(cmGoto, "/goto %s ", pName);
+			//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
+
+
+			chatVisible = true;
+			Scaleform::GFx::Value var[3];
+			var[0].SetBoolean(true);
+			var[1].SetBoolean(true);
+			var[2].SetString(cmGoto);
+			gfxHUD.Invoke("_root.api.showChat", var, 3);
+			chatVisibleUntilTime = r3dGetTime() + 20.0f;
+		}
+		if(action == 3) // Teleport Player to You
+		{
+			showChatInput();
+
+			char cmKick[128];
+			sprintf(cmKick, "/tome %s ", pName);
+			//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
+
+			chatVisible = true;
+			Scaleform::GFx::Value var[3];
+			var[0].SetBoolean(true);
+			var[1].SetBoolean(true);
+			var[2].SetString(cmKick);
+			gfxHUD.Invoke("_root.api.showChat", var, 3);
+			chatVisibleUntilTime = r3dGetTime() + 20.0f;
+		}
+		if(action == 4) // Kick Player
+		{
+			showChatInput();
+
+			char cmKick[128];
+			sprintf(cmKick, "/kick %s ", pName);
+			//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
+
+
+			chatVisible = true;
+			Scaleform::GFx::Value var[3];
+			var[0].SetBoolean(true);
+			var[1].SetBoolean(true);
+			var[2].SetString(cmKick);
+			gfxHUD.Invoke("_root.api.showChat", var, 3);
+			chatVisibleUntilTime = r3dGetTime() + 20.0f;
+		}
+		if(action == 5) // Ban Player
+		{
+		showChatInput();
+
+		char cmBan[128];
+		sprintf(cmBan, "/banp %s ", pName);
+
+		chatVisible = true;
+		Scaleform::GFx::Value var[3];
+		var[0].SetBoolean(true);
+		var[1].SetBoolean(true);
+		var[2].SetString(cmBan);
+		gfxHUD.Invoke("_root.api.showChat", var, 3);
+		chatVisibleUntilTime = r3dGetTime() + 20.0f;
+		}
+	}
+	else // Not Developer Tab Key HUD Menu
+	{
+      if (gClientLogic().localPlayer_)
 	{
 		//if (action == 2)
 		//{
@@ -662,134 +647,11 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 			}
 		}
 	}
-	//}
-	/*if(isDev && gUserProfile.CustomerID != 1000243)
-	{
-	if(action == 2)
-	{
-	showChatInput();
-
-
-	char cmGoto[128];
-	sprintf(cmGoto, "/goto %s ", pName);
-	//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
-
-
-	chatVisible = true;
-	Scaleform::GFx::Value var[3];
-	var[0].SetBoolean(true);
-	var[1].SetBoolean(true);
-	var[2].SetString(cmGoto);
-	gfxHUD.Invoke("_root.api.showChat", var, 3);
-	chatVisibleUntilTime = r3dGetTime() + 20.0f;
-	}
-	if(action == 3)
-	{
-	showChatInput();
-
-	char cmKick[128];
-	sprintf(cmKick, "/tome %s ", pName);
-	//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
-
-	chatVisible = true;
-	Scaleform::GFx::Value var[3];
-	var[0].SetBoolean(true);
-	var[1].SetBoolean(true);
-	var[2].SetString(cmKick);
-	gfxHUD.Invoke("_root.api.showChat", var, 3);
-	chatVisibleUntilTime = r3dGetTime() + 20.0f;
-	}
-	if(action == 4)
-	{
-	showChatInput();
-
-	char cmKick[128];
-	sprintf(cmKick, "/kick %s ", pName);
-	//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
-
-
-	chatVisible = true;
-	Scaleform::GFx::Value var[3];
-	var[0].SetBoolean(true);
-	var[1].SetBoolean(true);
-	var[2].SetString(cmKick);
-	gfxHUD.Invoke("_root.api.showChat", var, 3);
-	chatVisibleUntilTime = r3dGetTime() + 20.0f;
-	}
-	/*  if(action == 5)
-	{
-	showChatInput();
-
-
-	char cmBan[128];
-	sprintf(cmBan, "/banp %s ", pName);
-	//gfxHUD.Invoke("_root.api.setChatActive", ffReport);
-
-
-	chatVisible = true;
-	Scaleform::GFx::Value var[3];
-	var[0].SetBoolean(true);
-	var[1].SetBoolean(true);
-	var[2].SetString(cmBan);
-	gfxHUD.Invoke("_root.api.showChat", var, 3);
-	chatVisibleUntilTime = r3dGetTime() + 20.0f;
-	}
-	}
-	else
-	{*/
-
-	//}
-	ClientGameLogic& CGL = gClientLogic();
-	if (action == 5)
-	{
-		for(int i=0; i<R3D_ARRAYSIZE(CGL.playerNames); i++)
-		{
-			if(strcmp(CGL.playerNames[i].Gamertag,pName))
-			{
-				char Name[128] = {0};
-				r3dscpy(Name,pName);
-				obj_Player* tplr = CGL.FindPlayer(Name);
-				char tplrUserName[64]; tplr->GetUserName(tplrUserName);
-				for(int pli=0; i<CGL.MAX_NUM_PLAYERS; ++pli)
-				{
-					obj_Player* plr = CGL.GetPlayer(pli);
-					if (plr)
-					{
-						char plrUserName[64]; plr->GetUserName(plrUserName);
-						if (strcmp(plrUserName,tplrUserName)) // Found vaild player
-						{
-							// find correct player in ts3
-							for(int id=0; id<5000; i++)
-							{
-								char* name123;
-								int custom;
-								if(ts3client_getClientVariableAsString(1, id, CLIENT_NICKNAME, &name123) == ERROR_ok)
-								{
-									sscanf(name123,"%d",&custom);
-									if (custom == plr->CustomerID) // Found Correct CustomerID
-									{
-										anyID clientIDArray[1];
-										clientIDArray[0] = id;
-										if (!CGL.playerNames[i].isMute)
-										{
-											ts3client_requestMuteClients(1,clientIDArray,NULL);
-											CGL.playerNames[i].isMute = true;
-										}
-										else
-										{
-											ts3client_requestUnmuteClients(1,clientIDArray,NULL);
-											CGL.playerNames[i].isMute = false;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  }
 }
+
+
+
 void HUDDisplay::aboutToLeavePlayerFromGroup(const char* var1)
 {
     Scaleform::GFx::Value var[1];
