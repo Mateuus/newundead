@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="from MS">
+      <UniqueIdentifier>{fbd4dcb6-c8e6-4fe4-ab00-53cb67816404}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\MasterServer\Sources\MasterUdpMonitor.cpp">
+      <Filter>from MS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MasterServer\Sources\SrvCrashHandler.cpp">
+      <Filter>from MS</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWatcher.cpp" />
+    <ClCompile Include="Sources\LogUploader.cpp" />
+    <ClCompile Include="Sources\stdafx.cpp" />
+    <ClCompile Include="Sources\SupervisorConfig.cpp" />
+    <ClCompile Include="Sources\SupervisorServer.cpp" />
+    <ClCompile Include="Sources\SupervisorServerMain.cpp" />
+    <ClCompile Include="Sources\VersionNo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\MasterServer\Sources\MasterUdpMonitor.h">
+      <Filter>from MS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MasterServer\Sources\SrvCrashHandler.h">
+      <Filter>from MS</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWatcher.h" />
+    <ClInclude Include="Sources\LogUploader.h" />
+    <ClInclude Include="Sources\MMapGameInfo.h" />
+    <ClInclude Include="Sources\SupervisorConfig.h" />
+    <ClInclude Include="Sources\SupervisorServer.h" />
+    <ClInclude Include="Sources\VersionNo.h" />
+  </ItemGroup>
+</Project>

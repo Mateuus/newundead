@@ -1,0 +1,1240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_NoCrashRpt|Win32">
+      <Configuration>Debug_NoCrashRpt</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Server|Win32">
+      <Configuration>Debug_Server</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Final|Win32">
+      <Configuration>Final</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_NoCrashRpt|Win32">
+      <Configuration>Release_NoCrashRpt</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Server|Win32">
+      <Configuration>Release_Server</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3D51BE84-6441-4AC7-A73F-587C6B36DDAF}</ProjectGuid>
+    <RootNamespace>Eternity</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Final|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Final|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>lib\r3dLib.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>lib\r3dLibD.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;FINAL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>lib\r3dLibF.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DISABLE_CRASHRPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>lib\r3dLib_StatCRT.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DISABLE_CRASHRPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>lib\r3dLibD_StatCRT.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DISABLE_CRASHRPT; WO_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>lib\r3dLibD_StatCRT_server.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>.\..\External;.\..\External\dxsdk\Include;.\..\External\PhysX\include;.\Sources;.\include;.\..\External\RakNet\Source;.\..\External\Berkelium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DISABLE_CRASHRPT; WO_SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>r3dPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Lib>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>lib\r3dLib_StatCRT_server.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\atlasDesc.cpp" />
+    <ClCompile Include="Source\BezierGradient.cpp" />
+    <ClCompile Include="Source\CVar.cpp" />
+    <ClCompile Include="Source\d3dFont.cpp" />
+    <ClCompile Include="Source\JobChief.cpp" />
+    <ClCompile Include="Source\MeshGlobalBuffer.cpp" />
+    <ClCompile Include="Source\Particle.cpp" />
+    <ClCompile Include="Source\Pipeline.cpp" />
+    <ClCompile Include="Source\PShader.cpp" />
+    <ClCompile Include="Source\r3d.cpp" />
+    <ClCompile Include="Source\r3dAnimation.CPP" />
+    <ClCompile Include="Source\r3dBackgroundTaskDispatcher.cpp" />
+    <ClCompile Include="Source\r3dBitMaskArray.cpp" />
+    <ClCompile Include="Source\r3dBudgeter.cpp" />
+    <ClCompile Include="Source\r3dBuffer.cpp" />
+    <ClCompile Include="Source\r3dCam.cpp" />
+    <ClCompile Include="Source\r3dChamferBox.cpp" />
+    <ClCompile Include="Source\r3dColor.cpp" />
+    <ClCompile Include="Source\r3dCone.cpp" />
+    <ClCompile Include="Source\r3dConePrim.cpp" />
+    <ClCompile Include="Source\r3dCubeMap.cpp" />
+    <ClCompile Include="Source\r3dCylinder.cpp" />
+    <ClCompile Include="Source\r3dD3DCache.cpp" />
+    <ClCompile Include="Source\r3dDebug.cpp" />
+    <ClCompile Include="Source\r3dDeviceQueue.cpp" />
+    <ClCompile Include="Source\r3dFileMan.cpp" />
+    <ClCompile Include="Source\r3dFileTracker.cpp" />
+    <ClCompile Include="Source\r3dGeoSphere.cpp" />
+    <ClCompile Include="Source\r3dHash.cpp" />
+    <ClCompile Include="Source\r3dIniFile.cpp" />
+    <ClCompile Include="Source\r3dInput.cpp" />
+    <ClCompile Include="Source\r3dLight.cpp" />
+    <ClCompile Include="Source\r3dMat.cpp" />
+    <ClCompile Include="Source\r3dMath.cpp" />
+    <ClCompile Include="Source\r3dMeshTexDensityVisualizer.cpp" />
+    <ClCompile Include="Source\r3dNetwork.cpp" />
+    <ClCompile Include="Source\r3dObj.cpp" />
+    <ClCompile Include="Source\r3dObjLS.cpp" />
+    <ClCompile Include="Source\r3dPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\r3dPoint.cpp" />
+    <ClCompile Include="Source\r3dPoly.cpp" />
+    <ClCompile Include="Source\r3dProfileDataRecorder.cpp" />
+    <ClCompile Include="Source\r3dProfiler.cpp" />
+    <ClCompile Include="Source\r3dProfilerRender.cpp" />
+    <ClCompile Include="Source\r3dProtect.cpp" />
+    <ClCompile Include="Source\r3dRay.cpp" />
+    <ClCompile Include="Source\r3dRender.CPP" />
+    <ClCompile Include="Source\r3dSkeleton.CPP" />
+    <ClCompile Include="Source\r3dSkin.CPP" />
+    <ClCompile Include="Source\r3dSphere.cpp" />
+    <ClCompile Include="Source\r3dSpline.cpp" />
+    <ClCompile Include="Source\r3dStats.cpp" />
+    <ClCompile Include="Source\r3dString.cpp" />
+    <ClCompile Include="Source\r3dSys_WIN.cpp" />
+    <ClCompile Include="Source\r3dTex.cpp" />
+    <ClCompile Include="Source\r3dUtils.cpp" />
+    <ClCompile Include="Source\r3dUtils3D.cpp" />
+    <ClCompile Include="Source\r3dUtilsDraw2D.cpp" />
+    <ClCompile Include="Source\r3dUtilsFilters.cpp" />
+    <ClCompile Include="Source\r3dVCacheAnalyze.cpp" />
+    <ClCompile Include="Source\r3dVCacheOptimize.cpp" />
+    <ClCompile Include="Source\StackWalker.cpp" />
+    <ClCompile Include="Source\TimeGradient.cpp" />
+    <ClCompile Include="Source\timer.cpp" />
+    <ClCompile Include="Source\VShader.cpp" />
+    <ClCompile Include="Source\WinMain.cpp" />
+    <ClCompile Include="Source\FileSystem\r3dFileSystem.cpp" />
+    <ClCompile Include="Source\FileSystem\r3dFSCompress.cpp" />
+    <ClCompile Include="Source\ZLib\src\adler32.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\compress.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\crc32.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\deflate.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\infback.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\inffast.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\inflate.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\inftrees.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\trees.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\uncompr.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\zutil.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Tsg_stl\TString.cpp" />
+    <ClCompile Include="Source\UI\r3dMenu.cpp" />
+    <ClCompile Include="Source\UI\UICurveEditor.cpp" />
+    <ClCompile Include="Source\UI\UIElements.cpp" />
+    <ClCompile Include="Source\UI\UIimEdit.cpp" />
+    <ClCompile Include="Source\UI\UIimEdit2.cpp" />
+    <ClCompile Include="SF\RenderBuffer.cpp" />
+    <ClCompile Include="SF\script.cpp" />
+    <ClCompile Include="SF\CmdProcessor\CmdCommands.cpp" />
+    <ClCompile Include="SF\CmdProcessor\CmdConsole.cpp" />
+    <ClCompile Include="SF\CmdProcessor\CmdEvent.cpp" />
+    <ClCompile Include="SF\CmdProcessor\CmdProcessor.cpp" />
+    <ClCompile Include="SF\CmdProcessor\CmdVar.cpp" />
+    <ClCompile Include="SF\Console\Config.cpp" />
+    <ClCompile Include="SF\Console\EngineConsole.cpp" />
+    <ClCompile Include="..\External\pugiXML\src\pugixml.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\External\pugiXML\src\pugixpath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UndoHistory\UndoHistory.cpp" />
+    <ClCompile Include="Source\r3dLib.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug_NoCrashRpt|Win32'">EditAndContinue</DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug_Server|Win32'">EditAndContinue</DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EditAndContinue</DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
+      </DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release_NoCrashRpt|Win32'">
+      </DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release_Server|Win32'">
+      </DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </DebugInformationFormat>
+    </ClCompile>
+    <ClCompile Include="Source\HWInfo.cpp" />
+    <ClCompile Include="Source\r3dEternityWebBrowser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\atlasDesc.h" />
+    <ClInclude Include="Include\BezierGradient.h" />
+    <ClInclude Include="Include\CVar.h" />
+    <ClInclude Include="Include\d3dFont.h" />
+    <ClInclude Include="Include\JobChief.h" />
+    <ClInclude Include="Include\MeshGlobalBuffer.h" />
+    <ClInclude Include="Include\ParallelQuickSort.h" />
+    <ClInclude Include="Include\Particle.h" />
+    <ClInclude Include="Include\Particle_Int.h" />
+    <ClInclude Include="Include\Pipeline.h" />
+    <ClInclude Include="Include\pShader.h" />
+    <ClInclude Include="INCLUDE\r3d.h" />
+    <ClInclude Include="Include\r3dAnimation.H" />
+    <ClInclude Include="Include\r3dAssert.h" />
+    <ClInclude Include="Include\r3dBackgroundTaskDispatcher.h" />
+    <ClInclude Include="INCLUDE\r3dBinFmt.h" />
+    <ClInclude Include="INCLUDE\r3dBinMat.h" />
+    <ClInclude Include="Include\r3dBinMesh.h" />
+    <ClInclude Include="Include\r3dBitMaskArray.h" />
+    <ClInclude Include="INCLUDE\r3dBoxEx.h" />
+    <ClInclude Include="Include\r3dBudgeter.h" />
+    <ClInclude Include="INCLUDE\r3dbuffer.h" />
+    <ClInclude Include="INCLUDE\r3dCam.h" />
+    <ClInclude Include="Include\r3dChamferBox.h" />
+    <ClInclude Include="INCLUDE\r3dColor.h" />
+    <ClInclude Include="Include\r3dCompileAssert.h" />
+    <ClInclude Include="Include\r3dCone.h" />
+    <ClInclude Include="Include\r3dConePrim.h" />
+    <ClInclude Include="INCLUDE\r3dConst.h" />
+    <ClInclude Include="Include\r3dCubeMap.h" />
+    <ClInclude Include="Include\r3dCylinder.h" />
+    <ClInclude Include="Include\r3dD3DCache.h" />
+    <ClInclude Include="Include\r3dDebug.h" />
+    <ClInclude Include="Include\r3dDeviceQueue.h" />
+    <ClInclude Include="INCLUDE\r3dFileMan.h" />
+    <ClInclude Include="Include\r3dFileTracker.h" />
+    <ClInclude Include="Include\r3dGeoSphere.h" />
+    <ClInclude Include="Include\r3dHash.h" />
+    <ClInclude Include="Include\r3dHeap.h" />
+    <ClInclude Include="INCLUDE\r3dInput.h" />
+    <ClInclude Include="INCLUDE\r3dLight.h" />
+    <ClInclude Include="INCLUDE\r3dMat.h" />
+    <ClInclude Include="INCLUDE\r3dMath.h" />
+    <ClInclude Include="Source\r3dMeshTexDensityVisualizer.h" />
+    <ClInclude Include="Include\r3dNetwork.h" />
+    <ClInclude Include="INCLUDE\r3dObj.h" />
+    <ClInclude Include="INCLUDE\r3dPCH.h" />
+    <ClInclude Include="Include\r3dPlane.h" />
+    <ClInclude Include="INCLUDE\r3dPoint.h" />
+    <ClInclude Include="Include\r3dPoly.h" />
+    <ClInclude Include="Include\r3dProfileDataRecorder.h" />
+    <ClInclude Include="Include\r3dProfiler.h" />
+    <ClInclude Include="Include\r3dProfilerRender.h" />
+    <ClInclude Include="Include\r3dProtect.h" />
+    <ClInclude Include="Include\r3dRay.h" />
+    <ClInclude Include="INCLUDE\r3dRender.h" />
+    <ClInclude Include="INCLUDE\r3dScene.h" />
+    <ClInclude Include="Include\r3dSkeleton.H" />
+    <ClInclude Include="Include\r3dSkin.H" />
+    <ClInclude Include="Include\r3dSphere.h" />
+    <ClInclude Include="Include\r3dSpline.h" />
+    <ClInclude Include="Include\r3dStats.h" />
+    <ClInclude Include="include\r3dString.h" />
+    <ClInclude Include="Include\r3dSys_WIN.h" />
+    <ClInclude Include="INCLUDE\r3dTex.h" />
+    <ClInclude Include="Include\r3dTreeNode.h" />
+    <ClInclude Include="Include\r3dTypedefs.h" />
+    <ClInclude Include="Include\r3dTypeTuples.h" />
+    <ClInclude Include="INCLUDE\r3dUtils.h" />
+    <ClInclude Include="Include\r3dVCacheAnalyze.h" />
+    <ClInclude Include="Include\r3dVCacheOptimize.h" />
+    <ClInclude Include="Source\StackWalker.h" />
+    <ClInclude Include="Include\TimeGradient.h" />
+    <ClInclude Include="Include\timer.h" />
+    <ClInclude Include="Include\VShader.h" />
+    <ClInclude Include="Source\FileSystem\r3dFileSystem.h" />
+    <ClInclude Include="Source\FileSystem\r3dFSCompress.h" />
+    <ClInclude Include="Source\FileSystem\r3dFSStructs.h" />
+    <ClInclude Include="..\..\bin\Data\Shaders\DX9_P1\Fxaa.h" />
+    <ClInclude Include="..\..\bin\Data\Shaders\DX9_P1\postfx_common.h" />
+    <ClInclude Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\LibSM\shadow_config.h" />
+    <ClInclude Include="Source\ZLib\src\crc32.h" />
+    <ClInclude Include="Source\ZLib\src\deflate.h" />
+    <ClInclude Include="Source\ZLib\src\inffast.h" />
+    <ClInclude Include="Source\ZLib\src\inffixed.h" />
+    <ClInclude Include="Source\ZLib\src\inflate.h" />
+    <ClInclude Include="Source\ZLib\src\inftrees.h" />
+    <ClInclude Include="Source\ZLib\src\trees.h" />
+    <ClInclude Include="Source\ZLib\src\zconf.h" />
+    <ClInclude Include="Source\ZLib\src\zconf.in.h" />
+    <ClInclude Include="Source\ZLib\src\zlib.h" />
+    <ClInclude Include="Source\ZLib\src\zutil.h" />
+    <ClInclude Include="Include\Tsg_stl\BigEndian.h" />
+    <ClInclude Include="Include\Tsg_stl\HashTable.h" />
+    <ClInclude Include="Include\Tsg_stl\T2DArray.h" />
+    <ClInclude Include="Include\Tsg_stl\TArray.h" />
+    <ClInclude Include="Include\Tsg_stl\TFixedAllocator.h" />
+    <ClInclude Include="Include\Tsg_stl\TFixedArray.h" />
+    <ClInclude Include="Include\Tsg_stl\THelpers.h" />
+    <ClInclude Include="Include\Tsg_stl\TSlice.h" />
+    <ClInclude Include="Include\Tsg_stl\TStaticArray.h" />
+    <ClInclude Include="Include\Tsg_stl\TString.h" />
+    <ClInclude Include="Include\Tsg_stl\TTabArray.h" />
+    <ClInclude Include="Include\UI\r3dMenu.h" />
+    <ClInclude Include="Include\UI\UICurveEditor.h" />
+    <ClInclude Include="Include\UI\UIElements.h" />
+    <ClInclude Include="Include\UI\UIimEdit.h" />
+    <ClInclude Include="Include\UI\UIimEdit2.h" />
+    <ClInclude Include="SF\RenderBuffer.h" />
+    <ClInclude Include="SF\script.h" />
+    <ClInclude Include="SF\Version.h" />
+    <ClInclude Include="SF\CmdProcessor\CmdConsole.h" />
+    <ClInclude Include="SF\CmdProcessor\CmdEvent.h" />
+    <ClInclude Include="SF\CmdProcessor\CmdProcessor.h" />
+    <ClInclude Include="SF\CmdProcessor\CmdVar.h" />
+    <ClInclude Include="SF\Console\Config.h" />
+    <ClInclude Include="SF\Console\EngineConsole.h" />
+    <ClInclude Include="SF\Console\Vars.h" />
+    <ClInclude Include="..\External\pugiXML\src\pugiconfig.hpp" />
+    <ClInclude Include="..\External\pugiXML\src\pugixml.hpp" />
+    <ClInclude Include="UndoHistory\UndoHistory.h" />
+    <ClInclude Include="Include\r3dLib.h" />
+    <ClInclude Include="Include\HWInfo.h" />
+    <ClInclude Include="Source\r3dEternityWebBrowser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumLocalVPLSH_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumLocalVPLSH_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumSH_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumSH_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AdaptiveDepthBlur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AnaglyphComposite_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\BlurGaussianH_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\BlurGaussianV_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\bright_pass_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\BrightnessContrast_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CalcLuma_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_black_white.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_lut_1d_hsv.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_lut_1d_rgb.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_lut_3d.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\clouds_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\clouds_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimple_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimple_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleQuad_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleQuad_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleShad_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleShad_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Combine_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ComposeMultibloom_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Composite_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Composite_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Compositing_Deffered.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Compositing_Final.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Compositing_SSAO.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\copy_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CreateBloom_HDR_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CreateGlow_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Darkness_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Decal_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Decal_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Depth_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Depth_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\depthblurH_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\depthblurV_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\directional_streaks_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Final.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Final_A.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Final_n.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_FinalNVG.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Set2DB.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Set2DUV.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Set3D.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_SetFOV.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_SetPT.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DistortScreen_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_near_calc_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_near_expand_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_near_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOFExtractNear_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DownSample_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_AccumShadows_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_AmbientHDR_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_BlurShadows_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_CameraMotionBlur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_CameraMotionBlur_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearBuffer_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearBuffer_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearFloat_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearFloat_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ConvertToLDR_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_CopyOutput_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_DepthPrepass_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Dir_HDR_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Dir_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_DirL_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_apex_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_disp_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_disp_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_Instanced_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_TexelDensity_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_TexelDensity_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_FillbufferConst_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_FillTerraAtlas_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_FilmTone_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_Billboards_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_Billboards_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_MixIn_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_PlaneLight_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_HDR_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_IO_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_v2_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_v2_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Simple_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Spot_HDR_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Spot_IO_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Spot_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_TubeLight_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Volume_Point_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Edge_Blur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ExposureBlend_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fill_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FilmGrain_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Filter_GBlur.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fog.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\forward_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\forward_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fscopy_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_color_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_color_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_debug_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_debug_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fxaa_lumpass_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FXAA_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\GammaCorrect_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\gaussian_blur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\glare.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Gun_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Gun_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\HitScreen.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hsao_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hsao_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_mipmap_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_mipmap_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occluder_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occluder_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occlusion_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occlusion_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MinExpand_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Minimum_Mask_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Minimum_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_AlphaCalc_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_Blend_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_DiscontMap_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_LinesDetectH_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_LinesDetectV_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Multitap_Blur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Multitap_DOF_Blur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ObjectMotionBlur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Particle_PMAlpha.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Particle_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleCPU_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleGPU_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleMesh_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleMesh_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleSimple_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleSimple_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleSM_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\PhysicsMesh_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\PhysicsMesh_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_AA.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_FilmGrain.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_GodRays.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_SetBloom.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_StarShapeBlur.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_Sunglare.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\postfx_default_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\postfx_reconstructw_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\postfx_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\radialblur_modulate_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\radialblur_modulate_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\RemoveCubemapEdge_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\RemoveCubemapEdge_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Render3d_simple_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Render3d_simple_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ScopeFilter_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ScopeFilter_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ShowShadowBuffer.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Skin_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SkinDepth_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SkinSM_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SM_Forest_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\smdepth_inc.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\smdepth_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\smdepth_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SphericalVisualize_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SphericalVisualize_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SSAO_Blur.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_composite_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_mask_dilute_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_new_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SSAO_Out_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_ref_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\StereoReproject_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SunGlare.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SunSpot_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Transform_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Transparent_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Transparent_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Visualize3DSlice_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Visualize3DSlice_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_Fog_Volume_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_FogE_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_FogE_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_FogNoise_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw1_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_full_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_full_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_ps2.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\CloudsPS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\CloudsVS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass2_p0_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass2_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass2_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\grass_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanIO_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2high_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2high_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2low_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2low_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2normal_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2normal_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2uH_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2uH_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2uL_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2uL_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2uM_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2uM_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\rainRipples_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\ripples_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\ripples_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\s_terrainFragmentShaderSource.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyHoffman_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyHoffman_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyHoffmanLQ_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyIO_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyStatic_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyStatic_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Terrain2_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Terrain2_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlas_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlas_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlasMip_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlasMip_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_fill_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_mp2_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_mp2_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_ps_prev.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_DefferedPreFS_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Heavyness_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_HZB_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_NM_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_SM_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_SM_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Tree3D_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Tree3D_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Glow.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Lake_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Lake_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Refraction.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Refraction1.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\WaterFall_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\WaterFall_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\POST\Post_Quad_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\POST\Post_TerrainBounds.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\POST\Post_TerrainMat.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\Blur.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\Blur_Gaus.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\BlurDOF1.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\BlurDOF2.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\speed_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\speed_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\speedview_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\zclear_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\zdraw_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\zdraw_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\City_Dir_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\City_Dir_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Displace_Dir_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Displace_Dir_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Eye_Dir_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Eye_Dir_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Glass_Dir_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Glass_Dir_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Hair_Dir_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Hair_Dir_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Paper_Point_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Paper_Point_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\SkinSS_Dir_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\SkinSS_Dir_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudBlur_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudBlur_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudGrid_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudGrid_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudPlane_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudPlane_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudShadow_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudShadow_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\Paraboloid.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\RealGI_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\RealGI_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\Umbra_Query_ps.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\Umbra_Query_vs.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\LibSM\pcf1.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\IOParam\IODefine_VS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\IOParam\IOFillbuffer_PS.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\LIB\LightHelper.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\LIB\SSS_Helper.hls" />
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\LIB\Tonemapping.hls" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\External\RakNet\RakNet.vcxproj">
+      <Project>{143f9b67-c223-4f2d-b8f9-b644ca710ca6}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

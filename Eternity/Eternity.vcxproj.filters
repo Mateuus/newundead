@@ -1,0 +1,1673 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3D: Source">
+      <UniqueIdentifier>{306ab318-746e-4791-a565-31f647aaac49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\FileSystem">
+      <UniqueIdentifier>{9d97010c-c2b5-4fc1-a198-19d1f41bcd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders">
+      <UniqueIdentifier>{9d56abd5-450f-4d59-9106-1a8f934b7ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\Nature">
+      <UniqueIdentifier>{30b28ff8-6fba-4729-ac48-78c674a51c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\POST">
+      <UniqueIdentifier>{33965856-e7ed-4cd2-9f38-40def05eee7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\Filters">
+      <UniqueIdentifier>{d0f14ccf-bf07-41e2-900d-f6c10ca85da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\Custom">
+      <UniqueIdentifier>{3b65f8c2-e194-42b0-8da1-e7e5195a6d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\CloudPlane">
+      <UniqueIdentifier>{90d339c7-e497-4228-97e1-bd70e9f38ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\SYSTEM">
+      <UniqueIdentifier>{938f5cf7-e16e-4d71-8c83-5b84b9424633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\SYSTEM\LibSM">
+      <UniqueIdentifier>{8e09a9c1-35f4-41da-bfbb-512b5f30bd80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\SYSTEM\IOParam">
+      <UniqueIdentifier>{1845e659-02f9-42b0-bcae-55bfb196a756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D: Source\Shaders\Lib">
+      <UniqueIdentifier>{b9d215d6-712a-41d1-a5f3-2495ae1445e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ZLIB">
+      <UniqueIdentifier>{7c6eccbc-d47d-40ad-a77e-bfeb6eda19ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STL">
+      <UniqueIdentifier>{9853e78c-e782-4a39-9807-c29402b1324f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{ca67889a-8e03-4646-8adc-d8c37960f3a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SF">
+      <UniqueIdentifier>{4b81ce22-24ae-4d82-83aa-4562e4e8035f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SF\CmdProcessor">
+      <UniqueIdentifier>{189f84da-251c-44c4-81cd-db95067577d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SF\Console">
+      <UniqueIdentifier>{379d86d5-0e3f-45f7-b4a4-d838f7374338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pugiXML">
+      <UniqueIdentifier>{81116761-8ba5-4460-8de8-6c039e03cc32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UndoHistory">
+      <UniqueIdentifier>{7ff7aada-403a-49bc-8e8e-39644c0e68d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="license">
+      <UniqueIdentifier>{1e339092-06b9-4ceb-ab9f-04221c3002fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HWInfo">
+      <UniqueIdentifier>{2d708d36-e37f-4525-9aee-d794a65c579a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Browser">
+      <UniqueIdentifier>{9e5273c3-d72d-4b47-b8ec-fc61be638237}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\atlasDesc.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BezierGradient.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CVar.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\d3dFont.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\JobChief.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshGlobalBuffer.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Particle.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pipeline.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PShader.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3d.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dAnimation.CPP">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dBackgroundTaskDispatcher.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dBitMaskArray.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dBudgeter.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dBuffer.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dCam.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dChamferBox.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dColor.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dCone.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dConePrim.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dCubeMap.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dCylinder.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dD3DCache.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dDebug.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dDeviceQueue.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dFileMan.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dFileTracker.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dGeoSphere.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dHash.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dIniFile.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dInput.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dLight.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dMat.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dMath.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dMeshTexDensityVisualizer.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dNetwork.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dObj.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dObjLS.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dPCH.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dPoint.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dPoly.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dProfileDataRecorder.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dProfiler.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dProfilerRender.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dProtect.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dRay.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dRender.CPP">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dSkeleton.CPP">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dSkin.CPP">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dSphere.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dSpline.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dStats.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dString.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dSys_WIN.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dTex.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dUtils.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dUtils3D.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dUtilsDraw2D.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dUtilsFilters.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dVCacheAnalyze.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dVCacheOptimize.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StackWalker.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TimeGradient.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\timer.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VShader.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WinMain.cpp">
+      <Filter>3D: Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FileSystem\r3dFileSystem.cpp">
+      <Filter>3D: Source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FileSystem\r3dFSCompress.cpp">
+      <Filter>3D: Source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\adler32.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\compress.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\crc32.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\deflate.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\infback.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\inffast.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\inflate.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\inftrees.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\trees.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\uncompr.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ZLib\src\zutil.c">
+      <Filter>ZLIB</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tsg_stl\TString.cpp">
+      <Filter>STL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\r3dMenu.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UICurveEditor.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIElements.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIimEdit.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIimEdit2.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\RenderBuffer.cpp">
+      <Filter>SF</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\script.cpp">
+      <Filter>SF</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\CmdProcessor\CmdCommands.cpp">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\CmdProcessor\CmdConsole.cpp">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\CmdProcessor\CmdEvent.cpp">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\CmdProcessor\CmdProcessor.cpp">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\CmdProcessor\CmdVar.cpp">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\Console\Config.cpp">
+      <Filter>SF\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="SF\Console\EngineConsole.cpp">
+      <Filter>SF\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\pugiXML\src\pugixml.cpp">
+      <Filter>pugiXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\pugiXML\src\pugixpath.cpp">
+      <Filter>pugiXML</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoHistory\UndoHistory.cpp">
+      <Filter>UndoHistory</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dLib.cpp">
+      <Filter>license</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HWInfo.cpp">
+      <Filter>HWInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\r3dEternityWebBrowser.cpp">
+      <Filter>Browser</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\atlasDesc.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\BezierGradient.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\CVar.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\d3dFont.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\JobChief.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MeshGlobalBuffer.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ParallelQuickSort.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Particle.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Particle_Int.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Pipeline.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\pShader.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3d.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dAnimation.H">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dAssert.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dBackgroundTaskDispatcher.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dBinFmt.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dBinMat.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dBinMesh.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dBitMaskArray.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dBoxEx.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dBudgeter.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dbuffer.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dCam.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dChamferBox.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dColor.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dCompileAssert.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dCone.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dConePrim.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dConst.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dCubeMap.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dCylinder.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dD3DCache.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dDebug.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dDeviceQueue.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dFileMan.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dFileTracker.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dGeoSphere.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dHash.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dHeap.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dInput.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dLight.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dMat.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dMath.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\r3dMeshTexDensityVisualizer.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dNetwork.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dObj.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dPCH.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dPlane.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dPoint.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dPoly.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dProfileDataRecorder.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dProfiler.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dProfilerRender.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dProtect.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dRay.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dRender.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dScene.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dSkeleton.H">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dSkin.H">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dSphere.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dSpline.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dStats.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="include\r3dString.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dSys_WIN.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dTex.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dTreeNode.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dTypedefs.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dTypeTuples.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\r3dUtils.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dVCacheAnalyze.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dVCacheOptimize.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StackWalker.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\TimeGradient.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\timer.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\VShader.h">
+      <Filter>3D: Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileSystem\r3dFileSystem.h">
+      <Filter>3D: Source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileSystem\r3dFSCompress.h">
+      <Filter>3D: Source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileSystem\r3dFSStructs.h">
+      <Filter>3D: Source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bin\Data\Shaders\DX9_P1\Fxaa.h">
+      <Filter>3D: Source\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bin\Data\Shaders\DX9_P1\postfx_common.h">
+      <Filter>3D: Source\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\LibSM\shadow_config.h">
+      <Filter>3D: Source\Shaders\SYSTEM\LibSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\crc32.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\deflate.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\inffast.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\inffixed.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\inflate.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\inftrees.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\trees.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\zconf.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\zconf.in.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\zlib.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ZLib\src\zutil.h">
+      <Filter>ZLIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\BigEndian.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\HashTable.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\T2DArray.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TArray.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TFixedAllocator.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TFixedArray.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\THelpers.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TSlice.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TStaticArray.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TString.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Tsg_stl\TTabArray.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UI\r3dMenu.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UI\UICurveEditor.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UI\UIElements.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UI\UIimEdit.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UI\UIimEdit2.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\RenderBuffer.h">
+      <Filter>SF</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\script.h">
+      <Filter>SF</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\Version.h">
+      <Filter>SF</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\CmdProcessor\CmdConsole.h">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\CmdProcessor\CmdEvent.h">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\CmdProcessor\CmdProcessor.h">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\CmdProcessor\CmdVar.h">
+      <Filter>SF\CmdProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\Console\Config.h">
+      <Filter>SF\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\Console\EngineConsole.h">
+      <Filter>SF\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="SF\Console\Vars.h">
+      <Filter>SF\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\pugiXML\src\pugiconfig.hpp">
+      <Filter>pugiXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\pugiXML\src\pugixml.hpp">
+      <Filter>pugiXML</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoHistory\UndoHistory.h">
+      <Filter>UndoHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\r3dLib.h">
+      <Filter>license</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\HWInfo.h">
+      <Filter>HWInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\r3dEternityWebBrowser.h">
+      <Filter>Browser</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumLocalVPLSH_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumLocalVPLSH_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumSH_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AccumSH_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AdaptiveDepthBlur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\AnaglyphComposite_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\BlurGaussianH_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\BlurGaussianV_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\bright_pass_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\BrightnessContrast_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CalcLuma_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_black_white.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_lut_1d_hsv.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_lut_1d_rgb.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cc_lut_3d.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\clouds_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\clouds_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimple_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimple_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleQuad_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleQuad_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleShad_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\cloudsSimpleShad_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Combine_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ComposeMultibloom_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Composite_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Composite_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Compositing_Deffered.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Compositing_Final.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Compositing_SSAO.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\copy_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CreateBloom_HDR_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CreateGlow_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Darkness_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Decal_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Decal_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Depth_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Depth_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\depthblurH_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\depthblurV_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\directional_streaks_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Final.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Final_A.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Final_n.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_FinalNVG.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Set2DB.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Set2DUV.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_Set3D.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_SetFOV.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Distort_SetPT.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DistortScreen_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_near_calc_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_near_expand_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_near_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOF_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DOFExtractNear_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DownSample_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_AccumShadows_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_AmbientHDR_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_BlurShadows_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_CameraMotionBlur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_CameraMotionBlur_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearBuffer_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearBuffer_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearFloat_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ClearFloat_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_ConvertToLDR_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_CopyOutput_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_DepthPrepass_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Dir_HDR_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Dir_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_DirL_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_apex_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_disp_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_disp_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_Instanced_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_TexelDensity_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_TexelDensity_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Fillbuffer_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_FillbufferConst_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_FillTerraAtlas_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_FilmTone_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_Billboards_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_Billboards_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Forest_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_MixIn_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_PlaneLight_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_HDR_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_IO_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_v2_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_v2_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Point_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Simple_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Spot_HDR_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Spot_IO_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Spot_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_TubeLight_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\DS_Volume_Point_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Edge_Blur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ExposureBlend_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fill_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FilmGrain_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Filter_GBlur.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fog.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\forward_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\forward_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fscopy_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_color_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_color_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_debug_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fwd_debug_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\fxaa_lumpass_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FXAA_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\GammaCorrect_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\gaussian_blur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\glare.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Gun_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Gun_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\HitScreen.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hsao_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hsao_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_mipmap_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_mipmap_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occluder_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occluder_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occlusion_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\hzb_occlusion_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MinExpand_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Minimum_Mask_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Minimum_PS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_AlphaCalc_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_Blend_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_DiscontMap_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_LinesDetectH_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\MLAA_LinesDetectV_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Multitap_Blur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Multitap_DOF_Blur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ObjectMotionBlur_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Particle_PMAlpha.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Particle_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleCPU_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleGPU_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleMesh_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleMesh_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleSimple_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleSimple_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ParticleSM_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\PhysicsMesh_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\PhysicsMesh_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_AA.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_FilmGrain.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_GodRays.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_SetBloom.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_StarShapeBlur.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Post_Sunglare.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\postfx_default_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\postfx_reconstructw_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\postfx_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\radialblur_modulate_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\radialblur_modulate_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\RemoveCubemapEdge_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\RemoveCubemapEdge_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Render3d_simple_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Render3d_simple_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ScopeFilter_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ScopeFilter_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ShowShadowBuffer.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Skin_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SkinDepth_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SkinSM_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SM_Forest_VS.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\smdepth_inc.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\smdepth_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\smdepth_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SphericalVisualize_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SphericalVisualize_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SSAO_Blur.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_composite_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_mask_dilute_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_new_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SSAO_Out_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_ref_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\ssao_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\StereoReproject_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SunGlare.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SunSpot_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Transform_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Transparent_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Transparent_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Visualize3DSlice_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Visualize3DSlice_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_Fog_Volume_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_FogE_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_FogE_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\Volume_FogNoise_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw1_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_full_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_full_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_ps.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_ps2.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\zdraw_vs.hls">
+      <Filter>3D: Source\Shaders</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\CloudsPS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\CloudsVS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass2_p0_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass2_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass2_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\grass_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Grass_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanIO_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2high_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2high_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2low_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2low_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2normal_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2normal_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2uH_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2uH_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2uL_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2uL_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OCeanV2uM_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\OceanV2uM_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\rainRipples_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\ripples_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\ripples_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\s_terrainFragmentShaderSource.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyHoffman_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyHoffman_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyHoffmanLQ_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyIO_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyStatic_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\SkyStatic_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Terrain2_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Terrain2_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlas_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlas_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlasMip_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainAtlasMip_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_fill_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_mp2_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_mp2_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Deffered_ps_prev.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_DefferedPreFS_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_Heavyness_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_HZB_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_NM_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_SM_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_SM_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\TerrainV2_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Tree3D_PS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Tree3D_VS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Glow.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Lake_PS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Lake_VS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Refraction.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_Refraction1.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\Water_VS.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\WaterFall_ps.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\NATURE\WaterFall_vs.hls">
+      <Filter>3D: Source\Shaders\Nature</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\POST\Post_Quad_VS.hls">
+      <Filter>3D: Source\Shaders\POST</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\POST\Post_TerrainBounds.hls">
+      <Filter>3D: Source\Shaders\POST</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\POST\Post_TerrainMat.hls">
+      <Filter>3D: Source\Shaders\POST</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\Blur.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\Blur_Gaus.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\BlurDOF1.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\BlurDOF2.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\speed_ps.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\speed_vs.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\speedview_ps.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\zclear_ps.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\zdraw_ps.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\FILTERS\zdraw_vs.hls">
+      <Filter>3D: Source\Shaders\Filters</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\City_Dir_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\City_Dir_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Displace_Dir_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Displace_Dir_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Eye_Dir_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Eye_Dir_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Glass_Dir_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Glass_Dir_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Hair_Dir_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Hair_Dir_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Paper_Point_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\Paper_Point_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\SkinSS_Dir_PS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CUSTOM\SkinSS_Dir_VS.hls">
+      <Filter>3D: Source\Shaders\Custom</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudBlur_ps.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudBlur_vs.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudGrid_ps.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudGrid_vs.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudPlane_ps.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudPlane_vs.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudShadow_ps.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\CloudPlane\CloudShadow_vs.hls">
+      <Filter>3D: Source\Shaders\CloudPlane</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\Paraboloid.hls">
+      <Filter>3D: Source\Shaders\SYSTEM</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\RealGI_ps.hls">
+      <Filter>3D: Source\Shaders\SYSTEM</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\RealGI_vs.hls">
+      <Filter>3D: Source\Shaders\SYSTEM</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\Umbra_Query_ps.hls">
+      <Filter>3D: Source\Shaders\SYSTEM</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\Umbra_Query_vs.hls">
+      <Filter>3D: Source\Shaders\SYSTEM</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\LibSM\pcf1.hls">
+      <Filter>3D: Source\Shaders\SYSTEM\LibSM</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\IOParam\IODefine_VS.hls">
+      <Filter>3D: Source\Shaders\SYSTEM\IOParam</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\SYSTEM\IOParam\IOFillbuffer_PS.hls">
+      <Filter>3D: Source\Shaders\SYSTEM\IOParam</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\LIB\LightHelper.hls">
+      <Filter>3D: Source\Shaders\Lib</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\LIB\SSS_Helper.hls">
+      <Filter>3D: Source\Shaders\Lib</Filter>
+    </None>
+    <None Include="..\..\bin\Data\Shaders\DX9_P1\LIB\Tonemapping.hls">
+      <Filter>3D: Source\Shaders\Lib</Filter>
+    </None>
+  </ItemGroup>
+</Project>

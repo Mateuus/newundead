@@ -1,0 +1,4 @@
+000000.000| r3dNetwork: Initialized
+000000.000| r3dNetwork: Creating client
+000000.064|  IP: 202.162.78.182
+000000.065| r3dNetwork: connecting to 202.162.78.182:12045

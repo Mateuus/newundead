@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ServerWeapons">
+      <UniqueIdentifier>{2dc50c60-21f1-4754-82fa-37bd735721f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerWeapons\Client">
+      <UniqueIdentifier>{d3c604f9-94da-4fa8-99fa-1ce974706e0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="from Client">
+      <UniqueIdentifier>{4ab1465d-afb7-4dba-a195-ff57042f1c97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="from NetPackets">
+      <UniqueIdentifier>{677933d1-1cc8-4083-a77d-a2b1eddd2965}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\ServerWeapons\MasterServerWeaponArmory.cpp">
+      <Filter>ServerWeapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EclipseStudio\Sources\ObjectsCode\WEAPONS\BaseItemConfig.cpp">
+      <Filter>ServerWeapons\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EclipseStudio\Sources\ObjectsCode\WEAPONS\WeaponConfig.cpp">
+      <Filter>ServerWeapons\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EclipseStudio\Sources\Backend\WOBackendAPI.cpp">
+      <Filter>from Client</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MasterGameServer.cpp" />
+    <ClCompile Include="Sources\MasterServer.cpp" />
+    <ClCompile Include="Sources\MasterServerConfig.cpp" />
+    <ClCompile Include="Sources\MasterServerMain.cpp" />
+    <ClCompile Include="Sources\MasterUdpMonitor.cpp" />
+    <ClCompile Include="Sources\MasterUserServer.cpp" />
+    <ClCompile Include="Sources\SrvCrashHandler.cpp" />
+    <ClCompile Include="Sources\stdafx.cpp" />
+    <ClCompile Include="Sources\VersionNo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\ServerWeapons\MasterServerWeaponArmory.h">
+      <Filter>ServerWeapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EclipseStudio\Sources\ObjectsCode\WEAPONS\BaseItemConfig.h">
+      <Filter>ServerWeapons\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EclipseStudio\Sources\ObjectsCode\WEAPONS\WeaponConfig.h">
+      <Filter>ServerWeapons\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EclipseStudio\Sources\Backend\WOBackendAPI.h">
+      <Filter>from Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ServerNetPackets\NetPacketsGameBrowser.h">
+      <Filter>from NetPackets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ServerNetPackets\NetPacketsGameInfo.h">
+      <Filter>from NetPackets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ServerNetPackets\NetPacketsWeaponInfo.h">
+      <Filter>from NetPackets</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameSlotInfo.h" />
+    <ClInclude Include="Sources\MasterGameServer.h" />
+    <ClInclude Include="Sources\MasterServer.h" />
+    <ClInclude Include="Sources\MasterServerConfig.h" />
+    <ClInclude Include="Sources\MasterUdpMonitor.h" />
+    <ClInclude Include="Sources\MasterUserServer.h" />
+    <ClInclude Include="Sources\SrvCrashHandler.h" />
+    <ClInclude Include="Sources\VersionNo.h" />
+  </ItemGroup>
+</Project>

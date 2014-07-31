@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" ValidateRequest="false" CodeFile="api_SrvNotes.aspx.cs" Inherits="api_SrvNotes" %>
