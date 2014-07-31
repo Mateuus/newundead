@@ -610,7 +610,7 @@ void ServerGameLogic::OnNetData(DWORD peerId, const r3dNetPacketHeader* packetDa
 	return;
 }
 
-void ServerGameLogic::DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targetPlr, STORE_CATEGORIES weaponCat, bool forced_by_server, bool fromPlayerInAir, bool targetPlayerInAir )
+void ServerGameLogic::DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targetPlr, STORE_CATEGORIES weaponCat, bool forced_by_server, bool fromPlayerInAir, bool targetPlayerInAir)
 {
 	r3dOutToLog("%s killed by %s, forced: %d\n", targetPlr->userName, sourceObj->Name.c_str(), (int)forced_by_server);
 
@@ -656,6 +656,34 @@ void ServerGameLogic::DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targ
 		n.killerWeaponCat = (BYTE)weaponCat;
 		n.forced_by_server = forced_by_server;
 		p2pBroadcastToActive(sourceObj, &n, sizeof(n));
+	}
+	//MENSAGEM DE KILL PLAYER /*wpn->getConfig()->m_StoreName*/
+	{
+
+
+
+	obj_ServerPlayer * plr = ((obj_ServerPlayer*)sourceObj);
+
+	ServerWeapon* wpn = ((ServerWeapon*)sourceObj);
+
+	const BaseItemConfig* itemCfg = g_pWeaponArmory->getConfig(wpn->getConfig()->m_itemID);
+
+
+	char message[64] = {0};
+	sprintf(message, "%s killed by %s Arma: %s ", targetPlr->userName, sourceObj->Name.c_str(), itemCfg->m_StoreName);
+	r3dOutToLog("%s killed by %s Arma: %s \n",    targetPlr->userName, sourceObj->Name.c_str(), itemCfg->m_StoreName); 
+	PKT_C2C_ChatMessage_s n2;
+    n2.userFlag = 0;
+    n2.msgChannel = 1;
+    r3dscpy(n2.msg, message);
+    r3dscpy(n2.gamertag, "<system>");
+    for(int i=0; i<MAX_PEERS_COUNT; i++)
+		{
+				if(peers_[i].status_ >= PEER_PLAYING && peers_[i].player) 
+				{
+					net_->SendToPeer(&n2, sizeof(n2), i, true);
+				}
+		}
 	}
 
 	/*
