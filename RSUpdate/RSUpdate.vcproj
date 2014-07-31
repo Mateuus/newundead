@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="RSUpdate"
 	ProjectGUID="{4C326ABD-0ED8-49E0-AA2A-B24629A2E14D}"
 	RootNamespace="RSUpdate"
@@ -153,7 +153,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib ws2_32.lib strsafe.lib d3dx9.lib d3d9.lib dinput8.lib dxguid.lib xinput.lib Crypt32.lib ..\External\ChilKat\Libs\ChilkatRel.lib Shlwapi.lib"
-				OutputFile="..\..\bin\build\updater\DoomMMOLauncher.exe"
+				OutputFile="..\..\bin\build\updater\UndeadLauncher.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\External\dxsdk\Lib\"
 				GenerateDebugInformation="true"
