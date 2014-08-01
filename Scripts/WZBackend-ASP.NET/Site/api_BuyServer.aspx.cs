@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Configuration;
 
-public partial class api_ConvertM : WOApiWebPage
+public partial class api_BuyServer : WOApiWebPage
 {
     void OutfitOp( string Var1,string CustomerID)
     {
