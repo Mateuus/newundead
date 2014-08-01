@@ -660,18 +660,12 @@ void ServerGameLogic::DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targ
 	//MENSAGEM DE KILL PLAYER /*wpn->getConfig()->m_StoreName*/
 	{
 
-
-
 	obj_ServerPlayer * plr = ((obj_ServerPlayer*)sourceObj);
 
-	ServerWeapon* wpn = ((ServerWeapon*)sourceObj);
-
-	const BaseItemConfig* itemCfg = g_pWeaponArmory->getConfig(wpn->getConfig()->m_itemID);
-
+	//const BaseItemConfig* itemCfg = g_pWeaponArmory->getConfig(wpn->getConfig()->m_itemID);
 
 	char message[64] = {0};
-	sprintf(message, "%s killed by %s Arma: %s ", targetPlr->userName, sourceObj->Name.c_str(), itemCfg->m_StoreName);
-	r3dOutToLog("%s killed by %s Arma: %s \n",    targetPlr->userName, sourceObj->Name.c_str(), itemCfg->m_StoreName); 
+	sprintf(message, "%s killed by %s", targetPlr->userName, sourceObj->Name.c_str());
 	PKT_C2C_ChatMessage_s n2;
     n2.userFlag = 0;
     n2.msgChannel = 1;
