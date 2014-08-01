@@ -45,3 +45,8 @@
 *.ncb
 
 *.suo
+*.user
+/RSBuild/Release
+/RSBuild/*.user
+/RSBuild/*.suo
+/RSUpdate/Release
