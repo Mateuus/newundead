@@ -413,33 +413,33 @@ void HUDDisplay::eventShowPlayerListContextMenu(r3dScaleformMovie* pMove, const 
 	r3d_assert(argCount == 1);
 
 	int isDev = gUserProfile.ProfileData.isDevAccount;
-	Scaleform::GFx::Value var[6];
+	Scaleform::GFx::Value var[4];
 
-	if(isDev && gUserProfile.CustomerID != 1000243)
+	if(isDev)
 	{
-		var[0].SetInt(2);
+		var[0].SetInt(1);
 		var[1].SetString("TELEPORT TO");
+		var[2].SetInt(1);
+		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
+
+		var[0].SetInt(2);
+		var[1].SetString("TELEPORT PLAYER");
 		var[2].SetInt(2);
 		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
 		var[0].SetInt(3);
-		var[1].SetString("TELEPORT PLAYER");
+		var[1].SetString("KICK PLAYER");
 		var[2].SetInt(3);
 		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
 		var[0].SetInt(4);
-		var[1].SetString("KICK PLAYER");
-		var[2].SetInt(4);
-		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-
-		var[0].SetInt(5);
 		var[1].SetString("BAN ACCOUNT");
-		var[2].SetInt(5);
+		var[2].SetInt(4);
 		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 	}
 	else 
 	{
-		for (int i=0; i<8;i++)
+	for (int i=0; i<8;i++)
 	{
 		var[0].SetInt(i);
 		var[1].SetString("");
@@ -456,21 +456,21 @@ void HUDDisplay::eventShowPlayerListContextMenu(r3dScaleformMovie* pMove, const 
 			{
 				if (!strcmp(username,gClientLogic().playerNames[i].Gamertag) && !gClientLogic().playerNames[i].isInvitePending && gClientLogic().playerNames[i].GroupID == 0)
 				{
-					var[0].SetInt(2);
+					var[0].SetInt(1);
 					var[1].SetString("INVITE INTO GROUPS");
-					var[2].SetInt(2);
+					var[2].SetInt(1);
 					gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 					//break;
 				}
 				else if (!strcmp(username,gClientLogic().playerNames[i].Gamertag) && gClientLogic().playerNames[i].isInvitePending)
 				{
-					var[0].SetInt(2);
+					var[0].SetInt(1);
 					var[1].SetString("ACCEPT INVITE GROUPS");
-					var[2].SetInt(2);
+					var[2].SetInt(1);
 					gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
-					var[0].SetInt(3);
+					var[0].SetInt(2);
 					var[1].SetString("DECLINE INVITE GROUPS");
-					var[2].SetInt(3);
+					var[2].SetInt(2);
 					gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 					break;
 				}
@@ -491,10 +491,6 @@ void HUDDisplay::eventShowPlayerListContextMenu(r3dScaleformMovie* pMove, const 
 		var[2].SetInt(4);
 		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
-		var[0].SetInt(5);
-		var[1].SetString("");
-		var[2].SetInt(5);
-		gfxHUD.Invoke("_root.api.setPlayerListContextMenuButton", var, 3);
 
 	}
 
@@ -510,8 +506,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 	if(isDev)
 	// Developer Tab Key HUD Menu
 	{
-	int isDev = gUserProfile.ProfileData.isDevAccount;
-		if(action == 2) // Teleport To Player
+		if(action == 1) // Teleport To Player
 		{
 			showChatInput();
 
@@ -529,7 +524,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 			gfxHUD.Invoke("_root.api.showChat", var, 3);
 			chatVisibleUntilTime = r3dGetTime() + 20.0f;
 		}
-		if(action == 3) // Teleport Player to You
+		if(action == 2) // Teleport Player to You
 		{
 			showChatInput();
 
@@ -545,7 +540,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 			gfxHUD.Invoke("_root.api.showChat", var, 3);
 			chatVisibleUntilTime = r3dGetTime() + 20.0f;
 		}
-		if(action == 4) // Kick Player
+		if(action == 3) // Kick Player
 		{
 			showChatInput();
 
@@ -562,7 +557,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 			gfxHUD.Invoke("_root.api.showChat", var, 3);
 			chatVisibleUntilTime = r3dGetTime() + 20.0f;
 		}
-		if(action == 5) // Ban Player
+		if(action == 4) // Ban Player
 		{
 		showChatInput();
 
@@ -580,7 +575,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 	}
 	else // Not Developer Tab Key HUD Menu
 	{
-      if (gClientLogic().localPlayer_)
+    if (gClientLogic().localPlayer_)
 	{
 		//if (action == 2)
 		//{
@@ -590,7 +585,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 		{
 			for(int i=0; i<R3D_ARRAYSIZE(gClientLogic().playerNames); i++)
 			{
-				if (action == 2)
+				if (action == 1)
 				{
 					if (!strcmp(username,gClientLogic().playerNames[i].Gamertag) && !gClientLogic().playerNames[i].isInvitePending/* && gClientLogic().playerNames[i].GroupID == 0*/)
 					{
@@ -624,7 +619,7 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 						showPlayersList(0);
 					}
 				}
-				else if( action == 3)
+				else if( action == 2)
 				{
 					if (!strcmp(username,gClientLogic().playerNames[i].Gamertag) && gClientLogic().playerNames[i].isInvitePending)
 					{
@@ -635,6 +630,9 @@ void HUDDisplay::eventPlayerListAction(r3dScaleformMovie* pMove, const Scaleform
 						showPlayersList(0);
 						break;
 					}
+				}
+				else if( action == 3)
+				{
 					if (gClientLogic().localPlayer_->CurLoadout.GroupID == gClientLogic().localPlayer_->CurLoadout.GroupID2 && gClientLogic().localPlayer_->CurLoadout.GroupID == gClientLogic().playerNames[i].GroupID && !strcmp(username,gClientLogic().playerNames[i].Gamertag))
 					{
 						PKT_C2S_GroupKick_s n;

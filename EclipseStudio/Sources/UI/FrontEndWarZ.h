@@ -180,6 +180,8 @@ void FrontendWarZ::eventStorePurchaseGD(r3dScaleformMovie* pMovie, const Scalefo
 	void showInputPassword();
 	int convertvalue;
 	int currentvalue;
+	int valor;
+
 	CUserClans::CreateParams_s clanCreateParams;
 	std::string					   clanCreateParam_Desc;
 	static unsigned int WINAPI as_CreateClanThread(void* in_data);

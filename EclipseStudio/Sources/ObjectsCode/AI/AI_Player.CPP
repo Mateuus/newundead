@@ -1920,7 +1920,7 @@ r3dPoint3D obj_Player::GetMuzzlerPosition()
 // 3 - legs
 void obj_Player::UpdateHud()
 {
-	if (hudMain)
+/*	if (hudMain)
 	{
 		ObjectManager& GW = GameWorld();
 
@@ -1953,7 +1953,52 @@ void obj_Player::UpdateHud()
 			hudMain->setThreatValue((100 - (int)dist));
 		else
 			hudMain->setThreatValue(0);
+	}*/
+
+	if (hudMain)
+    {
+        ObjectManager& GW = GameWorld();
+		const ClientGameLogic& CGL = gClientLogic();
+		obj_Player* pl = CGL.localPlayer_;
+        float maxDist=40;
+        float absMaxDist=40;
+        int threatLevel;
+        for (GameObject *targetObj = GW.GetFirstObject(); targetObj; targetObj = GW.GetNextObject(targetObj))
+        {
+            if( targetObj->isObjType( OBJTYPE_Zombie ) )
+			{
+				obj_Zombie* a_live = static_cast<obj_Zombie*> ( targetObj ) ;
+					
+			
+			if( a_live->ZombieState != EZombieStates::ZState_Dead )
+				
+				{
+
+                float dist = (pl->GetPosition() - targetObj->GetPosition()).Length();
+                
+				if(dist > 0.1 && dist < 40)    
+                {
+                    if (dist<maxDist)
+                    {
+                        maxDist=dist;
+                    }
+                }
+            }
+        }
 	}
+
+        if(absMaxDist>=maxDist)
+        {
+        threatLevel=(int)((maxDist/absMaxDist)*100); //putting the integer cast operator will convert the float arithmetic value to integer.
+        threatLevel=100-threatLevel; 
+        hudMain->setThreatValue(threatLevel); 
+        }
+        else if (maxDist>40)
+        hudMain->setThreatValue(0);
+    }
+
+
+
 }
 BYTE obj_Player::getBodyNameFromBoneName(const char* boneName)
 {

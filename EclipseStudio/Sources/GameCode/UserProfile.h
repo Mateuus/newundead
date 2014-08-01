@@ -390,6 +390,8 @@ class CClientUserProfile : public CUserProfile
 	int		ApiLearnSkill(uint32_t skillid, int CharID);
 	int CClientUserProfile::ApiBuyPremium();
 	int CClientUserProfile::ApiConvertGCToGD(int currentvalue,int convertvalue);
+	int CClientUserProfile::ApiBuyServerGC(int valor);//BuyServer
+
 	int ApiChangeName(const char* Name);
 	int CClientUserProfile::ApiBan();
 	// client backpack APIs

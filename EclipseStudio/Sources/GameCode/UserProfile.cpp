@@ -1428,6 +1428,20 @@ int CClientUserProfile::ApiConvertGCToGD(int currentvalue,int convertvalue)
 	GetProfile();
 	return 0;
 }
+int CClientUserProfile::ApiBuyServerGC(int valor)//BuyServer
+{
+	GetProfile();
+	CWOBackendReq req(this, "api_BuyServer.aspx");
+	req.AddParam("CustomerID", CustomerID);
+	req.AddParam("Var1", valor);
+	if(!req.Issue())
+	{
+		r3dOutToLog("ApiBuyServerGC FAILED, code: %d\n", req.resultCode_);
+		return req.resultCode_;
+	}
+	GetProfile();
+	return 0;
+}
 int CClientUserProfile::ApiLearnSkill(uint32_t skillid, int CharID)
 {
 	CWOBackendReq req(this, "api_SrvSkills.aspx");
