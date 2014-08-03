@@ -40,10 +40,10 @@ CLauncherConfig::CLauncherConfig()
 	ToSURL =  "http://198.50.173.40/doc/EULA.rtf";
 	EULAURL = "http://198.50.173.40/doc/TOS.rtf";
 
-	updateGameDataURL = "http://198.50.173.40/wz/data/wz.xml";
-	updateLauncherDataURL = "http://198.50.173.40/wz/updater/woupd.xml";
+	updateGameDataURL = "http://127.0.0.1/wz/data/wz.xml";
+	updateLauncherDataURL = "http://127.0.0.1/wz/updater/woupd.xml";
 	// updateLauncherDataHostURL Used by -generate cmdline arg to output a woupd.xml file.
-	updateLauncherDataHostURL = "http://198.50.173.40/wz/updater/";
+	updateLauncherDataHostURL = "http://127.0.0.1/wz/updater/";
 
 	serverInfoURL = "http://198.50.173.40/api_getserverinfo.xml";
 
