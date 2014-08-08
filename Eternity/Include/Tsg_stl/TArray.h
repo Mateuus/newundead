@@ -142,7 +142,7 @@ namespace r3dTL
 	T&
 	TArray<T>::operator[] ( uint32_t idx )
 	{
-		r3d_assert( idx < mCount );
+		//r3d_assert( idx < mCount );//CaliWood
 		return mElems[ idx ];
 	}
 

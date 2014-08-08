@@ -29,7 +29,9 @@ struct draw_s {
 	float		distSq;
 	uint8_t		shadow_slice; // 1,2,3 bit flag
 };
-#define OBJECTMANAGER_MAXOBJECTS 8192
+//#define OBJECTMANAGER_MAXOBJECTS 8192
+#define OBJECTMANAGER_MAXOBJECTS 50000//CaliWood
+
 #define OBJECTMANAGER_MAXSTATICOBJECTS 32768
 
 #define OBJECTMANAGER_STATICBIT 0x80000000

@@ -1571,7 +1571,7 @@ void ServerGameLogic::CheckForObjectAroundPlayer(const r3dPoint3D& pos, float di
 void ServerGameLogic::GetStartSpawnPosition(const wiCharDataFull& loadout, r3dPoint3D* pos, float* dir,DWORD peerId)
 {
 	// if no map assigned yet, or new map, or newly created character (alive == 3)
-	if (loadout.GameMapId != GBGameInfo::MAPID_WZ_DoomTown || loadout.GameMapId != GBGameInfo::MAPID_WZ_BeastMap || loadout.GameMapId != GBGameInfo::MAPID_WZ_Tennessee)
+	if (loadout.GameMapId != GBGameInfo::MAPID_WZ_Valley || loadout.GameMapId != GBGameInfo::MAPID_WZ_Deserto)
 	{
 		if(loadout.GameMapId == 0 || loadout.GameMapId != ginfo_.mapId || loadout.Alive == 3)
 		{

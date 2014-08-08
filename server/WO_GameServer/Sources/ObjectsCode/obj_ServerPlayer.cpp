@@ -1483,7 +1483,7 @@ void obj_ServerPlayer::UpdateGameWorldFlags()
 	loadout_->GameFlags = 0;
 
 	//Spawn Protection Code here
-	if(loadout_->GameMapId == GBGameInfo::MAPID_WZ_DoomTown || loadout_->GameMapId == GBGameInfo::MAPID_WZ_BeastMap || loadout_->GameMapId == GBGameInfo::MAPID_WZ_Tennessee)
+	if(loadout_->GameMapId == GBGameInfo::MAPID_WZ_Valley || loadout_->GameMapId == GBGameInfo::MAPID_WZ_Deserto)
 	{
 		if((((r3dGetTime() - startPlayTime_) <= 20.0f)))
 		{

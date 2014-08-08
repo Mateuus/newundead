@@ -63,7 +63,7 @@ BOOL obj_DroppedItem::OnCreate()
 		{
 			switch(gClientLogic().m_gameInfo.mapId)
 			{
-			case GBGameInfo::MAPID_WZ_Colorado:
+			case GBGameInfo::MAPID_WZ_CaliWood:
 					if (LootID != cfg->m_itemID) // For all LootIDs
 					{
 							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
@@ -81,6 +81,9 @@ BOOL obj_DroppedItem::OnCreate()
 					case 301130:
 							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
 							break;
+					/*case 301131:
+							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
+							break;*/
 					default:
 							cpMeshName = cfg->m_ModelPath;
 							SpawnedItem=false;
