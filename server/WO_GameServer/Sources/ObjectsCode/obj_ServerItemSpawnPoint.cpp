@@ -258,6 +258,7 @@ void obj_ServerItemSpawnPoint::SpawnItem(int spawnIndex)
 	obj->m_SpawnObj   = GetSafeID();
 	obj->m_SpawnIdx   = spawnIndex;
 	obj->m_Item       = wi;
+	obj->LootID		  = (int)m_LootBoxID;//Codex
 	
 	return;
 }

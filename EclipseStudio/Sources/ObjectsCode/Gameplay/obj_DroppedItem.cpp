@@ -58,7 +58,39 @@ BOOL obj_DroppedItem::OnCreate()
 				r3dError("spawned item is not model");
 				break;
 		}
-		cpMeshName = cfg->m_ModelPath;
+		//cpMeshName = cfg->m_ModelPath;
+		if (SpawnedItem == true)
+		{
+			switch(gClientLogic().m_gameInfo.mapId)
+			{
+			case GBGameInfo::MAPID_WZ_Colorado:
+					if (LootID != cfg->m_itemID) // For all LootIDs
+					{
+							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
+					}
+					else 
+					{
+							cpMeshName = cfg->m_ModelPath;
+							SpawnedItem=false;
+					}
+					break;
+
+			default:
+					switch(LootID) // Specific lootID for other maps
+					{
+					case 301130:
+							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
+							break;
+					default:
+							cpMeshName = cfg->m_ModelPath;
+							SpawnedItem=false;
+					}
+			}
+		}
+		else
+		{
+			cpMeshName = cfg->m_ModelPath;
+		}
 	}
 	
 	if(!parent::Load(cpMeshName)) 
@@ -67,6 +99,11 @@ BOOL obj_DroppedItem::OnCreate()
 	if(m_Item.itemID == 'GOLD')
 	{
 		m_ActionUI_Title = gLangMngr.getString("Money");
+		m_ActionUI_Msg = gLangMngr.getString("HoldEToPickUpMoney");
+	}
+	else if (SpawnedItem == true)
+	{
+		m_ActionUI_Title = gLangMngr.getString("WoodBox");//$FR_PAUSE_USE_ITEM");
 		m_ActionUI_Msg = gLangMngr.getString("HoldEToPickUpMoney");
 	}
 	else
@@ -145,6 +182,8 @@ void obj_DroppedItem::AppendRenderables( RenderArray ( & render_arrays )[ rsCoun
 
 		rend.Init( MeshGameObject::GetObjectLodMesh(), this );
 		rend.SortValue = 0;
+		if (SpawnedItem == true)//Codex
+		rend.Parent->SetScale(r3dPoint3D(1.15,1.15,1.15));//Codex
 		
 		render_arrays[ rsFillGBufferEffects ].PushBack( rend );
 	}

@@ -985,9 +985,10 @@ static void drawLoginButtons(CUpdater& updater)
         return;
       }
     */
-	  updater.status_ = CUpdater::STATUS_NeedRegister;
+	 // updater.status_ = CUpdater::STATUS_NeedRegister;
   //MessageBox(NULL, "Register at Godanel LuFy", "Allright Register Account", MB_OK);
 		//ShellExecute(NULL, "open", gLauncherConfig.accountRegisterURL.c_str(), "", NULL, SW_SHOW);
+		ShellExecute(NULL, "open", gLauncherConfig.accountRegisterURL.c_str(), "", NULL, SW_SHOW);
     }
   }
   

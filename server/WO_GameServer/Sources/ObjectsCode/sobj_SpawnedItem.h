@@ -10,6 +10,7 @@ class obj_SpawnedItem : public GameObject, INetworkHelper
 public:
 	gobjid_t	m_SpawnObj;
 	int		m_SpawnIdx;
+	int		LootID;
 	wiInventoryItem m_Item;
 	float	m_DestroyIn; // time when item should be de-spawned
 

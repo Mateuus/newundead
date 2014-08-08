@@ -76,6 +76,8 @@ DefaultPacket* obj_DroppedItem::NetGetCreatePacket(int* out_size)
 	n.spawnID = toP2pNetId(GetNetworkID());
 	n.pos     = GetPosition();
 	n.Item    = m_Item;
+	n.SpawnedItem = false;//Codex
+	n.LootID = 0;//Codex
 	
 	*out_size = sizeof(n);
 	return &n;

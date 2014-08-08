@@ -768,6 +768,8 @@ struct PKT_S2C_CreateDroppedItem_s : public DefaultPacketMixin<PKT_S2C_CreateDro
 	r3dPoint3D	pos;
 	
 	wiInventoryItem	Item;
+	bool SpawnedItem;//Codex
+	int LootID;//Codex
 };
 
 struct PKT_C2S_CreateNote_s : public DefaultPacketMixin<PKT_C2S_CreateNote>

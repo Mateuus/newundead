@@ -115,7 +115,7 @@ void HUDPause::eventBackpackUseItem(int slotID)
 	obj_Player* plr = gClientLogic().localPlayer_;
 	r3d_assert(plr);
 	wiInventoryItem& wi = plr->CurLoadout.Items[slotID];
-	r3d_assert(wi.itemID && wi.quantity < 0);
+	//r3d_assert(wi.itemID && wi.quantity < 0);
 
 	/*{
 	const WeaponConfig* wc = g_pWeaponArmory->getWeaponConfig(wi.itemID);
