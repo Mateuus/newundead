@@ -51,3 +51,6 @@
 /RSBuild/*.suo
 /RSUpdate/Release
 /RSUpdate/RSUpdate.suo
+/Eternity/Final
+/Eternity/Debug_Server
+/Eternity/Release_NoCrashRpt

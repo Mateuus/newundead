@@ -13329,7 +13329,7 @@ void obj_Player::DrawLabel()
 			Font_Label->PrintF(r3dRenderer->ScreenW-80, 0, r3dColor(243,43,37), "FPS: %.1f", fps);
 	}
 
-#ifndef FINAL_BUILD
+//#ifndef FINAL_BUILD
 	// draw player CustomerID/gamertag for admins
 	if(!NetworkLocal && gUserProfile.ProfileData.isDevAccount && Keyboard->IsPressed(kbsLeftAlt))
 	{
@@ -13343,7 +13343,7 @@ void obj_Player::DrawLabel()
 			Font_Editor->PrintF(scrCoord.x, scrCoord.y,    r3dColor(255,255,255,a), "%s", plrUserName);
 		}
 	}
-#endif
+//#endif
 
 	/*
 	{
