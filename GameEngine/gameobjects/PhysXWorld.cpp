@@ -33,7 +33,7 @@
 #pragma comment(lib, "PhysX3VehicleCHECKED.lib")
 #pragma comment(lib, "RepX3CHECKED.lib")
 #pragma comment(lib, "RepXUpgrader3CHECKED.lib")
-/*#elif defined(FINAL_BUILD)
+#elif defined(FINAL_BUILD)//Mateuus
 #pragma comment(lib, "PhysX3_x86.lib")
 #pragma comment(lib, "PhysX3Cooking_x86.lib")
 #pragma comment(lib, "PhysX3_x86.lib")
@@ -43,7 +43,7 @@
 #pragma comment(lib, "PhysX3Extensions.lib")
 #pragma comment(lib, "PhysX3Vehicle.lib")
 #pragma comment(lib, "RepX3.lib")
-#pragma comment(lib, "RepXUpgrader3.lib")*/
+#pragma comment(lib, "RepXUpgrader3.lib")
 #else // RELEASE
 #ifndef WO_SERVER
 #pragma comment(lib, "PhysX3PROFILE_x86.lib")
@@ -95,7 +95,8 @@ struct PhysicsMesh
 	PxTriangleMesh* mesh;
 };
 int			gob_NumMeshesInPhysicsFactoryCache=0;
-PhysicsMesh	*gob_PhysicsFactoryCache[4096];
+//PhysicsMesh	*gob_PhysicsFactoryCache[4096];
+PhysicsMesh	*gob_PhysicsFactoryCache[1024];//Mateuus
 
 PxTriangleMesh *r3dGOBAddPhysicsMesh(const char* fname)
 {
@@ -109,7 +110,8 @@ PxTriangleMesh *r3dGOBAddPhysicsMesh(const char* fname)
 		if (strcmp(gob_PhysicsFactoryCache[i]->filename, fname)==0) 
 			return gob_PhysicsFactoryCache[i]->mesh;
 
-	if (gob_NumMeshesInPhysicsFactoryCache > 4096)
+	//if (gob_NumMeshesInPhysicsFactoryCache > 4096)
+	if (gob_NumMeshesInPhysicsFactoryCache > 1023)//Mateuus
 	{
 		r3dArtBug("r3dGOBAddPhysicsMesh:  Mesh Cache overflow !\n" );
 		return NULL;
@@ -143,7 +145,8 @@ struct PhysicsConvexMesh
 	PxConvexMesh* mesh;
 };
 int			gob_NumConvexMeshesInPhysicsFactoryCache=0;
-PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[4096];
+//PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[4096];
+PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[1024];//Mateuus
 
 PxConvexMesh *r3dGOBAddPhysicsConvexMesh(const char* fname)
 {
@@ -155,7 +158,8 @@ PxConvexMesh *r3dGOBAddPhysicsConvexMesh(const char* fname)
 		if (strcmp(gob_PhysicsConvexFactoryCache[i]->filename, fname)==0) 
 			return gob_PhysicsConvexFactoryCache[i]->mesh;
 
-	if (gob_NumConvexMeshesInPhysicsFactoryCache > 4096)
+	//if (gob_NumConvexMeshesInPhysicsFactoryCache > 4096)
+	if (gob_NumConvexMeshesInPhysicsFactoryCache > 1023)//Mateuus
 	{
 		r3dArtBug("r3dGOBAddPhysicsConvexMesh:  Mesh Cache overflow !\n" );
 		return NULL;
@@ -262,8 +266,8 @@ public:
 
 		if (code > PxErrorCode::eDEBUG_WARNING && code != PxErrorCode::eINVALID_PARAMETER && code != PxErrorCode::ePERF_WARNING) // TEMP eINVALID_PARAMETER check until PhysX 3.1.1
 			r3dError("PhysX Error (%s): '%s' at file %s, line %d\n", errorCode, message, file, line);
-		else
-			r3dOutToLog("PhysX Warning (%s): '%s' at file %s, line %d\n", errorCode, message, file, line);
+		/*else
+			r3dOutToLog("PhysX Warning (%s): '%s' at file %s, line %d\n", errorCode, message, file, line);*/ //Mateuus
 	}
 } myErrorCallback;
 
@@ -487,7 +491,8 @@ void PhysXWorld::Init()
 	sceneDesc.filterShaderData = groupCollisionFlags;
 	sceneDesc.filterShaderDataSize = 32 * sizeof(PxU32);
 
-	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(1, NULL);
+	//sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(1, NULL);
+	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2, NULL);//Mateuus
 	if(!sceneDesc.cpuDispatcher)
 		r3dError("PhysX: Failed to create CPU dispatcher");
 	
@@ -622,7 +627,8 @@ void PhysXWorld::StartSimulation()
 #endif
 
 //#ifndef FINAL_BUILD
-	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, /*d_physx_debug->GetInt()?1.0f:*/0.0f);
+	//PhysXScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, /*d_physx_debug->GetInt()?1.0f:*/0.0f);
+	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, d_physx_debug->GetInt()?1.0f:0.0f);//Mateuus
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES,	1.0f);
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_AABBS,	0.0f);
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eBODY_MASS_AXES,	0.0f);
@@ -857,7 +863,7 @@ bool PhysXWorld::HasCookedMesh(const r3dMesh* mesh)
 	char cookedMeshFilename[256]; memset(cookedMeshFilename, 0, 256);
 	r3dscpy(cookedMeshFilename, mesh->FileName.c_str());
 	int len = strlen(cookedMeshFilename);
-	//r3dscpy(&cookedMeshFilename[len-3], "mpx");
+	r3dscpy(&cookedMeshFilename[len-3], "mpx");//Mateuus
 	return r3d_access(cookedMeshFilename, 0)==0;
 }
 
