@@ -17,6 +17,7 @@ class CUberAnim;
 #if VEHICLES_ENABLED//Codex Carros
 class obj_Vehicle;
 #endif
+
 //int rRet3 = _AhnHS_VerifyProtectedFunction();
 class obj_Player : public GameObject
 {

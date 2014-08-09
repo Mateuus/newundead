@@ -3076,6 +3076,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
+		<File
 			RelativePath=".\Sources\ObjectsCode\WORLD\DecalChief.cpp"
 			>
 		</File>
