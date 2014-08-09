@@ -957,14 +957,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Sources\ObjectsCode\Gameplay\obj_VehicleSpawnRadius.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Sources\ObjectsCode\Gameplay\obj_VehicleSpawnRadius.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Sources\ObjectsCode\Gameplay\ReverbZone.cpp"
 						>
 					</File>

@@ -7,6 +7,10 @@
 #include "GameObjects/ObjManag.h"
 
 #include "ObjectsCode/obj_ServerPlayer.h"
+//Codex Carros
+#include "ObjectsCode/Vehicles/obj_ServerVehicle.h"
+#include "ObjectsCode/Vehicles/obj_ServerVehicleSpawn.h"
+
 #include "ObjectsCode/obj_ServerLightMesh.h"
 #include "ObjectsCode/sobj_SpawnedItem.h"
 #include "ObjectsCode/sobj_DroppedItem.h"
@@ -17,7 +21,6 @@
 #include "ObjectsCode/sobj_Animals.h"
 #include "ObjectsCode/obj_ServerPlayerSpawnPoint.h"
 #include "ObjectsCode/obj_ServerBarricade.h"
-#include "ObjectsCode/sobj_Vehicle.h"
 #include "ObjectsCode/obj_ServerPostBox.h"
 #include "../EclipseStudio/Sources/GameCode/UserProfile.h"
 #include "../EclipseStudio/Sources/ObjectsCode/weapons/WeaponArmory.h"
@@ -470,23 +473,42 @@ void ServerGameLogic::OnNetPeerDisconnected(DWORD peerId)
 				ApiPlayerUpdateChar(peer.player);
 			}
 
-			// Clear PLAYER IN VEHICLE NOW !!!!!
-			ObjectManager& GW = GameWorld();
-			for (GameObject *targetObj = GW.GetFirstObject(); targetObj; targetObj = GW.GetNextObject(targetObj))
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+		if (peer.player->PlayerOnVehicle == true)
+		{
+			GameObject* from = GameWorld().GetNetworkObject(peer.player->IDOFMyVehicle);
+			if(from)
 			{
-				if (targetObj->isObjType(OBJTYPE_Vehicle))
+				obj_Vehicle* VehicleFOUND= static_cast< obj_Vehicle* > ( from );
+				if (VehicleFOUND)
 				{
-					obj_Vehicle* car = (obj_Vehicle*)targetObj;
-					if (car)
+					for (int i=0;i<=8;i++)
 					{
-						if (car->owner == peer.player)
+						if (VehicleFOUND->PlayersOnVehicle[i]==peer.player->GetNetworkID())
 						{
-							car->owner = NULL;
-							car->lastDriveTime = r3dGetTime();
+							VehicleFOUND->PlayersOnVehicle[i]=0;
+							VehicleFOUND->OccupantsVehicle--;
+
+							PKT_S2C_PositionVehicle_s n2; // Server Vehicles
+							n2.spawnPos= VehicleFOUND->GetPosition();
+							n2.RotationPos = VehicleFOUND->GetRotationVector();
+							n2.OccupantsVehicle=VehicleFOUND->OccupantsVehicle;
+							n2.GasolineCar=VehicleFOUND->Gasolinecar;
+							n2.DamageCar=VehicleFOUND->DamageCar;
+							n2.RespawnCar=false;
+							n2.spawnID=VehicleFOUND->GetNetworkID();
+							gServerLogic.p2pBroadcastToAll(VehicleFOUND, &n2, sizeof(n2), true);
+							r3dOutToLog("######## VehicleID: %i Have %i Passengers\n",peer.player->IDOFMyVehicle,VehicleFOUND->OccupantsVehicle);
+							break;
 						}
+							
 					}
 				}
 			}
+		}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 			ApiPlayerLeftGame(peer.player);
 
@@ -615,6 +637,17 @@ void ServerGameLogic::DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targ
 	r3dOutToLog("%s killed by %s, forced: %d\n", targetPlr->userName, sourceObj->Name.c_str(), (int)forced_by_server);
 
 	char plr2msg[128] = {0};
+	//////////////////////////////////////////////////////
+	//Codex Carros
+	r3dPoint3D PlayerPos=targetPlr->GetPosition();
+	if (targetPlr->PlayerOnVehicle==true)
+	{
+	PlayerPos+=r3dPoint3D(u_GetRandom(-4,4),-8,u_GetRandom(-4,4));
+	//r3dOutToLog("Player en vehiculo\n");
+	}
+	//////////////////////////////////////////////////////
+
+
 	obj_Grave* obj = (obj_Grave*)srv_CreateGameObject("obj_Grave", "obj_Grave", targetPlr->GetPosition());
 	obj->SetNetworkID(GetFreeNetId());
 	obj->NetworkLocal = true;
@@ -899,6 +932,11 @@ bool ServerGameLogic::ApplyDamageToPlayer(GameObject* fromObj, obj_ServerPlayer*
 {
 	r3d_assert(fromObj);
 	r3d_assert(targetPlr);
+
+    //r3dOutToLog("Damage Source damageSource %i != storecat_ShootVehicle %i\n",damageSource,storecat_ShootVehicle);
+	if (targetPlr->PlayerOnVehicle == true && damageSource != storecat_ShootVehicle) // Server Vehicle //Codex Carros
+	  return false;
+
 	if(targetPlr->loadout_->Alive == 0 || targetPlr->profile_.ProfileData.isGod)
 		return false;
 
@@ -2014,37 +2052,7 @@ void ServerGameLogic::UpdateNetObjVisData(obj_ServerPlayer* plr)
 		}
 	}
 }
-void ServerGameLogic::SpawnNewCar()
-{
-	// first delete all !status car and spawn new car
-	/*r3dOutToLog ("Delete Car....\n");
-	int count = 0;
-	int drive = 0;
-	ObjectManager& GW = GameWorld();
-	for (GameObject *targetObj = GW.GetFirstObject(); targetObj; targetObj = GW.GetNextObject(targetObj))
-	{
-	if(targetObj->isObjType(OBJTYPE_Vehicle))
-	{
-	obj_Vehicle* car = (obj_Vehicle*)targetObj;
-	if (car && !car->status) // destroy it
-	car->OnDestroy();
-	}
-	}*/
 
-
-	// step 2 spawn new vehicle
-	for(int i=0; i<GameWorld().spawncar; i++) // Spawn xx Vehicles per server
-	{
-		obj_Vehicle* obj = 	(obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", "obj_Vehicle", r3dPoint3D(u_GetRandom(0,GameWorld().m_MinimapSize.x),0,u_GetRandom(0,GameWorld().m_MinimapSize.z)));
-		obj->SetNetworkID(gServerLogic.GetFreeNetId());
-		obj->NetworkLocal = true;
-		obj->OnCreate();
-		r3dOutToLog("Before On Terrain pos=%.2f,%.2f,%.2f\n",obj->GetPosition().x,obj->GetPosition().y,obj->GetPosition().z);
-		float terrHeight = Terrain->GetHeight(obj->GetPosition()); // always spawn on terrain !!!!!!!
-		obj->SetPosition(r3dPoint3D(obj->GetPosition().x,terrHeight,obj->GetPosition().z));
-		r3dOutToLog("On Terrain pos=%.2f,%.2f,%.2f\n",obj->GetPosition().x,obj->GetPosition().y,obj->GetPosition().z);
-	}
-}
 void ServerGameLogic::ResetNetObjVisData(const obj_ServerPlayer* plr)
 {
 	DWORD peerId       = plr->peerId_;
@@ -2155,15 +2163,6 @@ int ServerGameLogic::ProcessChatCommand(obj_ServerPlayer* plr, const char* cmd)
 			r3dscpy(n2.gamertag, "<system>");
 			p2pSendToPeer(plr->peerId_, plr, &n2, sizeof(n2));
 		}
-		if(strncmp(cmd, "/vehicle", 4) == 0)
-		{
-			obj_Vehicle* obj = 	(obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", "obj_Vehicle", plr->GetPosition());
-			sprintf(obj->vehicle_Model,"Data\\ObjectsDepot\\Vehicles\\drivable_buggy_02.sco");
-			obj->SetNetworkID(GetFreeNetId());
-			obj->NetworkLocal = true;
-			obj->bOn = false;
-			obj->OnCreate();
-		}
 		/*if(strncmp(cmd, "/notice", 4) == 0)
 		{
 			char notice[128];
@@ -2174,7 +2173,7 @@ int ServerGameLogic::ProcessChatCommand(obj_ServerPlayer* plr, const char* cmd)
 		}*/
 		if(strncmp(cmd, "/gm", 4) == 0)
 		{
-			/*obj_Vehicle* obj = 	(obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", "obj_Vehicle", plr->GetPosition());
+			/*
 			obj->SetNetworkID(GetFreeNetId());
 			obj->NetworkLocal = true;
 			obj->OnCreate();*/
@@ -2204,6 +2203,10 @@ int ServerGameLogic::ProcessChatCommand(obj_ServerPlayer* plr, const char* cmd)
 
 		if(strncmp(cmd, "/kick", 5) == 0)
 			return Cmd_Kick(plr, cmd);
+
+		if(strncmp(cmd, "/crtveh", 2) == 0 && plr->profile_.ProfileData.isDevAccount) // TEST //Codex Carros
+			return Cmd_crtveh(plr, cmd); // TEST
+
 		if(strncmp(cmd, "/banp", 5) == 0)
 		return Cmd_Kickban(plr, cmd);
 	}
@@ -2368,6 +2371,71 @@ int ServerGameLogic::Cmd_Kick(obj_ServerPlayer* plr, const char* cmd)
 	}
 	return 0;
 }
+
+int ServerGameLogic::Cmd_crtveh(obj_ServerPlayer* plr, const char* cmd) // ARREGLAR //Maxcaieiras
+{
+	char buf[128];
+	char find[64];
+	if(2 != sscanf(cmd, "%s %63c", buf, find))
+		return 2;
+
+        //r3dOutToLog("SSS %s\n",cmd);
+	   if (strcmp(cmd,"/crtveh zkiller") == 0)
+	   {
+		    static PKT_S2C_CreateVehicle_s n;
+			n.spawnID      = toP2pNetId(GetFreeNetId());//GetFreeNetId());
+			n.spawnPos     = plr->GetPosition() + r3dPoint3D(4,0,0);
+			n.spawnDir     = plr->GetRotationVector();
+			n.moveCell     = r3dPoint3D(0,0,0);
+			n.Ocuppants    = 0;
+			n.Gasolinecar  = u_GetRandom(54.0f,100.0f);
+			n.DamageCar    = u_GetRandom(2.3f,5.0f);
+			sprintf(n.vehicle, "Data\\ObjectsDepot\\Vehicles\\zombie_killer_car.sco");
+			r3dOutToLog("Zombie Killer Created ID %d\n",n.spawnID);
+			p2pBroadcastToAll(NULL, &n, sizeof(n), true);
+
+			obj_Vehicle* obj = (obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", n.vehicle, n.spawnPos);
+			obj->SetNetworkID(n.spawnID);
+			obj->NetworkLocal = false;
+			obj->m_isSerializable = true;
+			obj->SetRotationVector(n.spawnDir);
+			obj->Gasolinecar=n.Gasolinecar;
+			obj->OccupantsVehicle=n.Ocuppants;
+			obj->DamageCar=n.DamageCar;
+			obj->FirstRotationVector=n.spawnPos;
+			obj->FirstPosition=n.spawnDir;
+	   }
+	   else if (strcmp(cmd,"/crtveh buggy") == 0)
+	   {
+		    /*static PKT_S2C_CreateVehicle_s n;
+			n.spawnID      = toP2pNetId(gServerLogic.net_lastFreeId++);//GetFreeNetId());
+			n.spawnPos     = plr->GetPosition() + r3dPoint3D(4,0,0);
+			n.spawnDir     = plr->GetRotationVector();
+			n.moveCell     = r3dPoint3D(0,0,0);
+			n.Ocuppants    = 0;
+			n.Gasolinecar  = u_GetRandom(54.0f,100.0f);
+			n.DamageCar    = u_GetRandom(2.3f,5.0f);
+			sprintf(n.vehicle, "Data\\ObjectsDepot\\Vehicles\\Drivable_Buggy_02.sco");
+			r3dOutToLog("Buggy Created ID %d\n", cmd,n.spawnID);
+			p2pBroadcastToAll(NULL, &n, sizeof(n), true);
+
+			obj_Vehicle* obj = (obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", n.vehicle, n.spawnPos);
+			obj->SetNetworkID(n.spawnID);
+			obj->NetworkLocal = false;
+			obj->m_isSerializable = true;
+			obj->SetRotationVector(n.spawnDir);
+			obj->Gasolinecar=n.Gasolinecar;
+			obj->OccupantsVehicle=n.Ocuppants;
+			obj->DamageCar=n.DamageCar;
+			obj->FirstRotationVector=n.spawnPos;
+			obj->FirstPosition=n.spawnDir;*/
+
+		return 3;
+	   }
+	return 0;
+}
+
+
 int ServerGameLogic::Cmd_Kickgoto(obj_ServerPlayer* plr, const char* cmd)
 {
 	char buf[128];
@@ -2375,7 +2443,17 @@ int ServerGameLogic::Cmd_Kickgoto(obj_ServerPlayer* plr, const char* cmd)
 	if(2 != sscanf(cmd, "%s %63c", buf, find))
 		return 2;
 	obj_ServerPlayer* tplr = FindPlayer(find);
+
+    //Codex Carros
+	if (plr->PlayerOnVehicle)
+	{
+		r3dOutToLog("Unable teleport to player %s is on vehicle\n", plr->userName);
+		return 9;
+	}
+
 	if(tplr)
+	{
+	if (!tplr->PlayerOnVehicle) // Server Vehicle//Codex Carros
 	{
 		r3dPoint3D NewPos = tplr->loadout_->GamePos;
 		PKT_S2C_MoveTeleport_s n;
@@ -2383,6 +2461,12 @@ int ServerGameLogic::Cmd_Kickgoto(obj_ServerPlayer* plr, const char* cmd)
 		p2pBroadcastToActive(plr, &n, sizeof(n));
 		plr->SetLatePacketsBarrier("teleport");
 		plr->TeleportPlayer(NewPos);
+	 }
+	else 
+	 {
+			r3dOutToLog("Unable teleport to player %s is on vehicle\n", find);
+			return 9;
+	   }
 	}
 	else
 	{
@@ -2400,14 +2484,27 @@ int ServerGameLogic::Cmd_Kicktome(obj_ServerPlayer* plr, const char* cmd)
 	if(2 != sscanf(cmd, "%s %63c", buf, find))
 		return 2;
 	obj_ServerPlayer* tplr = FindPlayer(find);
+	if (plr->PlayerOnVehicle)//Codex Carros
+	{
+		r3dOutToLog("Unable teleport to player %s is on vehicle\n", plr->userName);
+		return 9;
+	}
 	if(tplr)
 	{
+		if (!tplr->PlayerOnVehicle) // Server Vehicle//Codex Carros
+		{
 		r3dPoint3D NewPos = plr->loadout_->GamePos;
 		PKT_S2C_MoveTeleport_s n;
 		n.teleport_pos = NewPos;
 		p2pBroadcastToActive(tplr, &n, sizeof(n));
 		tplr->SetLatePacketsBarrier("teleport");
 		tplr->TeleportPlayer(NewPos);
+		}
+		else 
+		{
+			r3dOutToLog("Unable teleport to player %s is on vehicle\n", find);
+			return 9;
+		}
 	}
 	else
 	{
@@ -2499,6 +2596,16 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2C_ChatMessage)
 	{
 		int res = ProcessChatCommand(fromPlr, n.msg);
 
+		if( res == 9) // Server Vehicles //Codex Carros
+		{
+			PKT_C2C_ChatMessage_s n2;
+			n2.userFlag = 0;
+			n2.msgChannel = 1;
+			r3dscpy(n2.msg, "Unable Teleport - Player on Vehicle");
+			r3dscpy(n2.gamertag, "<system>");
+			p2pSendToPeer(peerId, fromPlr, &n2, sizeof(n2));
+			return;
+		}
 
 		if( res == 0)
 		{
@@ -2820,6 +2927,9 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_UseNetObject)
 	{
 		obj_Grave* obj = (obj_Grave*)base;
 		obj->NetSendGraveData(peerId);
+	}
+	else if(base->Class->Name == "obj_Vehicle")//Codex Carros
+	{
 	}
 	else if(base->Class->Name == "obj_SafeLock")
 	{

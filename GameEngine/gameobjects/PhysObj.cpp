@@ -675,9 +675,11 @@ BasePhysicsObject* BasePhysicsObject::CreateStaticObject(const PhysicsObjectConf
 	PxFilterData filterData(filter, 0, 0, 0);
 	shape->setSimulationFilterData(filterData);
 	PxFilterData qfilterData(1<<filter, 0, 0, 0);
+#ifndef WO_SERVER
 #if VEHICLES_ENABLED
-	VehicleSetupDrivableShapeQueryFilterData(qfilterData);
+	VehicleSetupDrivableShapeQueryFilterData(qfilterData); //Codex Carros
 #endif
+#endif //WO_SERVER
 	shape->setQueryFilterData(qfilterData);
 	shape->userData = (void*)physCallbackObj;
 

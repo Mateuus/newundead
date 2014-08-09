@@ -20,7 +20,6 @@
 #include "./../EclipseStudio/Sources/multiplayer/ClientGameLogic.h"
 
 #include "ObjectsCode\AI\AI_Player.h"
-#include "./../GameEngine/gameobjects/obj_Vehicle.h"
 #include "ObjectsCode\AI\AI_PlayerAnim.h"
 #include "ObjectsCode\weapons\Weapon.h"
 #include "ObjectsCode\weapons\WeaponArmory.h"
@@ -111,9 +110,6 @@ void RigEffect_SprintBlur (float Lerp)
 void RigEffect_CarBlur (float Lerp)
 {
 	/*g_RenderRadialBlur = 1;
-
-	float num1 = 10-gClientLogic().localPlayer_->curcar->vd->vehicle->computeForwardSpeed()/120;
-	float num2 = 10-gClientLogic().localPlayer_->curcar->vd->vehicle->computeForwardSpeed()/100;
 	PFX_RadialBlur::Settings sts = gPFX_RadialBlur.GetDefaultSettings();
 	sts.BlurStart = num1;
 	sts.BlurStrength = num2;
@@ -753,7 +749,7 @@ void EditorGameHUD :: SetCameraPure ( r3dCamera &Cam)
 #endif
 		GameFOV = CurrentRig.FOV;
 
-	// vehicle camera
+	// vehicle camera //Codex Carros
 	extern bool SetCameraPlayerVehicle(const obj_Player* pl, r3dCamera &Cam);
 	if(SetCameraPlayerVehicle(pl, Cam))
 	{

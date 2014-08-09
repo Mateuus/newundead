@@ -2114,9 +2114,13 @@ r3dTerrain::UpdatePhysHeightField ()
 	PxFilterData filterData(PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
 	aHeightFieldShape->setSimulationFilterData(filterData);
 	PxFilterData qfilterData(1<<PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
+//Codex Carros
+#ifndef WO_SERVER
 #if VEHICLES_ENABLED
-	//VehicleSetupDrivableShapeQueryFilterData(qfilterData);
+	VehicleSetupDrivableShapeQueryFilterData(qfilterData);
 #endif
+#endif //WO_SERVER
+
 	aHeightFieldShape->setQueryFilterData(qfilterData);
 
 	g_pPhysicsWorld->AddActor(*physicsTerrain);
@@ -2388,9 +2392,13 @@ void r3dTerrain::CreateDefaultPhysicsData()
 	PxFilterData filterData(PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
 	aHeightFieldShape->setSimulationFilterData(filterData);
 	PxFilterData qfilterData(1<<PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
+//Codex Carros
+#ifndef WO_SERVER
 #if VEHICLES_ENABLED
-	//VehicleSetupDrivableShapeQueryFilterData(qfilterData);
+	VehicleSetupDrivableShapeQueryFilterData(qfilterData);
 #endif
+#endif //WO_SERVER
+
 	aHeightFieldShape->setQueryFilterData(qfilterData);
 	r3d_assert(_CrtCheckMemory());
 }
@@ -2440,9 +2448,13 @@ void r3dTerrain::CreatePhysicsData ( const Shorts& source )
 	PxFilterData filterData(PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
 	aHeightFieldShape->setSimulationFilterData(filterData);
 	PxFilterData qfilterData(1<<PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
+//Codex Carros
+#ifndef WO_SERVER
 #if VEHICLES_ENABLED
-	//VehicleSetupDrivableShapeQueryFilterData(qfilterData);
+	VehicleSetupDrivableShapeQueryFilterData(qfilterData);
 #endif
+#endif //WO_SERVER
+
 	aHeightFieldShape->setQueryFilterData(qfilterData);
 
 	g_pPhysicsWorld->AddActor(*physicsTerrain);

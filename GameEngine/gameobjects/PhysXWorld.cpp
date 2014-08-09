@@ -19,7 +19,7 @@
 
 #include "ApexWorld.h"
 #include "PhysXRepXHelpers.h"
-#include "VehicleManager.h"
+#include "VehicleManager.h"//Codex Carros
 
 // libs
 #ifdef _DEBUG
@@ -184,7 +184,7 @@ void r3dFreePhysicsConvexMeshes()
 
 
 PhysXWorld::PhysXWorld()
-: m_VehicleManager( NULL )
+: m_VehicleManager( NULL )//Codex Carros
 , PhysXFoundation(0)
 , PhysXProfileZoneMgr(0)
 #ifndef FINAL_BUILD
@@ -468,12 +468,18 @@ void PhysXWorld::Init()
 	//	Prevent collision between player and character ragdoll
 	setGroupCollisionFlag(PHYSCOLL_LOCALPLAYER, PHYSCOLL_NETWORKPLAYER, false);
 
-#if VEHICLES_ENABLED
+    //Codex Carros
+	#if VEHICLES_ENABLED
 	//	Vehicle related collision detection
+	setGroupCollisionFlag(PHYSCOLL_PLAYER_ONLY_GEOMETRY, PHYSCOLL_VEHICLE_WHEEL, false);
+	setGroupCollisionFlag(PHYSCOLL_PLAYER_ONLY_GEOMETRY, PHYSCOLL_STATIC_GEOMETRY, false);
+	setGroupCollisionFlag(PHYSCOLL_TINY_GEOMETRY, PHYSCOLL_VEHICLE_WHEEL, false);
+	setGroupCollisionFlag(PHYSCOLL_TINY_GEOMETRY, PHYSCOLL_STATIC_GEOMETRY, false);
 	setGroupCollisionFlag(PHYSCOLL_COLLISION_GEOMETRY, PHYSCOLL_VEHICLE_WHEEL, false);
 	setGroupCollisionFlag(PHYSCOLL_STATIC_GEOMETRY, PHYSCOLL_VEHICLE_WHEEL, false);
-	//setGroupCollisionFlag(PHYSCOLL_VEHICLE_WHEEL, PHYSCOLL_NON_PLAYER_GEOMETRY, false);
-#endif
+
+    #endif
+
 
 	// create scene
 	PxSceneDesc sceneDesc(PhysXSDK->getTolerancesScale());
@@ -508,11 +514,13 @@ void PhysXWorld::Init()
 	m_PlayerObstaclesManager = CharacterManager->createObstacleContext();
 #endif
 
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 	m_VehicleManager = new VehicleManager;
 #endif
 #endif
+
 }
 
 void PhysXWorld::Destroy()
@@ -537,6 +545,7 @@ void PhysXWorld::Destroy()
 		noBounceMaterial = NULL;
 	}
 
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 	if (m_VehicleManager)
@@ -546,6 +555,7 @@ void PhysXWorld::Destroy()
 	}
 #endif
 #endif
+
 
 #ifndef WO_SERVER
 	if(m_PlayerObstaclesManager)
@@ -604,11 +614,13 @@ void PhysXWorld::StartSimulation()
 
 	g_bAllowPhysObjCreation = false;
 
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 	m_VehicleManager->UpdateInput();
 #endif
 #endif
+
 //#ifndef FINAL_BUILD
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, /*d_physx_debug->GetInt()?1.0f:*/0.0f);
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES,	1.0f);
@@ -638,6 +650,7 @@ void PhysXWorld::StartSimulation()
             for(int i=0; i<numStepsReq-1; ++i)
             {
                 accumulator -= substepSize;
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 				m_VehicleManager->Update(substepSize);
@@ -658,6 +671,8 @@ PhysXScene->fetchResults(true);
         if(accumulator >= substepSize)
         {
             accumulator -=substepSize;
+
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 			m_VehicleManager->Update(substepSize);

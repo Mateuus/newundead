@@ -14,7 +14,9 @@ class Weapon;
 class Gear;
 class CUberEquip;
 class CUberAnim;
+#if VEHICLES_ENABLED//Codex Carros
 class obj_Vehicle;
+#endif
 //int rRet3 = _AhnHS_VerifyProtectedFunction();
 class obj_Player : public GameObject
 {
@@ -22,6 +24,15 @@ public:
 	DECLARE_CLASS(obj_Player, GameObject)
 
 	obj_Player();
+
+#if VEHICLES_ENABLED //Codex Carros
+	obj_Vehicle* ActualVehicle; // Server Vehicles
+    bool StrykerSound;
+	float GearsSounds;
+	bool IsOnVehicle; // Server Vehicles
+	int VehicleID;
+	bool ImOwnerCar;
+#endif
 
 	enum AuraType
 	{
@@ -41,7 +52,6 @@ public:
 
 	float	moveicontime; // time
 
-	void*   m_sndVehicleDrive;
 
 	DWORD	CustomerID;
 	r3dSec_string<64, 0xF7>	m_EncryptedUserName; // utf8 string so use it carefully. Encrypted to make life more difficult for haxorz :)
@@ -123,7 +133,6 @@ private:
 	r3dBoundBox m_OrigBBox;
 
 public:
-	obj_Vehicle* curcar;
 	void CheckVeCam();
 	bool bPhys;
 	static r3dTexture* s_laserPointerTex;
@@ -302,7 +311,6 @@ public:
 
 	r3dSec_type<float,		0x5Fc3cdAa>	RecoilCooldown;
 
-	obj_Vehicle* vehicles;
 
 	r3dVector RecoilViewMod; // adds recoil to ViewAngle
 	float		m_LastKillTime;
@@ -405,7 +413,6 @@ public:
 	void			 OnNetPacket(const PKT_S2C_SetPlayerLoadout_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerAttachments_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerWorldFlags_s& n);
-	void			 OnNetPacket(const PKT_C2C_CarPass_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerSwitchWeapon_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerReadyGrenade_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerThrewGrenade_s& n);
@@ -423,6 +430,8 @@ public:
 	void			 OnNetPacket(const PKT_S2C_BackpackAddNew_s& n);
 	void			 OnNetPacket(const PKT_S2C_BackpackModify_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerReputation_s& n);
+	void			 OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n);  // Server Vehicles //Codex Carros
+	void			 OnNetPacket(const PKT_C2C_CarSeat_s& n);  // Server Vehicles //Codex Carros
 
 	virtual void		UpdateTransform();
 
@@ -430,6 +439,7 @@ public:
 
 	bool		bAllowToUseWeapons;
 	void		CheckFireWeapon();
+	bool		CheckVehicle();//Codex Carros
 	float		GetGrenadeLaunchDelay();
 	void		GrenadeCallbackFromWeapon(const wiInventoryItem& wi);
 
@@ -439,16 +449,7 @@ public:
 	float updatehudtime;
 	void		localPlayer_UseItem(int slotID, uint32_t itemID, const r3dPoint3D& pos, float var1=0.0f, float var2=0.0f, float var3=0.0f, DWORD var4=0);
 
-	bool Cheats;
-	bool ESPItems;
-	bool ESPZombies;
-
-	bool ESPHackKill;
-
-	Weapon* oldWpn;
-	char ip[64];
-	bool isntvi;
-#if VEHICLES_ENABLED
+#if VEHICLES_ENABLED //Codex Carros
 
 	enum VehicleViews{
 		VehicleView_None,
@@ -460,13 +461,26 @@ public:
 
 
 	obj_Vehicle* canEnterVehicle();
+	void EnterVehicleHowPassenger( obj_Vehicle* target_Vehicle ); //server vehicles
 	void enterVehicle( obj_Vehicle* target_Vehicle );
 	bool isDriving();
+	bool isPassenger();
+	void exitVehicleHowPassenger(); //server vehicles
 	void exitVehicle();
 	bool isInVehicle();
 	bool TestExitPosition( r3dVector &exitPosition, bool ignoreGround = false );
+    bool exitsound;
+#endif
 
-#endif 
+	bool Cheats;
+	bool ESPItems;
+	bool ESPZombies;
+
+	bool ESPHackKill;
+
+	Weapon* oldWpn;
+	char ip[64];
+	bool isntvi;
 
 
 private:
@@ -506,6 +520,7 @@ private:
 
 	void		UpdateActionUI();
 public:
+	void*   m_sndVehicleDrive;//Codex Carros
 	CamoTimeLine camoTimeLine;
 };
 
@@ -524,4 +539,4 @@ extern void UpdatePlayerObstacle(int idx, const r3dPoint3D& pos);
 
 
 // for use when processing a bullet hit by obj_bullet or obj_Player::executeWeaponFireLocalPlayer
-bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart, const r3dPoint3D& FirePos);
+bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart, const r3dPoint3D& FirePos, int category);

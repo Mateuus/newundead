@@ -49,7 +49,7 @@ void removeMissionInfo(int var1);
 	void	eventChatMessage(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
 	void HUDDisplay::addplayertogroup(const char* gamertag,bool legend);
 	void addMissionInfo(const char* var1);
-	void setCarInfo(int var1 , int var2 , int var3 ,int var4, int var5 , bool show);
+	void	setCarInfo(int var1 , int var2 , int var3 ,int var4, int var5 ,int var6, bool show);
 	void setMissionObjectiveCompleted(int var1 , int var2);
 	void addMissionObjective(int var1 , const char* var2 , bool var3 , const char* var4 , bool var5);
 	void setMissionObjectiveNumbers(int var1, int var2 , const char* var3);
@@ -137,6 +137,12 @@ int currentslot;
 	void	showReadNote(const char* msg);
 	void	showGraveNote(const char* plr,const char* plr2);
 	void	showSL(bool var1,bool var2);
+   
+	//Codex Carros
+	void	StatusVehicle(const wchar_t* plr,const wchar_t* plr2);  // Server Vehicles
+	void	VehicleWithoutGasoline();  // Server Vehicles
+	void	VehicleDamaged();  // Server Vehicles
+	void	showCarFull(const char* msg);  // Server Vehicles
 
 	void	showRangeFinderUI(bool set) { RangeFinderUIVisible = set; }
 

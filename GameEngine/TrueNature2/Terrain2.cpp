@@ -21,6 +21,8 @@
 
 #include "Terrain2.h"
 
+#include "..\gameobjects\VehicleManager.h"//Codex Carros
+
 #define FNAME_TERRAIN2_INI			"%s/Terrain2/terrain2.ini"	
 #define FNAME_TERRAIN2_BIN			"%s/Terrain2/terrain2.bin"
 
@@ -5485,11 +5487,13 @@ r3dTerrain2::UpdatePhysHeightField( const Shorts& source )
 	PxFilterData filterData(PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
 	aHeightFieldShape->setSimulationFilterData(filterData);
 	PxFilterData qfilterData(1<<PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 	VehicleSetupDrivableShapeQueryFilterData(qfilterData);
 #endif
 #endif
+
 	aHeightFieldShape->setQueryFilterData(qfilterData);
 
 	g_pPhysicsWorld->AddActor(*m_PhysicsTerrain);
@@ -5568,11 +5572,13 @@ r3dTerrain2::UpdatePhysHeightField ( const Floats& heightFieldData )
 	PxFilterData filterData(PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
 	aHeightFieldShape->setSimulationFilterData(filterData);
 	PxFilterData qfilterData(1<<PHYSCOLL_STATIC_GEOMETRY, 0, 0, 0);
+//Codex Carros
 #ifndef WO_SERVER
 #if VEHICLES_ENABLED
 	VehicleSetupDrivableShapeQueryFilterData(qfilterData);
 #endif
 #endif
+
 	aHeightFieldShape->setQueryFilterData(qfilterData);
 
 	g_pPhysicsWorld->AddActor(*m_PhysicsTerrain);

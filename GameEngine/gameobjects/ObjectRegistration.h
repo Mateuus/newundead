@@ -17,13 +17,6 @@ AUTOREGISTER_CLASS(obj_ApexDestructible);
 #endif //APEX_ENABLED
 #endif //WO_SERVER
 
-#ifndef WO_SERVER
-#if VEHICLES_ENABLED
-#include "obj_Vehicle.h"
-IMPLEMENT_CLASS(obj_Vehicle, "obj_Vehicle", "Object");
-AUTOREGISTER_CLASS(obj_Vehicle);
-#endif // VEHICLES_ENABLED
-#endif // WO_SERVER
 
 #ifndef WO_SERVER
 #include "obj_Sprite.h"

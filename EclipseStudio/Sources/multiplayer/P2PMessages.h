@@ -13,7 +13,11 @@
 #include "../../../ServerNetPackets/NetPacketsWeaponInfo.h"
 #include "Gameplay_Params.h"
 #include "./../../src/EclipseStudio/Sources/ObjectsCode/WEAPONS/WeaponArmory.h"
-//#include "GameObjects/obj_Vehicle.h"
+
+//Codex Carros
+#include "../../../GameEngine/gameobjects/VehicleDescriptor.h"
+#include "vehicle/PxVehicleDrive.h"
+
 class GameObject;
 
 // all data packets should be as minimal as possible - so, no data aligning
@@ -23,7 +27,7 @@ class GameObject;
 #define P2PNET_VERSION	  (0x0000081A + GBWEAPINFO_VERSION + GBGAMEINFO_VERSION + GAMEPLAYPARAM_VERSION) // Allright Net
 
 #define NETID_PLAYERS_START	1		// players [1--255]
-#define NETID_OBJECTS_START	300		// various spawned objects [400-0xffff]
+#define NETID_OBJECTS_START	300		// various spawned objects [400-0xffff] // Server Vehicles Original 300
 
 static const int NUM_WEAPONS_ON_PLAYER = wiCharDataFull::CHAR_LOADOUT_ITEM4 + 1;
 
@@ -70,17 +74,9 @@ PKT_S2C_SetPlayerGroupID,
 
 /*PKT_C2S_SendHelpCall,
   PKT_S2C_SendHelpCall,*/
-  PKT_C2C_CarStatus,
-  PKT_C2C_CarStatusSv,
- PKT_C2C_CarPass,
-   PKT_C2C_CarFuel,
-    PKT_C2C_CarFlashLight,
 PKT_C2S_SendHelpCall,
 PKT_S2C_SendHelpCallData,
-  PKT_S2C_CreatePlayer,
-  PKT_C2S_CarKill,
-   PKT_C2S_CarSound,
-    PKT_C2S_CarMove,
+ PKT_S2C_CreatePlayer,
 
 	PKT_C2S_HackShieldLog,
 
@@ -97,11 +93,14 @@ PKT_S2C_SendHelpCallData,
   PKT_C2C_PlayerHitStaticPierced, // hit static geometry and pierced through it, will be followed up by another HIT event
   PKT_C2C_PlayerHitDynamic, // hit something that can be damaged (player, UAV, etc)
 
+  //Codex Carros
+  PKT_C2C_PlayerOnVehicle, // Server Vehicles
+  PKT_C2C_CarSeat,
+
  // PKT_S2C_CreateSafeLock,
 PKT_C2S_PlayerAcceptMission,
 PKT_C2s_PlayerSetMissionStatus,
 PKT_C2S_PlayerSetObStatus,
-PKT_C2C_CarSpeed,
   PKT_S2C_SetPlayerVitals,
   PKT_S2C_SetPlayerLoadout,	// indicate loadout change for not local players
   PKT_S2C_SetPlayerAttachments,
@@ -120,7 +119,6 @@ PKT_C2C_CarSpeed,
   PKT_S2C_BackpackModify,	// item quantity changed in backpack
   PKT_C2S_InventoryOp,		// player inventory operation
   PKT_S2C_CreateNetObject,
-  PKT_S2C_CreateVehicles,
   PKT_S2C_DestroyNetObject,
   PKT_C2S_UseNetObject,
   // PKT_C2S_SafeLockUnLock,
@@ -132,14 +130,28 @@ PKT_C2C_CarSpeed,
   PKT_S2C_SetGraveData,
     PKT_S2C_SetSafeLockData,
 	PKT_S2C_CreateBuilding,
-  // server notes
+
+  //server trade
   PKT_C2S_TradeBackToOp,
   PKT_C2S_TradeRequest,
+
+  // server notes
   PKT_C2S_CreateNote,
   PKT_S2C_CreateNote,
   PKT_S2C_SetNoteData,
+
+   // Server vehicles //Codex Carros
+  ///////////////////////////////////////////
+  PKT_S2C_CreateVehicle,
+  PKT_S2C_VehicleDirPos,
+  PKT_S2C_PositionVehicle,
+  PKT_C2S_CarKill, // Server Vehicles
+  PKT_C2S_DamageCar,
+  //////////////////////////////////////////
+
   // server animals
   PKT_S2C_CreateAnimals,
+
   // server zombies
   PKT_S2C_CreateZombie,
   PKT_S2C_ZombieSetState,
@@ -230,14 +242,7 @@ struct PKT_C2S_ValidateConnectingPeer_s : public DefaultPacketMixin<PKT_C2S_Vali
 struct PKT_C2C_PacketBarrier_s : public DefaultPacketMixin<PKT_C2C_PacketBarrier>
 {
 };
-struct PKT_C2S_CarKill_s : public DefaultPacketMixin<PKT_C2S_CarKill>
-{
-DWORD	targetId;
-};
-struct PKT_C2S_CarSound_s : public DefaultPacketMixin<PKT_C2S_CarSound>
-{
-int	Id;
-};
+
 struct PKT_C2S_JoinGameReq_s : public DefaultPacketMixin<PKT_C2S_JoinGameReq>
 {
 	DWORD		CustomerID;
@@ -253,12 +258,14 @@ struct PKT_S2C_JoinGameAns_s : public DefaultPacketMixin<PKT_S2C_JoinGameAns>
 	GBGameInfo	gameInfo;
 	__int64		gameTime;	// UTC game time
 };
+/*
 struct PKT_C2C_CarSpeed_s : public DefaultPacketMixin<PKT_C2C_CarSpeed>
 {
 	float speed;
 	float rpm;
 	float fuel;
 };
+*/
 struct PKT_S2C_ShutdownNote_s : public DefaultPacketMixin<PKT_S2C_ShutdownNote>
 {
 	BYTE		reason;
@@ -443,6 +450,24 @@ struct PKT_C2C_PlayerHitStatic_s : public DefaultPacketMixin<PKT_C2C_PlayerHitSt
 	BYTE		decalIdx;
 	BYTE		particleIdx;
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+struct PKT_C2C_CarSeat_s : public DefaultPacketMixin<PKT_C2C_CarSeat> // Server Vehicles
+{
+	int Seat;
+};
+
+struct PKT_C2C_PlayerOnVehicle_s : public DefaultPacketMixin<PKT_C2C_PlayerOnVehicle> // Server Vehicles
+{
+  bool PlayerOnVehicle;
+  gp2pnetid_t	VehicleID;
+  bool ImOwnerCar;
+  int myID;
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 //IMPORTANT: This packet should be equal to PKT_C2C_PlayerHitStatic_s!!!
 struct PKT_C2C_PlayerHitStaticPierced_s : public DefaultPacketMixin<PKT_C2C_PlayerHitStaticPierced>
@@ -472,43 +497,18 @@ struct PKT_S2C_MoveTeleport_s : public DefaultPacketMixin<PKT_S2C_MoveTeleport>
 {
 	r3dPoint3D	teleport_pos; // don't forget to PKT_C2C_PacketBarrier ir
 };
-struct PKT_C2S_CarMove_s : public DefaultPacketMixin<PKT_C2S_CarMove>
-{
-	r3dPoint3D	pos;
-	r3dVector angle;
-};
+
 
 struct PKT_C2C_MoveSetCell_s : public DefaultPacketMixin<PKT_C2C_MoveSetCell>
 {
 	// define radius where relative packets will be sent
 	const static int PLAYER_CELL_RADIUS = 5;  // packed difference: 0.04m
 	const static int UAV_CELL_RADIUS    = 10;
-	const static int VEHICLE_CELL_RADIUS = 10;
+	const static int VEHICLE_CELL_RADIUS = 10;//Codex Carros
 
 	r3dPoint3D	pos;
 };
-struct PKT_C2C_CarFlashLight_s : public DefaultPacketMixin<PKT_C2C_CarFlashLight>
-{
-	bool bOn;
-};
-struct PKT_C2C_CarStatusSv_s : public DefaultPacketMixin<PKT_C2C_CarStatusSv>
-{
-	bool status;
-};
-struct PKT_C2C_CarStatus_s : public DefaultPacketMixin<PKT_C2C_CarStatus>
-{
-	//bool status;
-	//float fuel;
-	gp2pnetid_t	CarID;
-};
-struct PKT_C2C_CarPass_s : public DefaultPacketMixin<PKT_C2C_CarPass>
-{
-gp2pnetid_t	NetID;
-};
-struct PKT_C2C_CarFuel_s : public DefaultPacketMixin<PKT_C2C_CarFuel>
-{
-	float fuel;
-};
+
 struct PKT_C2C_MoveRel_s : public DefaultPacketMixin<PKT_C2C_MoveRel>
 {
 	// (CELL_RADIUS*2)/[0-255] offset from previously received absolute position
@@ -721,13 +721,6 @@ struct PKT_S2C_AnimalsMove_s : public DefaultPacketMixin<PKT_S2C_AnimalsMove>
 	r3dPoint3D pos;
 	int state;
 };
-struct PKT_S2C_CreateVehicles_s : public DefaultPacketMixin<PKT_S2C_CreateVehicles>
-{
-	gp2pnetid_t	spawnID;
-	r3dPoint3D	pos;
-	bool bOn;
-	char				vehicle_Model[64];
-};
 struct PKT_S2C_CreateBuilding_s : public DefaultPacketMixin<PKT_S2C_CreateBuilding>
 {
 	gp2pnetid_t	spawnID;
@@ -813,6 +806,43 @@ struct PKT_S2C_SetNoteData_s : public DefaultPacketMixin<PKT_S2C_SetNoteData>
 	char		TextFrom[128];
 	char		TextSubj[1024];
 };
+//////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+// Server Vehicles
+struct PKT_S2C_CreateVehicle_s : public DefaultPacketMixin<PKT_S2C_CreateVehicle>
+{
+	gp2pnetid_t	spawnID;
+	r3dPoint3D	spawnPos;
+	r3dVector   spawnDir;
+	r3dPoint3D	moveCell;	// cell position from PKT_C2C_MoveSetCell
+	char    	vehicle[64];	// ItemID of base vehicle
+	int			Ocuppants;
+	float	    Gasolinecar;
+	float		DamageCar;
+	r3dVector FirstRotationVector;
+	r3dPoint3D FirstPosition;
+
+};
+
+struct PKT_S2C_PositionVehicle_s : public DefaultPacketMixin<PKT_S2C_PositionVehicle> // Server Vehicles
+{
+   DWORD	    spawnID;
+  r3dPoint3D	spawnPos;
+  r3dPoint3D    RotationPos;
+  int			OccupantsVehicle;
+  float			GasolineCar;
+  float			DamageCar;
+  float			RPMPlayer;
+  float			RotationSpeed;
+  PxVehicleDrive4WRawInputData controlData;
+  float timeStep;
+  bool			bOn;
+  bool			RespawnCar;
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 struct PKT_S2C_CreateAnimals_s : public DefaultPacketMixin<PKT_S2C_CreateAnimals>
 {
 gp2pnetid_t	spawnID;
@@ -837,6 +867,13 @@ struct PKT_S2C_CreateZombie_s : public DefaultPacketMixin<PKT_S2C_CreateZombie>
 struct PKT_S2C_ZombieSetState_s : public DefaultPacketMixin<PKT_S2C_ZombieSetState>
 {
 	BYTE		State;		// ZombieStates::EZombieStates
+};
+
+//Codex Carros
+struct PKT_C2S_DamageCar_s : public DefaultPacketMixin<PKT_C2S_DamageCar> // Server vehicles
+{
+	int WeaponID;
+	int CarID;
 };
 
 struct PKT_S2C_ZombieAttack_s : public DefaultPacketMixin<PKT_S2C_ZombieAttack>
@@ -1026,6 +1063,14 @@ struct PKT_S2C_SetPlayerReputation_s : public DefaultPacketMixin<PKT_S2C_SetPlay
 	int			Reputation;
 };
 
+//Codex Carros
+struct PKT_C2S_CarKill_s : public DefaultPacketMixin<PKT_C2S_CarKill> // Server vehicles
+{
+	DWORD targetId;
+	bool DieForExplosion;
+	int weaponID;
+};
+
 struct PKT_C2S_WpnLog_s : public DefaultPacketMixin<PKT_C2S_WpnLog>
 {
 	float m_spread;
@@ -1062,10 +1107,6 @@ struct PKT_C2S_PlayerState_s : public DefaultPacketMixin<PKT_C2S_PlayerState>
 {
 	r3dPoint3D accel;
 	int state;
-};
-struct PKT_C2S_CarControl_s : public DefaultPacketMixin<PKT_C2S_CarControl>
-{
-	PxVehicleDrive4WRawInputData carControlData;
 };
 struct PKT_C2S_GroupInvite_s : public DefaultPacketMixin<PKT_C2S_GroupInvite>
 {

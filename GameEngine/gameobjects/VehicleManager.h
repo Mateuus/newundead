@@ -70,7 +70,7 @@ public:
 
 class VehicleManager
 {
-	
+	r3dTL::TArray<VehicleDescriptor*> vehicles;
 	r3dTL::TArray<PxVehicleWheels*> physxVehs;
 	//	One result for each wheel in each car.
 	r3dTL::TArray<PxRaycastQueryResult> batchQueryResults;
@@ -90,21 +90,22 @@ class VehicleManager
 	void IssueSuspensionRaycasts();
 
 	PxVehicleDrivableSurfaceToTireFrictionPairs *surfaceTypePairs;
-
+public:
 	PxVehicleDrive4WRawInputData carControlData;
 	bool mAtRestUnderBraking;
 	float mTimeElapsedSinceAtRestUnderBraking;
 	bool mInReverseMode;
 
 	bool clearInputData;
-	void DoUserCarControl(float timeStep);
+	void DoUserCarControl(float timeStep,bool enable, PxVehicleDrive4WRawInputData OthercontrolDat,int othercar);
 	bool ProcessAutoReverse(float timestep);
+	float timeStepGet;
 
 	VehicleDescriptor *drivableCar;
 	VehicleCameraController cameraContoller;
+    void*   m_sndVehicleDrive;
+	bool	stopcar;
 
-public:
-	r3dTL::TArray<VehicleDescriptor*> vehicles;
 	VehicleManager();
 	~VehicleManager();
 	void Update(float timeStep);

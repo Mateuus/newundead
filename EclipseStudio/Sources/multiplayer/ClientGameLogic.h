@@ -162,7 +162,6 @@ virtual	void		OnNetData(DWORD peerId, const r3dNetPacketHeader* packetData, int 
 	 DEFINE_PACKET_FUNC(PKT_S2C_UpdateWeaponData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_UpdateGearData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateNetObject);
-	  DEFINE_PACKET_FUNC(PKT_S2C_CreateVehicles);
 	 // if (!g_FastLoad->GetBool())
 	  DEFINE_PACKET_FUNC(PKT_S2C_CreateBuilding);
 
@@ -174,6 +173,9 @@ virtual	void		OnNetData(DWORD peerId, const r3dNetPacketHeader* packetData, int 
 	     DEFINE_PACKET_FUNC(PKT_S2C_SetSafeLockData);
 	    DEFINE_PACKET_FUNC(PKT_S2C_CreateSafeLock);
 	 DEFINE_PACKET_FUNC(PKT_S2C_SetNoteData);
+	 DEFINE_PACKET_FUNC(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
+	 DEFINE_PACKET_FUNC(PKT_S2C_PositionVehicle);//CodexCarros
+	 DEFINE_PACKET_FUNC(PKT_C2S_DamageCar);//Codex Carros
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateZombie);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CheatWarning);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateAnimals);

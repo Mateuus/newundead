@@ -38,11 +38,12 @@
 #include "UI\HUDTrade.h"
 #include "UI\HUDRepair.h"
 
-#include "..\GameEngine\gameobjects\obj_Vehicle.h"
+#include "..\GameEngine\gameobjects\obj_Vehicle.h"//Codex Carros
 
 #include "rendering/Deffered/D3DMiscFunctions.h"
 
 extern float GameFOV;
+int externalcam; // Server Vehicles //Codex Carros
 
 bool isDi;
 
@@ -58,11 +59,12 @@ HUDCraft* hudCraft = NULL;
 HUDTrade* hudTrade = NULL;
 HUDRepair* hudRepair = NULL;
 
+#define VEHICLE_CINEMATIC_MODE 0 //Codex Carros
+
 static float LastHSLog;
 static uint64 scHandlerID;
 static uint64 svHandlerID;
 char ip[64];
-#define VEHICLE_CINEMATIC_MODE 0
 
 void InitTs3Server()
 {
@@ -877,115 +879,21 @@ void TPSGameHUD :: SetCameraPure ( r3dCamera &Cam)
 
 	const ClientGameLogic& CGL = gClientLogic();
 	obj_Player* pl = CGL.localPlayer_;
-	if(!pl) return;
-
-	//if (g_camera_mode->GetInt() != 2)
-	//{
-	/*_NEAR_DOF = 1;
-	DepthOfField_NearStart = 0.0f;
-	if (pl->m_isAiming && !pl->uberAnim_->IsFPSMode())
+	//if(!pl) return;
+	if(pl == 0)
 	{
-	DepthOfField_NearEnd = 0.20f;
-
-	_FAR_DOF = 1;
-	r3dPoint3D dir;
-	r3dScreenTo3D(r3dRenderer->ScreenW2, r3dRenderer->ScreenH2, &dir);
-
-	PxRaycastHit hit;
-	PhysicsCallbackObject* target = NULL;
-	PxSceneQueryFilterData filter(PxFilterData(COLLIDABLE_STATIC_MASK|(1<<PHYSCOLL_NETWORKPLAYER), 0, 0, 0), PxSceneQueryFilterFlag::eSTATIC|PxSceneQueryFilterFlag::eDYNAMIC);
-	g_pPhysicsWorld->raycastSingle(PxVec3(gCam.x, gCam.y, gCam.z), PxVec3(dir.x, dir.y, dir.z), 2000.0f, PxSceneQueryFlag::eDISTANCE, hit, filter);
-	//if (hit.distance > .0f)
-	//{
-	if (!pl->m_isInScope)
-	{
-	DepthOfField_FarStart = hit.distance+30.0f;
-	DepthOfField_FarEnd = hit.distance+40.0f;
-	}
-	else
-	{
-	DepthOfField_FarStart = hit.distance+100.0f;
-	DepthOfField_FarEnd = hit.distance+105.0f;
+		return;
 	}
 
-	if (hit.distance < 0)
-	{
-	DepthOfField_FarStart = 500;
-	DepthOfField_FarEnd = 500;
-	}
-	//}
-	//else
-	//{
-	//	DepthOfField_FarStart = 0;
-	//	DepthOfField_FarEnd = 0;
-	//}
-	}
-	else if (!pl->uberAnim_->IsFPSMode() && (gCam - pl->GetPosition()).Length() < 1.80f)
-	{
-	DepthOfField_NearEnd = 1.80f;
-	}
-	else
-	{
-	DepthOfField_NearEnd = 0.45f;
-	_FAR_DOF = 0;
-	}
-	//}
-	//else
-	//_NEAR_DOF = 0;
-
-	//AHNHS_PROTECT_FUNCTION
-	//Font_Editor->PrintF(r3dRenderer->ScreenW-80, 0,    r3dColor(255,255,255), "Speed 2 km/h",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);	
-	/*if (g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle())
-	{
-	r3dPoint3D scrCoord;
-	r3dProjectToScreen(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetPosition() + r3dPoint3D(0, 1.8f, 0), &scrCoord);
-	Font_Editor->PrintF(scrCoord.x, scrCoord.y,    r3dColor(255,255,255), "Speed %.2f km/h",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);	
-	}*/
-	/*	r3dRenderer->SetMaterial(NULL);
-
-	struct PushRestoreStates
-	{
-	PushRestoreStates()
-	{
-	r3dRenderer->SetRenderingMode( R3D_BLEND_ALPHA | R3D_BLEND_NZ | R3D_BLEND_PUSH );
-	}
-
-	~PushRestoreStates()
-	{
-	r3dRenderer->SetRenderingMode( R3D_BLEND_POP );
-	}
-	} pushRestoreStates; (void)pushRestoreStates;
-	if (g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle())
-	{
-	//r3dProjectToScreenAlways(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetBBoxWorld().Center() + r3dPoint3D(0, 1.8f, 0), &scrCoord,20,20);
-	Font_Label->PrintF(r3dRenderer->ScreenW-80, 0,    r3dColor(255,255,255), "Speed %.2f km/h",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);	
-	}*/
-
-	/*if (g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle())
-	{
-	r3dPoint3D scrCoord;
-	//	r3dProjectToScreen(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetPosition(), &scrPos);
-	r3dProjectToScreenAlways(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetBBoxWorld().Center() + r3dPoint3D(0, 1.8f, 0), &scrCoord,20,20);
-	Font_Editor->PrintF(scrCoord.x, scrCoord.y,    r3dColor(255,255,255), "Speed %.2f km/h",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);	
-	}*/
-	/*if (g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle())
-	{
-	r3dPoint3D scrCoord;
-	//	r3dProjectToScreen(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetPosition(), &scrPos);
-	r3dProjectToScreen(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetBBoxWorld().Center() + r3dPoint3D(0, 1.8f, 0), &scrCoord);
-	Font_Editor->PrintF(scrCoord.x,scrCoord.y,    r3dColor(255,255,255), "Speed %.2f km/h",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2.5);	
-	}*/
-	//	if (d_drive_vehicles->GetBool())
-	//pl->CheckVeCam();
-
-	//CGL.localPlayer_->DrawLabel();
+	
+	//Codex Carros
 	extern bool SetCameraPlayerVehicle(const obj_Player* pl, r3dCamera &Cam);
-	if(!SetCameraPlayerVehicle(pl, Cam) && d_drive_vehicles->GetBool() && pl->isDriving() || pl->curcar != NULL && !d_drive_vehicles->GetBool() && pl->isInVehicle())
+	if(SetCameraPlayerVehicle(pl, Cam) || pl->isInVehicle() || pl->isPassenger()) // server vehicles
 	{
-		//CGL.localPlayer_->CheckVeCam();
 		FPS_Position = Cam;
 		return;
 	}
+
 	if(pl->bDead && !hudPause->isActive() && !hudMain->isPlayersListVisible() && !hudPause->isActive() && !hudTrade->isActive()
 		&& !hudRepair->isActive())
 	{
@@ -1770,116 +1678,151 @@ void TPSGameHUD :: Draw()
 
 	return;  
 }
-
-bool SetCameraPlayerVehicle(const obj_Player* pl, r3dCamera &Cam)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+bool SetCameraPlayerVehicle(const obj_Player* pl, r3dCamera &Cam) // Server Vehicles
 {
 	static bool wasDrivenByPlayer = false;
 #if VEHICLES_ENABLED
-	obj_Player* plr = gClientLogic().localPlayer_;
-	if (pl->curcar != NULL && !d_drive_vehicles->GetBool() && plr->isInVehicle())
+	if ( g_pPhysicsWorld )// && g_pPhysicsWorld->m_VehicleManager->GetDrivenCar())// && d_drive_vehicles->GetBool() == true)// && !hudPause->isActive())
 	{
-		//r3dOutToLog("SetPassCam\n");
-		r3dVector CamPos = pl->curcar->GetPosition();
-		CamPos += r3dPoint3D( 0, ( 5 ), 0 );
-
-		int mMX=Mouse->m_MouseMoveX, mMY=Mouse->m_MouseMoveY;
-		float  glb_MouseSensAdj = CurrentRig.MouseSensetivity * g_mouse_sensitivity->GetFloat();
-
-		static float camangle = 0;
-		static float camangle2 = 0;
-		camangle += float(-mMX) * glb_MouseSensAdj;
-		camangle2 += float(-mMY) * glb_MouseSensAdj;
-
-		if(camangle > 360.0f ) camangle = camangle - 360.0f;
-		if(camangle < 0.0f )   camangle = camangle + 360.0f;
-
-		if(camangle2 > 30.0f ) camangle2 = 30.0f;
-		if(camangle2 < -25.0f )   camangle2 = -25.0f;
-
-
-		D3DXMATRIX mr;
-		D3DXMatrixRotationYawPitchRoll(&mr, R3D_DEG2RAD(-camangle), R3D_DEG2RAD(-camangle2), 0);
-		r3dVector vehicleForwardVector = r3dVector(mr ._31, mr ._32, mr ._33);
-
-		CamPos += -vehicleForwardVector * 8 ;
-
-		Cam.SetPosition(CamPos);
-		Cam.PointTo( CamPos + vehicleForwardVector * 3 + r3dVector ( 0, -1, 0) );
-		Cam.vUP = r3dPoint3D(0, 1, 0);
-		//#else
-		//g_pPhysicsWorld->m_VehicleManager->ConfigureCamera(Cam);
-	}
-	else
-	{
-		if ( g_pPhysicsWorld && pl->curcar != NULL && d_drive_vehicles->GetBool() == true && plr->isDriving())
+		obj_Vehicle* vehicle = pl->ActualVehicle;//g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle();
+		if( vehicle )
 		{
-			//if (!pl->isDriving()) return;
-			obj_Vehicle* vehicle = pl->curcar;
-			if( vehicle ) 
+//#if	VEHICLE_CINEMATIC_MODE
+			r3dVector CamPos = vehicle->GetPosition();
+			CamPos += r3dPoint3D( 0, ( 5 ), 0 );
+
+			int mMX=Mouse->m_MouseMoveX, mMY=Mouse->m_MouseMoveY;
+			float  glb_MouseSensAdj = CurrentRig.MouseSensetivity * g_mouse_sensitivity->GetFloat();
+
+			static float camangle = 0;
+			static float camangle2 = 0;
+			if (!hudPause->isActive() && !hudMain->isPlayersListVisible())
 			{
-
-				//r3dTL::TArray<PxVehicleWheels*> physxVehs;
-				//physxVehs[4] = g_pPhysicsWorld->m_VehicleManager->vehicles[4]->vehicle;
-				//Font_Label->PrintF(r3dRenderer->ScreenW-80, 0, r3dColor(243,43,37),"Vehicles Speed : %f", physxVehs[4]->computeForwardSpeed());
-				//#if    VEHICLE_CINEMATIC_MODE
-				//if (g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle())
-				//Font_Label->PrintF(20,60,r3dColor(255,255,255), "Speed : %f", g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);
-
-				/*	hudActionUI->Activate();
-				wchar_t varName[64];
-				swprintf(varName,64,L"Speed : %f",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);
-				hudActionUI->setText(L"Vehicles Panel", varName, InputMappingMngr->getKeyName(r3dInputMappingMngr::KS_INTERACT));
-				hudActionUI->enableRegularBlock();
-				r3dPoint3D scrPos;
-				r3dProjectToScreen(vehicle->GetBBoxWorld().Center(), &scrPos);
-				hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);*/
-				r3dVector CamPos = pl->curcar->GetPosition();
-				CamPos += r3dPoint3D( 0, ( 5 ), 0 );
-
-				int mMX=Mouse->m_MouseMoveX, mMY=Mouse->m_MouseMoveY;
-				float  glb_MouseSensAdj = CurrentRig.MouseSensetivity * g_mouse_sensitivity->GetFloat();
-
-				static float camangle = 0;
-				static float camangle2 = 0;
-				camangle += float(-mMX) * glb_MouseSensAdj;
-				camangle2 += float(-mMY) * glb_MouseSensAdj;
-
-				if(camangle > 360.0f ) camangle = camangle - 360.0f;
-				if(camangle < 0.0f )   camangle = camangle + 360.0f;
-
-				if(camangle2 > 30.0f ) camangle2 = 30.0f;
-				if(camangle2 < -25.0f )   camangle2 = -25.0f;
+			camangle += float(-mMX) * glb_MouseSensAdj;
+			camangle2 += float(-mMY) * glb_MouseSensAdj;
 
 
-				D3DXMATRIX mr;
-				D3DXMatrixRotationYawPitchRoll(&mr, R3D_DEG2RAD(-camangle), R3D_DEG2RAD(-camangle2), 0);
-				r3dVector vehicleForwardVector = r3dVector(mr ._31, mr ._32, mr ._33);
+			if(camangle > 360.0f ) camangle = camangle - 360.0f;
+			if(camangle < 0.0f )   camangle = camangle + 360.0f;
 
-				CamPos += -vehicleForwardVector * 8 ;
-
-				Cam.SetPosition(CamPos);
-				Cam.PointTo( CamPos + vehicleForwardVector * 3 + r3dVector ( 0, -1, 0) );
-				Cam.vUP = r3dPoint3D(0, 0.25f, 0);
-				//#else
-				g_pPhysicsWorld->m_VehicleManager->ConfigureCamera(Cam);
-				//#endif
-				//if(Keyboard->WasPressed(kbsF9))
-				//wasDrivenByPlayer = true;
+			if(camangle2 > 5.0f ) camangle2 = 5.0f;
+			if(camangle2 < -30.0f )   camangle2 = -30.0f;
 			}
-			else
+
+
+			D3DXMATRIX mr;
+			D3DXMatrixRotationYawPitchRoll(&mr, R3D_DEG2RAD(-camangle), R3D_DEG2RAD(-camangle2), 0);
+			//D3DXMatrixRotationYawPitchRoll(&mr, R3D_DEG2RAD(-camangle), 0.0f, 0);
+			r3dVector vehicleForwardVector = r3dVector(mr ._31, mr ._32, mr ._33);
+
+
+			if(Keyboard->WasPressed(kbsC) && !hudMain->isChatInputActive())
 			{
-				wasDrivenByPlayer = false;
+                    externalcam++;
+				if (externalcam>5)
+					externalcam=1;
 			}
+
+          if (externalcam==1)
+		  {
+			        CamPos += -vehicleForwardVector * 8 ;
+			        Cam.SetPosition(CamPos);
+			        Cam.PointTo( CamPos + vehicleForwardVector * 3 + r3dVector ( 0, -1, 0) );
+			        Cam.vUP = r3dPoint3D(0, 1, 0);
+		  }
+		  else if (externalcam==2)
+		  {
+			        r3dPoint3D InCarCam=vehicle->GetPosition();
+			        InCarCam += r3dPoint3D( 0, ( 5 ), 0 );
+			        D3DXMATRIX mr2;
+			        D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(vehicle->GetRotationVector().x), R3D_DEG2RAD(vehicle->GetRotationVector().y), 0);
+			        r3dVector vehicleForwardVector2 = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
+
+			        InCarCam += -vehicleForwardVector2 *8;
+
+			        Cam.SetPosition(InCarCam);
+
+			        Cam.PointTo(InCarCam + vehicleForwardVector2 * 3 + r3dVector ( 0, -1, 0) );
+			        Cam.vUP = r3dPoint3D(0, 1, 0);
+		  }
+          else if (externalcam==3)
+		  {
+			        CamPos += -vehicleForwardVector * 15 ;
+			        Cam.SetPosition(CamPos);
+			        Cam.PointTo( CamPos + vehicleForwardVector * 3 + r3dVector ( 0, -1, 0) );
+			        Cam.vUP = r3dPoint3D(0, 1, 0);
+		  }
+		  else if (externalcam==4)
+		  {
+			        r3dPoint3D InCarCam=vehicle->GetPosition();
+			        InCarCam += r3dPoint3D( 0, ( 5 ), 0 );
+			        D3DXMATRIX mr2;
+			        D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(vehicle->GetRotationVector().x), R3D_DEG2RAD(vehicle->GetRotationVector().y), 0);
+			        r3dVector vehicleForwardVector2 = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
+
+			        InCarCam += -vehicleForwardVector2 *15;
+
+			        Cam.SetPosition(InCarCam);
+
+			        Cam.PointTo(InCarCam + vehicleForwardVector2 * 3 + r3dVector ( 0, -1, 0) );
+			        Cam.vUP = r3dPoint3D(0, 1, 0);
+		  }
+		  else if (externalcam==5) // No funciona bien
+		  {
+			        r3dPoint3D InCarCam=vehicle->GetPosition();
+					r3dPoint3D Rotation=r3dVector(vehicle->GetRotationMatrix()._31,vehicle->GetRotationMatrix()._32,vehicle->GetRotationMatrix()._33);
+
+					if (vehicle->FileName=="data/objectsdepot/vehicles/drivable_buggy_02.sco")
+					{
+                                InCarCam += r3dPoint3D( 0, ( 1.6 ), 0 );
+								InCarCam +=-Rotation/1.4;
+					}
+					else if (vehicle->FileName=="data/objectsdepot/vehicles/drivable_buggy_01.sco")
+					{
+                                InCarCam += r3dPoint3D( 0, ( 1.4 ), 0 );
+								InCarCam +=-Rotation/1.4;
+					}
+					else if (vehicle->FileName=="data/objectsdepot/vehicles/drivable_stryker.sco")
+					{
+			                    InCarCam += r3dPoint3D( 0, ( 2.5 ), 0 );
+								InCarCam +=-Rotation/2;
+					}
+					else if (vehicle->FileName=="data/objectsdepot/vehicles/zombie_killer_car.sco")
+					{
+			                    InCarCam += r3dPoint3D( 0, ( 2.1 ), 0 );
+								InCarCam +=-Rotation/2;
+					}
+
+
+			        Cam.SetPosition(InCarCam);
+			        Cam.PointTo(InCarCam + Rotation*3 + r3dVector ( 0 , -1, 0));
+			        Cam.vUP = r3dPoint3D( 0, 1, 0);
+		  }
+
+//#else
+//			g_pPhysicsWorld->m_VehicleManager->ConfigureCamera(Cam);
+//#endif
+			if(Keyboard->WasPressed(kbsE) && wasDrivenByPlayer==false)
+			   wasDrivenByPlayer = true;
 		}
 		else
 		{
 			wasDrivenByPlayer = false;
 		}
 	}
-#endif 
+	else
+	{
+		wasDrivenByPlayer = false;
+	}
+#endif
 	return wasDrivenByPlayer;
 
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 static float g_lastAimAnimTime = -1.f;
 
@@ -2052,6 +1995,22 @@ void ProcessPlayerMovement(obj_Player* pl, bool editor_debug )
 	//AHNHS_PROTECT_FUNCTION
 	r3d_assert(pl->NetworkLocal);
 
+	//Codex Carros
+#if VEHICLES_ENABLED
+	if (pl->isInVehicle() && !InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_INTERACT))
+	{
+		pl->PlayerState = PLAYER_MOVE_RUN;
+		pl->UpdateLocalPlayerMovement();
+		   return;
+	}
+	else if (pl->isPassenger() && !InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_INTERACT))
+	{
+		pl->PlayerState = PLAYER_MOVE_RUN;
+		pl->UpdateLocalPlayerMovement();
+		   return;
+	}
+#endif
+
 	// check fire weapon should be called all the time, as it will reset weapon fire in case if you are sitting on the menu, etc
 	{
 		R3DPROFILE_FUNCTION("update fire");
@@ -2060,6 +2019,7 @@ void ProcessPlayerMovement(obj_Player* pl, bool editor_debug )
 
 	if(InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_SWITCH_FPS_TPS) && !(hudAttm && hudAttm->isActive()) && !(hudMain && hudMain->isChatInputActive()) && !Mouse->GetMouseVisibility() && !pl->bSwim && pl->PlayerState != PLAYER_PRONE_UP && pl->PlayerState != PLAYER_PRONE_DOWN)
 	{
+		if (!pl->isInVehicle() && !pl->isPassenger())//Codex Carros
 		pl->switchFPS_TPS();
 	}
 
@@ -2081,9 +2041,8 @@ void ProcessPlayerMovement(obj_Player* pl, bool editor_debug )
 
 	bool disablePlayerRotation = false;
 	bool disablePlayerMovement = false;
-
-	if(Mouse->GetMouseVisibility() || (hudMain && hudMain->isChatInputActive()) || pl->isInVehicle()) // do not update player if we are in menu control mode!
-	{	
+	if(Mouse->GetMouseVisibility() || (hudMain && hudMain->isChatInputActive())) // do not update player if we are in menu control mode!
+	{
 		disablePlayerMovement = true;
 		disablePlayerRotation = true;
 	}
@@ -2092,72 +2051,31 @@ void ProcessPlayerMovement(obj_Player* pl, bool editor_debug )
 
 	const Weapon* wpn = pl->m_Weapons[pl->m_SelectedWeapon];
 
-	if(!Mouse->GetMouseVisibility()
-		&& wpn)
+	if(!Mouse->GetMouseVisibility())//Codex Carros
 	{
+		// vehicles
+		if(InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_INTERACT) && !(hudMain &&hudMain->isChatInputActive())) // Server Vehicles
+		{
+#if VEHICLES_ENABLED
 
-		// vehicles   // vehicles
+				if (pl->isPassenger())
+				{
+				   pl->exitVehicleHowPassenger();
+				}
+				else if (pl->isInVehicle())
+				{
+				   pl->exitVehicle();
+				}
+				externalcam=1;
+#endif
+		}
 	}
 
-	//if(Keyboard->WasPressed(kbsL))
-	//  {
-	//	r3dOutToLog("L\n");
-	//#if VEHICLES_ENABLED
-	//	 pl->exitVehicle();
-	//#endif
-	//			}
-	//Font_Label->PrintF(r3dRenderer->ScreenW-80, 0, r3dColor(243,43,37), "Test");
-	if (pl->isDriving())
-	{
-		obj_Vehicle* currentCar = pl->curcar;
-		r3d_assert(currentCar);
-		pl->SetPosition(currentCar->GetPosition());
-		pl->SetRotationVector(currentCar->GetRotationVector());
-	}
-	else if (pl->curcar != NULL && pl->isInVehicle())
-	{
-		obj_Vehicle* currentCar = pl->curcar;
-		if (!currentCar) return;
-		r3d_assert(currentCar);
-		pl->SetPosition(currentCar->GetPosition());
-		pl->SetRotationVector(currentCar->GetRotationVector());
-	}
 
 
 	if(Keyboard->WasPressed(kbsE) && !hudMain->isChatInputActive())
 	{
-		// if( pl->isInVehicle() )
-		//  {
-		//      pl->exitVehicle();
-		///  }
-		//else
-		//{
-
-#if VEHICLES_ENABLED
-		if( pl->isDriving())
-		{
-			pl->exitVehicle();
-			//SoundSys.Stop(pl->curcar->footStepsSnd);
-			//SoundSys.Stop(pl->curcar->EngineSnd);
-			pl->curcar = NULL;
-			r3dOutToLog("Exit\n");
-		}
-		else if (pl->curcar != NULL && pl->isInVehicle())
-		{
-			PKT_C2C_CarPass_s n;
-			n.NetID = toP2pNetId(0);
-			p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
-			hudMain->setCarInfo(0,0,0,0,0,false);
-			pl->vehicleViewActive_ = pl->VehicleView_None;
-			pl->TeleportPlayer(pl->curcar->GetPosition() + r3dPoint3D( 4, 3, 0 ),"Passenger Vehicles");
-			//SoundSys.Stop(pl->curcar->footStepsSnd);
-			//SoundSys.Stop(pl->curcar->EngineSnd);
-			pl->curcar = NULL;
-			r3dOutToLog("Exit passenger\n");
-			pl->TogglePhysicsSimulation(true);
-		}
-#endif
-		//  }
+	
 	}
 	/*	if(pl->m_isFinishedAiming && !pl->m_isInScope)
 	{
@@ -2278,18 +2196,7 @@ void ProcessPlayerMovement(obj_Player* pl, bool editor_debug )
 			crouching = false;
 		}
 	}
-	if(waterDepth > 0.5f)
-	{
-#if VEHICLES_ENABLED
-#ifdef FINAL_BUILD
-		if( pl->isInVehicle() )
-		{
-			d_drive_vehiclescon->SetBool( false ); // to gain control currently. 
-			//pl->CurLoadout.Health -= 1.0f; //Disabled because client and server not sync
-		}
-#endif
-#endif
-	}
+
 	if(proning) 
 	{
 		if(!wasProning)
@@ -2515,11 +2422,6 @@ void ProcessPlayerMovement(obj_Player* pl, bool editor_debug )
 			accelaration *= GPP->c_fSpeedMultiplier_HighThirstValue;
 		if(pl->CurLoadout.Hunger > GPP->c_fSpeedMultiplier_HighHungerLevel)
 			accelaration *= GPP->c_fSpeedMultiplier_HighHungerValue;
-
-		if (pl->isDriving())
-		{
-			//playerState = PLAYER_DRIVER;
-		}
 
 		if(crouching)
 			accelaration *= 0.4f;

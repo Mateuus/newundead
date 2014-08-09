@@ -30,10 +30,9 @@ struct MaterialType
 	int				footStepsSound;
 	int				crouchFootstepsSound;
 	int				proneFootstepsSound;
-		int				VehiclesSound;
 		int				SwimSound;
 		int				SwimFSound;
-	MaterialType(): footStepsSound(-1), crouchFootstepsSound(-1), proneFootstepsSound(-1), SwimSound(-1) ,SwimFSound(-1) ,VehiclesSound(-1){}
+	MaterialType(): footStepsSound(-1), crouchFootstepsSound(-1), proneFootstepsSound(-1), SwimSound(-1) ,SwimFSound(-1){}
 };
 
 class MaterialTypes

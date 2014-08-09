@@ -29,8 +29,8 @@ obj_VehicleSpawn::~obj_VehicleSpawn()
 		spawnedVehicle->setVehicleSpawner( NULL );
 		GameWorld().DeleteObject( spawnedVehicle );
 		spawnedVehicle = NULL;
-	} 
-#endif 
+	}
+#endif
 
 }
 
@@ -79,8 +79,7 @@ BOOL obj_VehicleSpawn::Update()
 		}
 	}
 #endif
-#endif 
-
+#endif
 	return parent::Update();
 }
 
@@ -121,7 +120,7 @@ struct VehicleSpawnRenderableHelper : Renderable
 		This->Parent->DoDraw();
 	}
 
-	obj_VehicleSpawn* Parent;	
+	obj_VehicleSpawn* Parent;
 };
 
 
@@ -136,7 +135,7 @@ struct VehicleSpawnShadowGBufferRenderable : Renderable
 	{
 		VehicleSpawnShadowGBufferRenderable *This = static_cast<VehicleSpawnShadowGBufferRenderable*>( RThis );
 
-		
+
 	}
 
 	obj_VehicleSpawn*	Parent;
@@ -148,32 +147,35 @@ void obj_VehicleSpawn::DoDraw()
 {
 //#ifndef FINAL_BUILD
 #if VEHICLES_ENABLED
-/*    if( g_Manipulator3d.IsSelected(this) || ( spawnedVehicle != NULL && g_Manipulator3d.IsSelected(spawnedVehicle)) )
+/*	if( g_Manipulator3d.IsSelected(this) || ( spawnedVehicle != NULL && g_Manipulator3d.IsSelected(spawnedVehicle)) )
 #else
-    if( g_Manipulator3d.IsSelected(this) )
+	if( g_Manipulator3d.IsSelected(this) )
 #endif
-    {*/
-        r3dColor clr = r3dColor::blue;
-        r3dRenderer->SetRenderingMode( R3D_BLEND_ALPHA | R3D_BLEND_ZC );
+	{*/
+		r3dColor clr = r3dColor::blue;
+		r3dRenderer->SetRenderingMode( R3D_BLEND_ALPHA | R3D_BLEND_ZC );
 
-        clr.A = 196;
-        r3dBoundBox localBBox = GetBBoxLocal();
-        r3dBoundBox bbox;
-        bbox.Org = GetPosition();// - 0.5f * m_bboxSize;
-        bbox.Org.y += .5f * localBBox.Size.y ;
-        bbox.Size = localBBox.Size;
+		clr.A = 196;
+		r3dBoundBox localBBox = GetBBoxLocal();
+		r3dBoundBox bbox;
+		bbox.Org = GetPosition();// - 0.5f * m_bboxSize;
+		bbox.Org.y += .5f * localBBox.Size.y ;
+		bbox.Size = localBBox.Size;
 
-        r3dVector rotation = GetRotationVector();
-        // there's a bug with rotation so I've to swap the axis.
-        float temp;
-        temp = rotation.y;
-        rotation.y = rotation.x;
-        rotation.x = temp;
+		r3dVector rotation = GetRotationVector();
+		// there's a bug with rotation so I've to swap the axis.
+		float temp;
+		temp = rotation.y;
+		rotation.y = rotation.x;
+		rotation.x = temp;
+
+		//r3dDrawOrientedBoundBox( bbox, rotation, gCam, clr );
 
         r3dDrawLine3D(GetPosition(), GetPosition() + r3dPoint3D(0, 20.0f, 0), gCam, 0.4f, r3dColor(242, 64, 0));
         r3dDrawCircle3D(GetPosition(), 2.0f, gCam, 0.4f, r3dColor(242, 255, 0));
-        r3dRenderer->Flush();
-/*    }*/
+		// r3dDrawUniformSphere ( GetPosition(), m_maxDist, gCam, clr );
+		r3dRenderer->Flush();
+/*	}*/
 #endif
 }
 
@@ -234,14 +236,15 @@ void obj_VehicleSpawn::SetVehicleType( const std::string& preset )
 void obj_VehicleSpawn::RespawnCar()
 {
 #if VEHICLES_ENABLED
+
 	if( spawnedVehicle ) {
 		spawnedVehicle->setVehicleSpawner( NULL );
 		GameWorld().DeleteObject( spawnedVehicle );
 		spawnedVehicle = NULL;
-	} 
+	}
 
 	if( vehicle_Model[0] != '\0' ) {
-		spawnedVehicle = static_cast<obj_Vehicle*> ( srv_CreateGameObject("obj_Vehicle", vehicle_Model, GetPosition()));
+		spawnedVehicle = static_cast<obj_Vehicle*> ( srv_CreateGameObject("obj_Vehicle", vehicle_Model, GetPosition() ));
 		spawnedVehicle->m_isSerializable = false;
 		spawnedVehicle->setVehicleSpawner( this );
 	}
@@ -293,7 +296,7 @@ float obj_VehicleSpawn::DrawPropertyEditor(float scrx, float scry, float scrw, f
 		{
 			for(uint32_t i=0; i<trueVehicleName.size(); ++i)
 			{
-				
+
 				if( trueVehicleName[i].compare(vehicle_Model) == 0 )
 				{
 					selectedVehicleIndex = i;
@@ -315,4 +318,5 @@ float obj_VehicleSpawn::DrawPropertyEditor(float scrx, float scry, float scrw, f
 
 	return starty-scry;
 }
+
 #endif

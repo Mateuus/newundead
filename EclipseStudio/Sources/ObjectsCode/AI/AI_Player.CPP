@@ -45,8 +45,8 @@
 #include "ObjectsCode/Gameplay/obj_Grave.h"
 #include "ObjectsCode/Gameplay/obj_PostBox.h"
 #include "ObjectsCode/Gameplay/obj_SafeLock.h"
+#include "../../GameEngine/gameobjects/obj_Vehicle.h"//Codex Carros
 #include "../Gameplay/obj_Animals.h"
-#include "../../GameEngine/gameobjects/obj_Vehicle.h"
 #include "../Gameplay/obj_Zombie.h"
 #include "../Gameplay/obj_ZombieDummy.h"
 #include "ObjectsCode/Gameplay/NPCObject.h"
@@ -129,7 +129,7 @@ gobjid_t m_LocalPlayer_CurrentAimAt;
 
 #define TIME_FOR_SECOND_WIND 5.0f
 #define KILLSTREAK_FOR_SECOND_WIND 3
-static const float gDist_To_Allow_Vehicle_Entry = 5;
+static const float gDist_To_Allow_Vehicle_Entry = 3;//Codex Carros
 bool gDisableShortcuts = false;
 struct PhysSkeletonCacheEntry
 {
@@ -178,17 +178,7 @@ float SpreadMin[] =
 	.15f, // SMG
 	.1f, // GRENADES
 };
-void obj_Player::CheckVeCam()
-{
-	//if (this != gClientLogic().localPlayer_)
-	//return;
-	if (g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle())
-	{
-		r3dPoint3D scrCoord;
-		r3dProjectToScreen(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetPosition() + r3dPoint3D(0, 1.8f, 0), &scrCoord);
-		Font_Editor->PrintF(scrCoord.x, scrCoord.y,    r3dColor(255,255,255,100), "Speed %.2f km/h",g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2);	
-	}
-}
+
 void AddCachedPhysSkeleton()
 {
 	PhysSkeletonCacheEntry entry ;
@@ -332,23 +322,6 @@ int AcquirePlayerObstacle(const r3dPoint3D& pos)
 	return -1;
 }
 
-void UpdateVehicleObstacle(int idx, const r3dPoint3D& pos)
-{
-	if(idx == -1)
-		return;
-
-	R3DPROFILE_FUNCTION("UpdateAnimalsObstacle");
-
-	r3d_assert(idx >= 0 && idx < g_PhysObstacleSize);
-	r3d_assert(g_PhysObstacleCache[idx].Taken);
-
-	PxBoxObstacle obstacle;
-	obstacle.mHalfExtents = PxVec3(1.25f, 1, 1.25f);
-	obstacle.mPos = PxExtendedVec3(pos.x, pos.y + 1.0f, pos.z);
-	g_pPhysicsWorld->m_PlayerObstaclesManager->updateObstacle(g_PhysObstacleCache[idx].Handle, obstacle);
-
-	return;
-}
 
 void ReleasePlayerObstacle(int* out_idx)
 {
@@ -994,9 +967,8 @@ obj_Player::obj_Player()
 	rewards_.reserve(32);
 	lastRewardShowTime_ = 0;
 
-
-#if VEHICLES_ENABLED
-	vehicleViewActive_ = VehicleView_None; 
+#if VEHICLES_ENABLED //Codex Carros
+	vehicleViewActive_ = VehicleView_None;
 #endif
 
 #ifndef FINAL_BUILD
@@ -1126,6 +1098,16 @@ BOOL obj_Player::OnCreate()
 	R3D_LOG_TIMESPAN_START(Ai_Player_OnCreate);
 
 	parent::OnCreate();
+
+#if VEHICLES_ENABLED//Codex Carros
+	vehicleViewActive_ = VehicleView_None;
+    IsOnVehicle = false; // Server Vehicles
+	StrykerSound = false;
+	GearsSounds=1.0f;
+	ActualVehicle=NULL;
+	VehicleID=0;
+	ImOwnerCar=false;
+#endif
 
 	r3d_assert(PhysXObstacleIndex == -1);
 	if(!NetworkLocal)
@@ -1260,6 +1242,16 @@ BOOL obj_Player::OnCreate()
 	{
 		r3d_assert(!NetworkLocal);
 
+	if(NetworkLocal)//Codex Carros
+	{
+		#if VEHICLES_ENABLED // Server Vehicles
+			if ( isPassenger() )
+					exitVehicleHowPassenger();
+			else if( isInVehicle() )
+					exitVehicle();
+		#endif
+	}
+
 		PlayerState = PLAYER_DIE;
 		uberAnim_->AnimPlayerState = PLAYER_DIE;
 		uberAnim_->StartDeathAnim();
@@ -1294,6 +1286,8 @@ BOOL obj_Player::OnCreate()
 		m_sndSniperExhale = SoundSys.Play(SoundSys.GetEventIDByPath(m_isFemaleHero?"Sounds/WarZ/PlayerSounds/PLAYER_SNIPER_EXHALE_F":"Sounds/WarZ/PlayerSounds/PLAYER_SNIPER_EXHALE_M"), GetPosition(), true);
 		SoundSys.Stop(m_sndSniperExhale);
 		r3d_assert(m_sndSniperExhale);
+
+		//Codex Carros
 		m_sndVehicleDrive = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngineLoop"), GetPosition(), true);
 		SoundSys.Stop(m_sndVehicleDrive);
 		r3d_assert(m_sndVehicleDrive);
@@ -1387,7 +1381,6 @@ BOOL obj_Player::OnDestroy()
 		SoundSys.Stop(m_sndSniperBreath); SoundSys.Release(m_sndSniperBreath);
 		SoundSys.Stop(m_sndSniperHeartSlow); SoundSys.Release(m_sndSniperHeartSlow);
 		SoundSys.Stop(m_sndSniperExhale); SoundSys.Release(m_sndSniperExhale);
-		SoundSys.Stop(m_sndVehicleDrive); SoundSys.Release(m_sndVehicleDrive);
 	}
 
 	if (hudTrade)
@@ -2041,9 +2034,20 @@ BYTE obj_Player::getBodyNameFromBoneName(const char* boneName)
 void obj_Player::CheckFireWeapon()
 {
 
+#if VEHICLES_ENABLED//Codex Carros
+if (isInVehicle() || isPassenger())
+{
+       switchToEmptyHands();
+	   PKT_C2C_PlayerSwitchWeapon_s n;
+	   n.wid = 255;
+	   p2pSendToHost(this, &n, sizeof(n), true);
+	   return;
+}
+#endif
+
 	r3d_assert(NetworkLocal);
 
-	if (bSwim || bSwimShift || isInVehicle())
+	if (bSwim || bSwimShift)
 		return;
 
 	VMPROTECT_BeginMutation("obj_Player::CheckFireWeapon");
@@ -2197,6 +2201,129 @@ void obj_Player::CheckFireWeapon()
 								return;
 						}
 					}
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//Codex Carros
+					if(wpn->getItemID() == 101398) // Repair system car
+					{
+						obj_Vehicle* target_Vehicle = canEnterVehicle();
+						if ( target_Vehicle )
+						{
+							if( target_Vehicle->DamageCar<=0)
+							{
+								if (hudActionUI->isActive())
+										hudActionUI->Deactivate();
+								const wchar_t* Gasolinetext1=gLangMngr.getString("$CantRepairCar1");
+								const wchar_t* Gasolinetext2=gLangMngr.getString("$CantRepairCar2");
+								hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								return;
+							}
+							if ( target_Vehicle->Occupants<=0 )
+							{
+								if (target_Vehicle->DamageCar<5.0f)
+								{
+									if ((target_Vehicle->DamageCar+2.0f)>5)
+										target_Vehicle->DamageCar=5.0f;
+									else
+										target_Vehicle->DamageCar+=2.0f;
+									
+									target_Vehicle->ExitVehicle=true;
+									if (hudActionUI->isActive())
+										 hudActionUI->Deactivate();
+										 const wchar_t* Gasolinetext1=gLangMngr.getString("$RepairDone1");
+										 const wchar_t* Gasolinetext2=gLangMngr.getString("$RepairDone2");
+										 hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								}
+								else {
+									if (hudActionUI->isActive())
+										hudActionUI->Deactivate();
+									const wchar_t* Gasolinetext1=gLangMngr.getString("$NoneedRepairCar1");
+									const wchar_t* Gasolinetext2=gLangMngr.getString("$NoneedRepairCar2");
+									hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+									return;
+								}
+							}
+							else {
+								if (hudActionUI->isActive())
+									hudActionUI->Deactivate();
+								const wchar_t* Gasolinetext1=gLangMngr.getString("$PropietaryCar1");
+								const wchar_t* Gasolinetext2=gLangMngr.getString("$PropietaryCar2");
+								hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								return;
+							}
+						}
+						else {
+								if (hudActionUI->isActive())
+									hudActionUI->Deactivate();
+								const wchar_t* Gasolinetext1=gLangMngr.getString("$SearchCar1");
+								const wchar_t* Gasolinetext2=gLangMngr.getString("$SearchCar2");
+								hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								return;
+						}
+					}
+
+					if(wpn->getItemID() == 301321) // Server Vehicles
+					{
+							obj_Vehicle* target_Vehicle = canEnterVehicle();
+							if ( target_Vehicle )
+							{
+									if ( target_Vehicle->Occupants<=0 )
+									{
+											if (target_Vehicle->DamageCar>=0.9)
+											{
+													if (target_Vehicle->GasolineCar<100)
+													{
+														float maxGas=25.0f;
+														if ((target_Vehicle->GasolineCar+maxGas)>100)
+															target_Vehicle->GasolineCar=100.0f;
+														else
+															target_Vehicle->GasolineCar=target_Vehicle->GasolineCar+maxGas;
+														target_Vehicle->ExitVehicle=true;
+														if (hudActionUI->isActive())
+														    hudActionUI->Deactivate();
+														const wchar_t* Gasolinetext1=gLangMngr.getString("$GassFullOK1");
+														const wchar_t* Gasolinetext2=gLangMngr.getString("$GassFullOK2");
+														hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+											}
+											else {
+														if (hudActionUI->isActive())
+																hudActionUI->Deactivate();
+														const wchar_t* Gasolinetext1=gLangMngr.getString("$GassFull1");
+														const wchar_t* Gasolinetext2=gLangMngr.getString("$GassFull2");
+														hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+														return;
+											}
+									}
+									else {
+												if (hudActionUI->isActive())
+														hudActionUI->Deactivate();
+												const wchar_t* Gasolinetext1=gLangMngr.getString("$NoGassVehDestroy1");
+												const wchar_t* Gasolinetext2=gLangMngr.getString("$NoGassVehDestroy2");
+												hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+												return;
+									}
+						}
+						else {
+									if (hudActionUI->isActive())
+											hudActionUI->Deactivate();
+									const wchar_t* Gasolinetext1=gLangMngr.getString("$NoGassVehDestroy1");
+									const wchar_t* Gasolinetext2=gLangMngr.getString("$NoGassVehDestroy2");
+									hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+									return;
+							}
+					}
+					else {
+						if (hudActionUI->isActive())
+							hudActionUI->Deactivate();
+							const wchar_t* Gasolinetext1=gLangMngr.getString("$Not_in_Vehicle");
+							const wchar_t* Gasolinetext2=gLangMngr.getString("");
+							hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+				            return;
+						}
+					}
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 					if (wpn->getItemID() == WeaponConfig::ITEMID_PersonalLocker)
 					{
 
@@ -2764,7 +2891,7 @@ void obj_Player::executeWeaponFireLocalPlayer(const r3dPoint3D& from, float reco
 	*/
 	if(wpn->isImmediateShooting())
 	{
-		if ( ProcessBulletHit(damagePercFromPiercing, this, shootTargetPos, shootTargetNorm, shootTarget, shootMaterial, shootActorName,  wpn->getConfig(), GetMuzzlerPosition(), GetPosition())  == false ) 
+		if ( ProcessBulletHit(damagePercFromPiercing, this, shootTargetPos, shootTargetNorm, shootTarget, shootMaterial, shootActorName,  wpn->getConfig(), GetMuzzlerPosition(), GetPosition(), wpn->getCategory())  == false ) 
 		{	
 			r3dPoint3D dir = shootTargetPos - from;
 			dir.Normalize();
@@ -2834,6 +2961,16 @@ void obj_Player::DoDeath(int networdIDKiller, bool forced_by_server, STORE_CATEG
 	r3dOutToConsole("DoDeath() %s killed by %s",deathUserName,killerUserName);
 	}
 	}*/
+	if(NetworkLocal)//Codex Carros
+	{
+		#if VEHICLES_ENABLED // Server Vehicles
+			if ( isPassenger() )
+					exitVehicleHowPassenger();
+			else if( isInVehicle() )
+					exitVehicle();
+		#endif
+	}
+
 	r3d_assert(!bDead);
 
 	if(NetworkLocal)
@@ -2935,12 +3072,6 @@ void obj_Player::DoDeath(int networdIDKiller, bool forced_by_server, STORE_CATEG
 		UpdateLoadoutSlot(CurLoadout); // reload meshes
 		SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/MainMenu GUI/UI_player_death"), GetPosition());
 
-#if VEHICLES_ENABLED
-		if( isInVehicle() )
-		{
-			exitVehicle();
-		}
-#endif
 		if(hudMain)
 		{
 			char deadMsg[128] = {0};
@@ -2954,9 +3085,18 @@ void obj_Player::DoDeath(int networdIDKiller, bool forced_by_server, STORE_CATEG
 				else if(killedByObj->isObjType(OBJTYPE_Human))
 				{
 					obj_Player* killedByPlr = (obj_Player*)killedByObj;
+					if (killedByPlr->IsOnVehicle==true)//Codex Carros
+					{
+						char tmpName[64] = {0};
+						killedByPlr->GetUserName(tmpName);
+						sprintf(deadMsg, "ATROPELADO POR %s", tmpName);
+					}
+					else
+					{
 					char tmpName[64] = {0};
 					killedByPlr->GetUserName(tmpName);
 					sprintf(deadMsg, "KILLED BY %s", tmpName);
+					}
 				}
 				else if(killedByObj->isObjType(OBJTYPE_Zombie))
 					r3dscpy(deadMsg, "EATEN BY ZOMBIE");
@@ -3033,6 +3173,9 @@ void obj_Player::SyncAnimation(bool force)
 static float accumLastDamageRcvd = 0;
 	void obj_Player::ApplyDamage(const r3dPoint3D& dmgPos, float damage, GameObject* fromObj, int bodyBone, int dmgType)
 	{
+        if (isInVehicle() || isPassenger())//Codex Carros
+		return;
+
 		lastTimeHit = r3dGetTime();
 		lastTimeHitBone = bodyBone;
 		lastDamageRcvd = damage;
@@ -3390,7 +3533,7 @@ void obj_Player::UpdateLocalPlayerMovement()
 
 	float waterDepth = getWaterDepthAtPos(GetPosition());
 
-	if (!isInVehicle() && !bSwim)
+	if (!bSwim)
 	{
 		float deltaTimeInAir =(curTime-StartFallingTime);
 		if(!bOnGround && JumpVelocity<=0) // don't accelerate falling while jumping, only when actually falling
@@ -3627,20 +3770,7 @@ void obj_Player::UpdateLocalPlayerMovement()
 			SetVelocity(vel);
 	}
 
-	/*ObjectManager& GW = GameWorld();
-	for (GameObject *targetObj = GW.GetFirstObject(); targetObj; targetObj = GW.GetNextObject(targetObj))
-	{
-	if (targetObj->Class->Name == "obj_Vehicle")
-	{
-	//r3dOutToLog("obj_Vehicle Length %.2f",(GetPosition() - targetObj->GetPosition()).LengthSq());
-	if ((GetPosition() - targetObj->GetPosition()).LengthSq() < 2.0f)
-	{
-	SetPosition(prevPos);
-	parent::Update();
-	SetVelocity(r3dPoint3D(0,0,0));
-	}
-	}
-	}*/
+	
 	if (prevPos.y-GetPosition().y < -0.75f)
 	{
 		//parent::Update();
@@ -3668,7 +3798,7 @@ void obj_Player::UpdateLocalPlayerMovement()
 	{
 		// calculate damage from falling if any
 		float newHeight = GetPosition().y;
-		if((StartFallingHeight - newHeight) > 8.0f && !bSwim) // more than 8 meters, we gonna break something
+		if((StartFallingHeight - newHeight) > 8.0f && !bSwim && !isInVehicle() && !isPassenger())//Codex Carros // more than 8 meters, we gonna break something
 		{
 			float damageAmount = ((StartFallingHeight - newHeight))*2.0f; // if falling more than 25 meters - dies immediatelly (damage >=100)
 			damageAmount = R3D_CLAMP(damageAmount, 0.0f, 255.0f);
@@ -3834,26 +3964,70 @@ BOOL obj_Player::Update()
 	else
 		m_AuraType = AT_NONE;
 
-	//m_AuraType = AT_SPAWNPROTECTION;
-	/*if (gClientLogic().localPlayer_)
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Codex Carros
+	#if VEHICLES_ENABLED
+   if (NetworkLocal) {  // Server Vehicles
+
+		if (isInVehicle() || isPassenger())
+		{
+			if (gClientLogic().localPlayer_)
+			{
+				this->SetPosition(ActualVehicle->GetPosition()+r3dPoint3D(0,8,0));
+				this->SetRotationVector(ActualVehicle->GetRotationVector());
+				PKT_C2C_PlayerOnVehicle_s n;
+				n.PlayerOnVehicle=true;
+				n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
+				n.myID=gClientLogic().localPlayer_->GetNetworkID();
+				if (isInVehicle())
+					ImOwnerCar=true;
+				else
+					ImOwnerCar=false;
+				n.ImOwnerCar=ImOwnerCar;
+				gClientLogic().localPlayer_->VehicleID=n.VehicleID;
+				p2pSendToHost(this, &n, sizeof(n));
+
+				float waterDepth = getWaterDepthAtPos(ActualVehicle->GetPosition());
+				if(waterDepth > 1.3f) // too deep
+				{
+					if (isPassenger())
+					{
+						//ActualVehicle->DamageCar=0.21f;
+						ActualVehicle->DestroyOnWater=true;
+						//this->exitVehicleHowPassenger();
+					}
+				}
+			}
+			 
+		}
+		else {
+			if (gClientLogic().localPlayer_)
+			{
+				PKT_C2C_PlayerOnVehicle_s n;
+				n.PlayerOnVehicle=false;
+ 				n.VehicleID=gClientLogic().localPlayer_->VehicleID;
+				n.myID=gClientLogic().localPlayer_->GetNetworkID();
+ 				if (isInVehicle())
+					ImOwnerCar=true;
+				else
+					ImOwnerCar=false;
+				n.ImOwnerCar=ImOwnerCar;
+				p2pSendToHost(this, &n, sizeof(n));
+			}
+		}
+	}
+#endif
+
+   if (!NetworkLocal )
 	{
-	if (gClientLogic().localPlayer_->isInVehicle())
-	TogglePhysicsSimulation(false);
-	}*/
-
-	//float Stride[4] = {155.5f, 155.5f, 155.5f, 155.5f};
-
-	//D3DXVECTOR4 Stride( 0.0f, 1.0f, 0.0f, 1.0f );
-
-	/*for (int i = 0; i < 2000; ++i)
-	{
-	r3dRenderer->pd3ddev->SetPixelShaderConstantF(i,Stride,i);
-	r3dRenderer->pd3ddev->SetPixelShaderConstantF(i,Stride,i);
-	}*/
+		if (bDead)
+			this->IsOnVehicle=false;
+	}
 
 
-	//r3dRenderer->pd3ddev->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
-	//r3dOutToLog("GetPixelShaderConstantF %.2f\n",Stride);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 	camoTimeLine.Update();
 
@@ -4137,9 +4311,17 @@ BOOL obj_Player::Update()
 			}
 			else
 			{
-				hudMain->setCharTagTextVisible1(m_CharIcon, showName1, false);
-				//hudMain->moveUserIcon(m_CharIcon, GetPosition()+r3dPoint3D(0,2.0f,0), alwaysShow);
-				hudMain->moveUserIcon(m_CharIcon, GetPosition()+r3dPoint3D(0,2.0f,0), alwaysShow);
+				if (IsOnVehicle==false)//Codex Carros
+				{	
+				  hudMain->setCharTagTextVisible1(m_CharIcon, showName1, false);
+				  hudMain->moveUserIcon(m_CharIcon, GetPosition()+r3dPoint3D(0,2.0f,0), alwaysShow);
+				}
+				else
+				{
+				  hudMain->setCharTagTextVisible1(m_CharIcon, showName1, false);
+				  //hudMain->moveUserIcon(m_CharIcon, GetPosition()+r3dPoint3D(0,2.0f,0), alwaysShow);
+				  hudMain->moveUserIcon(m_CharIcon, GetPosition()+r3dPoint3D(0,2.0f,0), alwaysShow);
+				}
 			}
 		}
 	}
@@ -4484,42 +4666,7 @@ BOOL obj_Player::Update()
 				bAllowToUseWeapons = false;
 			hudMain->showSafeZoneWarning(!bAllowToUseWeapons);
 
-			//hudMain->setVisibility(lifeProperties.getPlayerVisibility());
-			//hudMain->setHearing(lifeProperties.getPlayerHearRadius());
-
-			/*int value = 0;
-
-
-			switch (PlayerState)
-			{
-			case PLAYER_MOVE_RUN:
-			value = 75;
-			break;
-			case PLAYER_MOVE_PRONE:
-			value = 25;
-			break;
-			case PLAYER_MOVE_SPRINT:
-			value = 80;
-			break;
-			}
-
-			if (lifeProperties.weaponFired)
-			{
-			value = 100;
-			}
-
-			hudMain->setThreatValue(value);*/
-
-			/*	if (d_drive_vehicles)
-			{
-			bAllowToUseWeapons = false;
-			}
-			else if (!d_drive_vehicles && !(CurLoadout.GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox) || (CurLoadout.GameFlags & wiCharDataFull::GAMEFLAG_isSpawnProtected))
-			{
-			bAllowToUseWeapons = true;
-			}*/
-
-			//hudMain->setTime(CGL.GetServerGameTime());
+		
 			if(hudPause->isActive())
 				hudPause->setTime(CGL.GetServerGameTime());
 
@@ -4674,6 +4821,9 @@ BOOL obj_Player::Update()
 	if(CurLoadout.Health < 30 && m_BloodTimer > 1.0f)
 	{
 		r3dPoint3D pos = GetPosition(); pos.y += 2.0f;
+#if VEHICLES_ENABLED//Codex Carros
+	if (!isInVehicle() || !isPassenger()) // Server Vehicles
+#endif
 		AddBloodOnGround(pos);
 		m_BloodTimer = 0;
 	}
@@ -4702,6 +4852,10 @@ float dist_Point_to_Line( const r3dPoint3D& p, const r3dPoint3D& l1, const r3dPo
 void obj_Player::UpdateActionUI()
 {
 	R3DPROFILE_FUNCTION("UpdateActionUI");
+#if VEHICLES_ENABLED //Codex Carros
+	if (isInVehicle() || isPassenger())
+		return;
+#endif
 	r3d_assert(NetworkLocal);
 	if(hudMain==NULL || hudActionUI == NULL || hudPause == NULL ||
 		hudAttm == NULL || hudGeneralStore == NULL || hudVault == NULL || hudTrade == NULL)
@@ -4823,22 +4977,8 @@ void obj_Player::UpdateActionUI()
 
 	static float pressedKeyTimer = 0.0f;
 
-	/*if (d_drive_vehicles->GetBool())
-	{
-	if(!hudActionUI->isActive() )
-	{
-	hudActionUI->Activate();
-	hudActionUI->setText(L"Vehicles", L"Hold E To Exit Vehicles", InputMappingMngr->getKeyName(r3dInputMappingMngr::KS_INTERACT));
-	hudActionUI->enableRegularBlock();
-	}
-	if(hudActionUI->isActive())
-	{
-	r3dPoint3D scrPos;
-	r3dProjectToScreen(dropObj->GetPosition(), &scrPos);
-	hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);
-	}
-	}*/
-	if(distance < 1.0f && !d_drive_vehicles->GetBool()) // distance to ray. if more than 1, then it is outside of ray
+	
+	if(distance < 1.0f) // distance to ray. if more than 1, then it is outside of ray
 	{
 		// in case if you are standing right next to pile of objects, we need to re-init ui each time we pick different item from pile
 		static GameObject* prevHUDItem = NULL;
@@ -4856,12 +4996,6 @@ void obj_Player::UpdateActionUI()
 				//	hudActionUI->setCarInfo(0,0,0,0,0,false);
 				hudActionUI->setText(((SharedUsableItem*)dropObj)->m_ActionUI_Title, ((SharedUsableItem*)dropObj)->m_ActionUI_Msg, strcmp(dropObj->Class->Name.c_str(),"obj_Grave")?InputMappingMngr->getKeyName(r3dInputMappingMngr::KS_INTERACT) : "Y");
 			}
-			else if(dropObj->Class->Name == "obj_Vehicle")
-			{
-				obj_Vehicle* vehicle = (obj_Vehicle*)dropObj;
-				hudActionUI->setText(L"Vehicles", L"Hold E To Enter Vehicles", InputMappingMngr->getKeyName(r3dInputMappingMngr::KS_INTERACT));
-				//hudActionUI->setCarInfo(5,10,20,10,50,true);
-			}
 			else if (selectHumans)// human have weapons
 			{
 				//hudActionUI->setCarInfo(0,0,0,0,0,false);
@@ -4878,17 +5012,83 @@ void obj_Player::UpdateActionUI()
 		if(hudActionUI->isActive())
 		{
 			hudActionUI->showEBlock(true,true);
-			/*if(dropObj->Class->Name == "obj_Vehicle")
-			{
-			obj_Vehicle* vehicle = (obj_Vehicle*)dropObj;
-			hudActionUI->setCarInfo((int)vehicle->dura/20,85,40,80,(int)vehicle->fuel,true);
-			}
-			else
-			hudActionUI->setCarInfo(0,0,0,0,0,false);*/
 			r3dPoint3D scrPos;
 			r3dProjectToScreen(dropObj->GetBBoxWorld().Center(), &scrPos);
 			hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);
 		}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+		if(hudActionUI->isActive())
+		{
+			hudActionUI->showEBlock(true,true);
+			if(dropObj->isObjType(OBJTYPE_Vehicle))
+			{
+				obj_Vehicle* vehicleinfo = (obj_Vehicle*)dropObj;
+				int DateOcup = 0;
+				switch(vehicleinfo->Occupants)
+				{
+				case 0:
+					  DateOcup = 0;
+					break;
+				case 1:
+						if (vehicleinfo->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+							DateOcup = 33;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/zombie_killer_car.sco")
+							DateOcup = 50;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+							DateOcup = 12;
+					  break;
+				case 2:
+						if (vehicleinfo->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+							DateOcup = 66;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+							DateOcup = 24;
+					  break;
+                case 3:
+						if (vehicleinfo->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+							DateOcup = 100;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+							DateOcup = 36;
+					  break;
+                case 4:
+							DateOcup = 50;
+					  break;
+                case 5:
+							DateOcup = 62;
+					  break;
+                case 6:
+							DateOcup = 74;
+					  break;
+                case 7:
+							DateOcup = 86;
+					  break;
+                case 8:
+							DateOcup = 100;
+					  break;
+				}
+				int DataDamage = 0;
+				if (vehicleinfo->DamageCar>=4.5f)
+					DataDamage=5;
+				else if (vehicleinfo->DamageCar>=3.5f && vehicleinfo->DamageCar<4.5f)
+					DataDamage=4;
+				else if (vehicleinfo->DamageCar>=2.5f && vehicleinfo->DamageCar<3.5f)
+					DataDamage=3;
+				else if (vehicleinfo->DamageCar>=1.5f && vehicleinfo->DamageCar<2.5f)
+					DataDamage=2;
+				else if (vehicleinfo->DamageCar>0.0f && vehicleinfo->DamageCar<1.5f)
+					DataDamage=1;
+				else if (vehicleinfo->DamageCar<=0.0f )
+					DataDamage=0;
+				hudActionUI->setCarInfo(DataDamage,0,0,DateOcup,(int)vehicleinfo->GasolineCar,true);
+			}
+			else {
+				hudActionUI->setCarInfo(0,0,0,0,0,false);
+			}
+			r3dPoint3D scrPos;
+			r3dProjectToScreen(dropObj->GetBBoxWorld().Center(), &scrPos);
+			hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);
+		}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		bool isPress = strcmp(dropObj->Class->Name.c_str(),"obj_Grave")?InputMappingMngr->isPressed(r3dInputMappingMngr::KS_INTERACT):Keyboard->IsPressed(kbsY);
 		if(isPress)
@@ -4913,49 +5113,65 @@ void obj_Player::UpdateActionUI()
 						return;
 					}
 				}
-				if(dropObj->Class->Name == "obj_Vehicle")
-				{
-					obj_Vehicle* target_Vehicle = (obj_Vehicle*)dropObj;
-					/*if ( target_Vehicle  ) // now we're going to try to use vehicles (otherwise UAV characters can't use vehicles).
-					{
-					if ( target_Vehicle->status )
-					{
-					//hudMain->showMessage(L"Cannot enter vehicle");
-					curcar = target_Vehicle;
-					vehicleViewActive_ = VehicleView_Passenger;
-
-					TogglePhysicsSimulation(false);
-					PKT_C2C_CarPass_s n;
-					n.NetID = toP2pNetId(target_Vehicle->GetNetworkID());
-					p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
-					hudActionUI->Deactivate();
-					return;
-					}
-
-					hudActionUI->showEBlock(false,false);
-					hudActionUI->Deactivate();
-
-					d_drive_vehiclescon->SetBool(true);
-					//d_drive_vehicles->SetBool(true);
-					g_pPhysicsWorld->m_VehicleManager->DriveCar(target_Vehicle->vd);
-					curcar = target_Vehicle;
-					enterVehicle( target_Vehicle );
-					/*TogglePhysicsSimulation(false);
-					target_Vehicle->SwitchToDrivable( true );
-					vehicleViewActive_ = VehicleView_Driver;
-					target_Vehicle->NetworkLocal = true;
-					curcar = target_Vehicle;
-					PKT_C2C_CarStatus_s n;
-					n.CarID = toP2pNetId(target_Vehicle->GetNetworkID());
-					p2pSendToHost(this,&n,sizeof(n));
-					}*/
-					SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"),GetPosition());
-					return;
-				}
 				if(dropObj->Class->Name == "obj_SafeLock")
 				{
 					hudMain->showSL(true,true);
 				}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+				if(dropObj->Class->Name == "obj_Vehicle")
+				{
+					     if (!isInVehicle() || !isPassenger())
+						 {
+					        obj_Vehicle* target_Vehicle = canEnterVehicle();
+                            if ( target_Vehicle  ) // now we're going to try to use vehicles (otherwise UAV characters can't use vehicles).
+                            {
+								if (target_Vehicle->DamageCar<=0)
+								{
+									hudActionUI->Deactivate();
+									hudMain->VehicleDamaged();
+									return;
+								}
+								if (target_Vehicle->GasolineCar<=0)
+								{
+									hudActionUI->Deactivate();
+									hudMain->VehicleWithoutGasoline();
+									return;
+								}
+								if (target_Vehicle->Occupants<1)
+								{
+									enterVehicle( target_Vehicle );
+									//r3dOutToLog("######## %i\n",target_Vehicle->Occupants);
+									hudActionUI->showEBlock(false,false);
+									g_pPhysicsWorld->m_VehicleManager->DriveCar(target_Vehicle->vd);
+								}
+								else {
+									int MaxPassengers=2;
+									if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+										MaxPassengers=3;
+									else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/zombie_killer_car.sco")
+										MaxPassengers=2;
+									else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+										MaxPassengers=8;
+
+									if (target_Vehicle->Occupants>=MaxPassengers)
+									{
+										char Letters[128];
+										sprintf(Letters,"%i/%i",MaxPassengers,MaxPassengers);
+										hudMain->showCarFull(Letters);
+									}
+									else
+									{
+										EnterVehicleHowPassenger( target_Vehicle );
+										hudActionUI->showEBlock(false,false);
+									}
+								}
+				            }
+						 }
+				}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 				if(dropObj->Class->Name == "obj_Grave")
 				{
 					obj_Grave* Grave = (obj_Grave*)dropObj;
@@ -5355,28 +5571,7 @@ void obj_Player::OnNetPacket(const PKT_C2S_GroupID_s& n)
 {
 	gClientLogic().playerNames[n.peerId].GroupID = n.GroupID;
 }
-void obj_Player::OnNetPacket(const PKT_C2C_CarPass_s& n)
-{
-	if (NetworkLocal) return;
 
-	//r3dOutToLog("CarPass\n");
-
-	if (n.NetID == 0)
-	{
-		TogglePhysicsSimulation(true);
-		curcar = NULL;
-	}
-
-	GameObject* obj = GameWorld().GetNetworkObject(n.NetID);
-	if (obj) {
-		obj_Vehicle* vehicle = (obj_Vehicle*)obj;
-		//if (vehicle == gClientLogic().localPlayer_->curcar){
-		//r3dOutToLog("TogglePhysicsSimulation False\n");
-		curcar = vehicle;
-		TogglePhysicsSimulation(false);
-		//}
-	}
-}
 void obj_Player::OnNetPacket(const PKT_S2C_SetPlayerWorldFlags_s& n)
 {
 	CurLoadout.GameFlags = n.flags;
@@ -5502,6 +5697,29 @@ void obj_Player::OnNetPacket(const PKT_C2S_TradeRequest_s& n)
 void obj_Player::OnNetPacket(const PKT_C2C_PlayerHitNothing_s& n)
 {
 }
+////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+void obj_Player::OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n) // Server Vehicles
+{
+#if VEHICLES_ENABLED
+	    IsOnVehicle = n.PlayerOnVehicle;
+		VehicleID=n.VehicleID;
+		ImOwnerCar=n.ImOwnerCar;
+#endif
+}
+
+void obj_Player::OnNetPacket(const PKT_C2C_CarSeat_s& n) // Server Vehicles
+{
+	//r3dOutToLog("######## Tu posicion en el vehiculo es %i\n",n.Seat);
+	if (n.Seat>1)
+	{
+		vehicleViewActive_ = VehicleView_Passenger;
+		d_drive_vehicles->SetBool( true );
+		ActualVehicle->NetworkLocal = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 
 void obj_Player::OnNetPacket(const PKT_C2C_PlayerHitStatic_s& n)
 {
@@ -5811,7 +6029,6 @@ case xxx: { \
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerLoadout);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerGroupID);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerAttachments);
-		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_CarPass);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_GroupSwapLeader);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_GroupID);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_GroupReInvite);
@@ -5834,6 +6051,8 @@ case xxx: { \
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_BackpackAddNew);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_BackpackModify);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerReputation);
+	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerOnVehicle); // Server Vehicles //Codex Carros
+	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_CarSeat); // Server Vehicles //Codex Carros
 		//DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_SetVelocity);
 	}
 
@@ -6382,22 +6601,9 @@ void obj_Player::DrawLabel()
 	/*{
 	if (curcar != NULL)
 	{
-	//r3dProjectToScreenAlways(g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->GetBBoxWorld().Center() + r3dPoint3D(0, 1.8f, 0), &scrCoord,20,20);
-	//float xSpeed = g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed()*2-g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->oldSpeed;
-	if (curcar)
-	{
-	if (isDriving())
-	{
-	Font_Label->PrintF( 10, r3dRenderer->ScreenH-220,    r3dColor(255,255,255), "Speed %.1f km/h",curcar->vd->vehicle->computeForwardSpeed()*2);	
-	Font_Label->PrintF( 10, r3dRenderer->ScreenH-200,    r3dColor(255,255,255), "Durability %f.1f %",curcar->dura);	
-	}
-	else if (!d_drive_vehicles->GetBool() && isInVehicle())
-	{
-	Font_Label->PrintF( 10, r3dRenderer->ScreenH-220,    r3dColor(255,255,255), "Speed %.1f km/h",curcar->RemoteSpeed);	
-	Font_Label->PrintF( 10, r3dRenderer->ScreenH-200,    r3dColor(255,255,255), "RPM %.1f",curcar->rpm);	
-	}
-
-	}
+	
+	
+	
 	//Font_Label->PrintF( 10, r3dRenderer->ScreenH-240,    r3dColor(255,255,255), "xSpeed %.2f km/n",xSpeed);	
 	}
 	}*/
@@ -6913,13 +7119,19 @@ obj_Player::AppendShadowRenderables( RenderArray & rarr, const r3dCamera& Cam )
 {
 	r3d_assert( &rarr - g_render_arrays - rsCreateSM < NumShadowSlices ) ;
 
-	// HACK: For the moment. 
-#if VEHICLES_ENABLED
-	if ( isInVehicle() ) 
+		// HACK: For the moment.
+#if VEHICLES_ENABLED//Codex Carros
+	if ( isInVehicle() || isPassenger()) // Server Vehicles
 	{
-		return; 
+		return;
+	}
+	if (!NetworkLocal ) // Server Vehicles
+	{
+		if (IsOnVehicle == true)
+		        return;
 	}
 #endif
+
 	if (!isntvi)
 		if (!CurLoadout.isVisible) return;
 
@@ -7062,11 +7274,15 @@ obj_Player::AppendRenderables( RenderArray ( & render_arrays  )[ rsCount ], cons
 	if(!m_enableRendering)
 		return;
 
-	// HACK: For the moment. 
-#if VEHICLES_ENABLED
-	if ( isInVehicle() ) 
+#if VEHICLES_ENABLED //Codex Carros
+	if ( isInVehicle() || isPassenger()) // Server Vehicles
 	{
-		return; 
+		return;
+	}
+	if (!NetworkLocal ) // Server Vehicles
+	{
+        if (IsOnVehicle == true)
+		       return;
 	}
 #endif
 
@@ -7478,9 +7694,6 @@ void obj_Player::UpdateFootsteps()
 			fts = SoundSys.GetEventIDByPath("Sounds/WarZ/PlayerSounds/PLAYER_SWIM_IDIE");
 		}
 
-		if (isDriving() && d_drive_vehiclescon->GetBool())
-			fts = SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggy_Engine");
-
 		//footStepsSnd = NULL;
 
 		if (!SoundSys.IsHandleValid(footStepsSnd) || fts != currentFootStepsSoundID)
@@ -7738,24 +7951,26 @@ void obj_Player::OnBackpackChanged(int idx)
 		SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/WarZ/PlayerSounds/PLAYER_CHANGECLOTHES"), GetPosition());
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
 #if VEHICLES_ENABLED
 obj_Vehicle* obj_Player::canEnterVehicle()
 {
 	// Fast version from Frank
+
 	for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
 	{
-		if( obj->ObjTypeFlags && OBJTYPE_Vehicle )
+		if( obj->ObjTypeFlags & OBJTYPE_Vehicle )
 		{
 			obj_Vehicle* vehicle= static_cast< obj_Vehicle* > ( obj );
 
-			float distSq = (GetPosition() - vehicle->GetPosition()).LengthSq();
+			float distSq = (GetPosition() - vehicle->GetPosition()).Length();
 			if( distSq < gDist_To_Allow_Vehicle_Entry )
 			{
 				return vehicle;
 			}
 		}
 	}
-
 	return NULL;
 }
 
@@ -7763,10 +7978,6 @@ obj_Vehicle* obj_Player::canEnterVehicle()
 
 void obj_Player::TogglePhysicsSimulation(bool on)
 {
-	if (bPhys == on) return;
-
-	bPhys = on;
-
 	if (PhysicsObject)
 	{
 		PxActor *a = PhysicsObject->getPhysicsActor();
@@ -7783,62 +7994,149 @@ void obj_Player::TogglePhysicsSimulation(bool on)
 
 //////////////////////////////////////////////////////////////////////////
 
-void obj_Player::enterVehicle( obj_Vehicle* target_Vehicle )
+void obj_Player::EnterVehicleHowPassenger( obj_Vehicle* target_Vehicle )
 {
-	//SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"), GetPosition(), true); //SetPosition(ActualVehicle->GetPosition());
-	//SoundSys.Start(m_sndVehicleDrive);
-	//ActualVehicle=target_Vehicle;
-	d_drive_vehiclescon->SetBool(true);
+	switchToEmptyHands();
+	r3dOutToLog("#### Entrando como pasajero en %s\n",target_Vehicle->FileName);
+	SetPosition(GetPosition()+r3dPoint3D(0,8,0));
+	vehicleViewActive_ = VehicleView_Passenger;
+	ActualVehicle=target_Vehicle;
 	TogglePhysicsSimulation(false);
-
-	target_Vehicle->SwitchToDrivable( true );
-	vehicleViewActive_ = VehicleView_Driver;
 	d_drive_vehicles->SetBool( true );
-	//target_Vehicle->owner = this;
-	target_Vehicle->NetworkLocal = true;
-	PKT_C2C_CarStatus_s n;
-	n.CarID = toP2pNetId(target_Vehicle->GetNetworkID());
-	p2pSendToHost(this,&n,sizeof(n));
-	//target_Vehicle->vd->owner=target_Vehicle;
+
 }
 
-void obj_Player::exitVehicle()
+void obj_Player::exitVehicleHowPassenger()
 {
-	hudMain->setCarInfo(0,0,0,0,0,false);
-	//SoundSys.Stop(m_sndVehicleDrive);
-	SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Stop"), curcar->GetPosition(), true);
-	r3dVector targetPosition = curcar->GetPosition() + r3dPoint3D( 4, 3, 0 ); // Server Vehicles
+	hudMain->setCarInfo(0,0,0,0,0,0,false);
+	r3dOutToLog("#### Saliendo como pasajero en %s\n",ActualVehicle->FileName);
+	float pos1=4.0f;
+	float pos2=-4.0f;
+	switch((int)u_GetRandom(0,5))
+	{
+	case 0:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 1:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	case 2:
+		pos1=-4.0f;
+		pos2=4.0f;
+		break;
+	case 3:
+		pos1=-4.0f;
+		pos2=-4.0f;
+		break;
+	case 4:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 5:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	}
+	r3dVector targetPosition = ActualVehicle->GetPosition() + r3dPoint3D( pos1, 3, pos2); // Server Vehicles
 	TeleportPlayer( targetPosition, "Exiting vehicle");
-	curcar->SwitchToDrivable( false );
-	vehicleViewActive_ = VehicleView_None;
-	d_drive_vehiclescon->SetBool(false);
-	d_drive_vehicles->SetBool( false );
-	curcar->SwitchToDrivable( false );
-	PKT_C2C_CarStatus_s n;
-	//n.status = false;
-	//n.fuel = curcar->fuel;
-	n.CarID = toP2pNetId(curcar->GetNetworkID());
-	p2pSendToHost(this,&n,sizeof(n));
-	//	g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->owner = NULL;
-	curcar->NetworkLocal = false;
-	//g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->owner=0;
+
 	TogglePhysicsSimulation(true);
+	d_drive_vehicles->SetBool( false );
+	vehicleViewActive_ = VehicleView_None;
+	ActualVehicle=NULL;
 }
+
+void obj_Player::enterVehicle( obj_Vehicle* target_Vehicle ) // Server Vehicles
+{
+    switchToEmptyHands();
+	if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+	{
+         SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"), GetPosition());
+	}
+	else {
+		 SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Start"), GetPosition());
+	}
+	SetPosition(GetPosition()+r3dPoint3D(0,8,0));
+	vehicleViewActive_ = VehicleView_Driver;
+	ActualVehicle=target_Vehicle;
+	TogglePhysicsSimulation(false);
+	d_drive_vehicles->SetBool( true );
+	ActualVehicle->NetworkLocal = true;
+	ActualVehicle->Occupants=1;
+}
+
+void obj_Player::exitVehicle()  // Server Vehicles
+{
+     hudMain->setCarInfo(0,0,0,0,0,0,false);
+	if (ActualVehicle->DamageCar>0 && ActualVehicle->GasolineCar>=1)
+	{
+		if (ActualVehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+			SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Stop"), GetPosition());
+		else
+			SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Stop"), GetPosition());		
+	}
+	float pos1=4.0f;
+	float pos2=-4.0f;
+	switch((int)u_GetRandom(0,5))
+	{
+	case 0:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 1:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	case 2:
+		pos1=-4.0f;
+		pos2=4.0f;
+		break;
+	case 3:
+		pos1=-4.0f;
+		pos2=-4.0f;
+		break;
+	case 4:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 5:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	}
+	r3dVector targetPosition = ActualVehicle->GetPosition() + r3dPoint3D( pos1, 3, pos2); // Server Vehicles
+	TeleportPlayer( targetPosition, "Exiting vehicle");
+	ActualVehicle->Occupants=0;
+	d_drive_vehicles->SetBool( false );
+	ActualVehicle->NetworkLocal = false;
+	TogglePhysicsSimulation(true);
+	vehicleViewActive_ = VehicleView_None;
+	ActualVehicle=NULL;
+}
+
 bool obj_Player::isDriving()
 {
 	return vehicleViewActive_ == VehicleView_Driver;
 }
 
-bool obj_Player::isInVehicle() 
+bool obj_Player::isPassenger()
 {
-	return vehicleViewActive_ != VehicleView_None;
+	return vehicleViewActive_ == VehicleView_Passenger;
 }
+
+bool obj_Player::isInVehicle()
+{
+	return vehicleViewActive_ == VehicleView_Driver;
+}
+
 bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
 {
 
 	// snap to ground
 	if ( ignoreGround == false ) {
-		// first find out if there's ground. 
+		// first find out if there's ground.
 		PxRaycastHit hit;
 		PxSceneQueryFilterData filter(PxFilterData(COLLIDABLE_STATIC_MASK, 0, 0, 0), PxSceneQueryFilterFlag::eSTATIC);
 		if(g_pPhysicsWorld->raycastSingle(PxVec3(exitPosition.x, exitPosition.y+1, exitPosition.z), PxVec3(0, -1, 0), 2, PxSceneQueryFlag::eIMPACT, hit, filter))
@@ -7846,14 +8144,14 @@ bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
 			exitPosition.x = hit.impact.x;
 			exitPosition.y = hit.impact.y;
 			exitPosition.z = hit.impact.z;
-		} 
-		else 
+		}
+		else
 		{
 			return false;
 		}
 	}
 
-	// check spawn area. 
+	// check spawn area.
 	PxShape* overlapHit = NULL;
 	PxU32 collisionFlag = COLLIDABLE_STATIC_MASK ;
 	PxBoxGeometry playerBox( 0.2f, 0.9f, 0.2f) ;
@@ -7870,7 +8168,7 @@ bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
 #endif
 
 
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ProcessCharacterEditor(obj_Player* pl, float left, float top, float height);
 void ProcessCharacterEditor()
@@ -8304,7 +8602,7 @@ static void AdjustHitPosition( DecalParams& params, GameObject* target )
 
 //------------------------------------------------------------------------
 
-bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart , const r3dPoint3D& FirePos) 
+bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart , const r3dPoint3D& FirePos, int category) 
 {	
 	r3d_assert(owner);
 	r3d_assert(owner->NetworkLocal==true);
@@ -8521,6 +8819,35 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 					}
 				}
 
+				//////////////////////////////////////////////////////////////////////////////////////////////
+				//Codex Carros
+				char NameOfMaterial[128];
+				if (strstr(strupr(NameOfMaterial), "METAL_VEHICLE") && category != storecat_MELEE)
+						{
+								for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
+								{
+									if(obj->isObjType(OBJTYPE_Vehicle))
+									{
+										obj_Vehicle* Vehicle = (obj_Vehicle*)obj;
+										if (Vehicle)
+										{
+											float dist = (shootTarget->GetPosition() - Vehicle->GetPosition()).Length();
+
+											if (dist <= 0.2f && Vehicle->DamageCar>0)
+											{	
+												if (weaponInfo->m_itemID != NULL)
+												{
+													Vehicle->ApplyDamage(Vehicle->GetNetworkID(),weaponInfo->m_itemID);
+													SpawnImpactParticle(r3dHash::MakeHash("Metal"),r3dHash::MakeHash(weaponInfo->m_PrimaryAmmo->getDecalSource()), hitPoint, hitNormal);
+													break;
+												}
+											}
+										}
+									}
+								}
+						}
+				//////////////////////////////////////////////////////////////////////////////////////////////
+
 				if( params.TypeID != INVALID_DECAL_ID )
 				{
 					g_pDecalChief->Add( params );
@@ -8599,7 +8926,7 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 #include "ObjectsCode/Gameplay/obj_DroppedItem.h"
 #include "ObjectsCode/Gameplay/obj_Note.h"
 #include "ObjectsCode/Gameplay/obj_PostBox.h"
-#include "../../GameEngine/gameobjects/obj_Vehicle.h"
+#include "../../GameEngine/gameobjects/obj_Vehicle.h"//Codex Carros
 #include "../Gameplay/obj_Zombie.h"
 #include "../Gameplay/obj_ZombieDummy.h"
 #include "ObjectsCode/Gameplay/NPCObject.h"
@@ -8668,7 +8995,6 @@ gobjid_t m_LocalPlayer_CurrentAimAt;
 
 #define TIME_FOR_SECOND_WIND 5.0f
 #define KILLSTREAK_FOR_SECOND_WIND 3
-static const float gDist_To_Allow_Vehicle_Entry = 5;
 bool gDisableShortcuts = false;
 struct PhysSkeletonCacheEntry
 {
@@ -9480,9 +9806,8 @@ obj_Player::obj_Player()
 	rewards_.reserve(32);
 	lastRewardShowTime_ = 0;
 
-
-#if VEHICLES_ENABLED
-	vehicleViewActive_ = VehicleView_None; 
+#if VEHICLES_ENABLED //Codex Carros
+	vehicleViewActive_ = VehicleView_None;
 #endif
 
 #ifndef FINAL_BUILD
@@ -9612,6 +9937,17 @@ BOOL obj_Player::OnCreate()
 
 	parent::OnCreate();
 
+//Codex Carros
+#if VEHICLES_ENABLED
+	vehicleViewActive_ = VehicleView_None;
+    IsOnVehicle = false; // Server Vehicles
+	StrykerSound = false;
+	GearsSounds=1.0f;
+	ActualVehicle=NULL;
+	VehicleID=0;
+	ImOwnerCar=false;
+#endif
+
 	r3d_assert(PhysXObstacleIndex == -1);
 	if(!NetworkLocal)
 	{
@@ -9735,6 +10071,16 @@ BOOL obj_Player::OnCreate()
 	{
 		r3d_assert(!NetworkLocal);
 
+	if(NetworkLocal)//Codex Carros
+	{
+		#if VEHICLES_ENABLED // Server Vehicles
+			if ( isPassenger() )
+					exitVehicleHowPassenger();
+			else if( isInVehicle() )
+					exitVehicle();
+		#endif
+	}
+
 		PlayerState = PLAYER_DIE;
 		uberAnim_->AnimPlayerState = PLAYER_DIE;
 		uberAnim_->StartDeathAnim();
@@ -9769,6 +10115,11 @@ BOOL obj_Player::OnCreate()
 		m_sndSniperExhale = SoundSys.Play(SoundSys.GetEventIDByPath(m_isFemaleHero?"Sounds/WarZ/PlayerSounds/PLAYER_SNIPER_EXHALE_F":"Sounds/WarZ/PlayerSounds/PLAYER_SNIPER_EXHALE_M"), GetPosition(), true);
 		SoundSys.Stop(m_sndSniperExhale);
 		r3d_assert(m_sndSniperExhale);
+
+		//Codex Carros
+		m_sndVehicleDrive = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngineLoop"), GetPosition(), true);
+		SoundSys.Stop(m_sndVehicleDrive);
+		r3d_assert(m_sndVehicleDrive);
 	}
 
 	lastWeapDataRep = r3dGetTime();
@@ -10510,6 +10861,127 @@ void obj_Player::CheckFireWeapon()
 						}
 					}
 
+						///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//Codex Carros
+					if(wpn->getItemID() == 101398) // Repair system car
+					{
+						obj_Vehicle* target_Vehicle = canEnterVehicle();
+						if ( target_Vehicle )
+						{
+							if( target_Vehicle->DamageCar<=0)
+							{
+								if (hudActionUI->isActive())
+										hudActionUI->Deactivate();
+								const wchar_t* Gasolinetext1=gLangMngr.getString("$CantRepairCar1");
+								const wchar_t* Gasolinetext2=gLangMngr.getString("$CantRepairCar2");
+								hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								return;
+							}
+							if ( target_Vehicle->Occupants<=0 )
+							{
+								if (target_Vehicle->DamageCar<5.0f)
+								{
+									if ((target_Vehicle->DamageCar+2.0f)>5)
+										target_Vehicle->DamageCar=5.0f;
+									else
+										target_Vehicle->DamageCar+=2.0f;
+									
+									target_Vehicle->ExitVehicle=true;
+									if (hudActionUI->isActive())
+										 hudActionUI->Deactivate();
+										 const wchar_t* Gasolinetext1=gLangMngr.getString("$RepairDone1");
+										 const wchar_t* Gasolinetext2=gLangMngr.getString("$RepairDone2");
+										 hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								}
+								else {
+									if (hudActionUI->isActive())
+										hudActionUI->Deactivate();
+									const wchar_t* Gasolinetext1=gLangMngr.getString("$NoneedRepairCar1");
+									const wchar_t* Gasolinetext2=gLangMngr.getString("$NoneedRepairCar2");
+									hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+									return;
+								}
+							}
+							else {
+								if (hudActionUI->isActive())
+									hudActionUI->Deactivate();
+								const wchar_t* Gasolinetext1=gLangMngr.getString("$PropietaryCar1");
+								const wchar_t* Gasolinetext2=gLangMngr.getString("$PropietaryCar2");
+								hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								return;
+							}
+						}
+						else {
+								if (hudActionUI->isActive())
+									hudActionUI->Deactivate();
+								const wchar_t* Gasolinetext1=gLangMngr.getString("$SearchCar1");
+								const wchar_t* Gasolinetext2=gLangMngr.getString("$SearchCar2");
+								hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+								return;
+						}
+					}
+
+					if(wpn->getItemID() == 301321) // Server Vehicles
+					{
+							obj_Vehicle* target_Vehicle = canEnterVehicle();
+							if ( target_Vehicle )
+							{
+									if ( target_Vehicle->Occupants<=0 )
+									{
+											if (target_Vehicle->DamageCar>=0.9)
+											{
+													if (target_Vehicle->GasolineCar<100)
+													{
+														float maxGas=25.0f;
+														if ((target_Vehicle->GasolineCar+maxGas)>100)
+															target_Vehicle->GasolineCar=100.0f;
+														else
+															target_Vehicle->GasolineCar=target_Vehicle->GasolineCar+maxGas;
+														target_Vehicle->ExitVehicle=true;
+														if (hudActionUI->isActive())
+														    hudActionUI->Deactivate();
+														const wchar_t* Gasolinetext1=gLangMngr.getString("$GassFullOK1");
+														const wchar_t* Gasolinetext2=gLangMngr.getString("$GassFullOK2");
+														hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+											}
+											else {
+														if (hudActionUI->isActive())
+																hudActionUI->Deactivate();
+														const wchar_t* Gasolinetext1=gLangMngr.getString("$GassFull1");
+														const wchar_t* Gasolinetext2=gLangMngr.getString("$GassFull2");
+														hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+														return;
+											}
+									}
+									else {
+												if (hudActionUI->isActive())
+														hudActionUI->Deactivate();
+												const wchar_t* Gasolinetext1=gLangMngr.getString("$NoGassVehDestroy1");
+												const wchar_t* Gasolinetext2=gLangMngr.getString("$NoGassVehDestroy2");
+												hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+												return;
+									}
+						}
+						else {
+									if (hudActionUI->isActive())
+											hudActionUI->Deactivate();
+									const wchar_t* Gasolinetext1=gLangMngr.getString("$NoGassVehDestroy1");
+									const wchar_t* Gasolinetext2=gLangMngr.getString("$NoGassVehDestroy2");
+									hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+									return;
+							}
+					}
+					else {
+						if (hudActionUI->isActive())
+							hudActionUI->Deactivate();
+							const wchar_t* Gasolinetext1=gLangMngr.getString("$Not_in_Vehicle");
+							const wchar_t* Gasolinetext2=gLangMngr.getString("");
+							hudMain->StatusVehicle(Gasolinetext1,Gasolinetext2);
+				            return;
+						}
+					}
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 					if((wpn->getItemID() == WeaponConfig::ITEMID_Bandages || wpn->getItemID() == WeaponConfig::ITEMID_Bandages2 || wpn->getItemID() == WeaponConfig::ITEMID_Antibiotics ||
 						wpn->getItemID() == WeaponConfig::ITEMID_Painkillers || wpn->getItemID() == WeaponConfig::ITEMID_Medkit) 
 						&& CurLoadout.Health > 99)
@@ -11069,6 +11541,16 @@ r3dPoint3D obj_Player::GetHeadPosition()
 void obj_Player::DoDeath(int networdIDKiller, bool forced_by_server, STORE_CATEGORIES damageSource)
 {
 	//r3dOutToLog("%s: DoDeath\n", Name.c_str());
+
+	if(NetworkLocal)//Codex Carros
+	{
+		#if VEHICLES_ENABLED // Server Vehicles
+			if ( isPassenger() )
+					exitVehicleHowPassenger();
+			else if( isInVehicle() )
+					exitVehicle();
+		#endif
+	}
 	r3d_assert(!bDead);
 
 	if(NetworkLocal)
@@ -11169,12 +11651,21 @@ void obj_Player::DoDeath(int networdIDKiller, bool forced_by_server, STORE_CATEG
 				{
 					r3dscpy(deadMsg, "KILLED BY ENVIRONMENT");
 				}
-				else if(killedByObj->isObjType(OBJTYPE_Human))
+				else if(killedByObj->isObjType(OBJTYPE_Human)) 
 				{
 					obj_Player* killedByPlr = (obj_Player*)killedByObj;
+					if (killedByPlr->IsOnVehicle==true) //Codex Carros
+					{
+						char tmpName[64] = {0};
+						killedByPlr->GetUserName(tmpName);
+						sprintf(deadMsg, "ATROPELADO POR %s", tmpName);
+					}
+					else
+					{
 					char tmpName[64] = {0};
 					killedByPlr->GetUserName(tmpName);
 					sprintf(deadMsg, "KILLED BY %s", tmpName);
+					}
 				}
 				else if(killedByObj->isObjType(OBJTYPE_Zombie))
 					r3dscpy(deadMsg, "EATEN BY ZOMBIE");
@@ -11251,6 +11742,11 @@ void obj_Player::SyncAnimation(bool force)
 static float accumLastDamageRcvd = 0;
 void obj_Player::ApplyDamage(const r3dPoint3D& dmgPos, float damage, GameObject* fromObj, int bodyBone, int dmgType)
 {
+    
+	if (isInVehicle() || isPassenger())//Codex Carros
+		return;
+
+
 	lastTimeHit = r3dGetTime();
 	lastTimeHitBone = bodyBone;
 	lastDamageRcvd = damage;
@@ -11689,6 +12185,69 @@ BOOL obj_Player::Update()
 	if(!NetworkLocal) // for local already done in UpdateLocalPlayerMovement
 		parent::Update();
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Codex Carros
+	#if VEHICLES_ENABLED
+   if (NetworkLocal) {  // Server Vehicles
+
+		if (isInVehicle() || isPassenger())
+		{
+			if (gClientLogic().localPlayer_)
+			{
+				this->SetPosition(ActualVehicle->GetPosition()+r3dPoint3D(0,8,0));
+				this->SetRotationVector(ActualVehicle->GetRotationVector());
+				PKT_C2C_PlayerOnVehicle_s n;
+				n.PlayerOnVehicle=true;
+				n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
+				n.myID=gClientLogic().localPlayer_->GetNetworkID();
+				if (isInVehicle())
+					ImOwnerCar=true;
+				else
+					ImOwnerCar=false;
+				n.ImOwnerCar=ImOwnerCar;
+				gClientLogic().localPlayer_->VehicleID=n.VehicleID;
+				p2pSendToHost(this, &n, sizeof(n));
+
+				float waterDepth = getWaterDepthAtPos(ActualVehicle->GetPosition());
+				if(waterDepth > 1.3f) // too deep
+				{
+					if (isPassenger())
+					{
+						//ActualVehicle->DamageCar=0.21f;
+						ActualVehicle->DestroyOnWater=true;
+						//this->exitVehicleHowPassenger();
+					}
+				}
+			}
+			 
+		}
+		else {
+			if (gClientLogic().localPlayer_)
+			{
+				PKT_C2C_PlayerOnVehicle_s n;
+				n.PlayerOnVehicle=false;
+ 				n.VehicleID=gClientLogic().localPlayer_->VehicleID;
+				n.myID=gClientLogic().localPlayer_->GetNetworkID();
+ 				if (isInVehicle())
+					ImOwnerCar=true;
+				else
+					ImOwnerCar=false;
+				n.ImOwnerCar=ImOwnerCar;
+				p2pSendToHost(this, &n, sizeof(n));
+			}
+		}
+	}
+#endif
+
+   if (!NetworkLocal )
+	{
+		if (bDead)
+			this->IsOnVehicle=false;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	camoTimeLine.Update();
 
 	// show pending rewards, even if game finished.
@@ -12121,7 +12680,7 @@ BOOL obj_Player::Update()
 	// CLAN TAG
 	if(!NetworkLocal && hudMain)
 	{
-		if(m_CharIcon.IsUndefined() && CGL.localPlayer_ && ClanID == CGL.localPlayer_->ClanID)
+		if(m_CharIcon.IsUndefined() && CGL.localPlayer_ && ClanID == CGL.localPlayer_->ClanID && IsOnVehicle==false)//Codex Carros
 		{
 			char plrUserName[256]; GetUserNameAndClanTag(plrUserName);
 			hudMain->addCharTag1(plrUserName, CurLoadout.Stats.Reputation, false, m_CharIcon);
@@ -12250,6 +12809,10 @@ float dist_Point_to_Line( const r3dPoint3D& p, const r3dPoint3D& l1, const r3dPo
 void obj_Player::UpdateActionUI()
 {
 	R3DPROFILE_FUNCTION("UpdateActionUI");
+#if VEHICLES_ENABLED //Codex Carros
+	if (isInVehicle() || isPassenger())
+		return;
+#endif
 	r3d_assert(NetworkLocal);
 	if(hudMain==NULL || hudActionUI == NULL || hudPause == NULL ||
 		hudAttm == NULL || hudGeneralStore == NULL || hudVault == NULL)
@@ -12390,6 +12953,80 @@ void obj_Player::UpdateActionUI()
 			hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+		if(hudActionUI->isActive())
+		{
+			hudActionUI->showEBlock(true,true);
+			if(dropObj->isObjType(OBJTYPE_Vehicle))
+			{
+				obj_Vehicle* vehicleinfo = (obj_Vehicle*)dropObj;
+				int DateOcup = 0;
+				switch(vehicleinfo->Occupants)
+				{
+				case 0:
+					  DateOcup = 0;
+					break;
+				case 1:
+						if (vehicleinfo->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+							DateOcup = 33;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/zombie_killer_car.sco")
+							DateOcup = 50;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+							DateOcup = 12;
+					  break;
+				case 2:
+						if (vehicleinfo->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+							DateOcup = 66;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+							DateOcup = 24;
+					  break;
+                case 3:
+						if (vehicleinfo->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+							DateOcup = 100;
+						else if (vehicleinfo->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+							DateOcup = 36;
+					  break;
+                case 4:
+							DateOcup = 50;
+					  break;
+                case 5:
+							DateOcup = 62;
+					  break;
+                case 6:
+							DateOcup = 74;
+					  break;
+                case 7:
+							DateOcup = 86;
+					  break;
+                case 8:
+							DateOcup = 100;
+					  break;
+				}
+				int DataDamage = 0;
+				if (vehicleinfo->DamageCar>=4.5f)
+					DataDamage=5;
+				else if (vehicleinfo->DamageCar>=3.5f && vehicleinfo->DamageCar<4.5f)
+					DataDamage=4;
+				else if (vehicleinfo->DamageCar>=2.5f && vehicleinfo->DamageCar<3.5f)
+					DataDamage=3;
+				else if (vehicleinfo->DamageCar>=1.5f && vehicleinfo->DamageCar<2.5f)
+					DataDamage=2;
+				else if (vehicleinfo->DamageCar>0.0f && vehicleinfo->DamageCar<1.5f)
+					DataDamage=1;
+				else if (vehicleinfo->DamageCar<=0.0f )
+					DataDamage=0;
+				hudActionUI->setCarInfo(DataDamage,0,0,DateOcup,(int)vehicleinfo->GasolineCar,true);
+			}
+			else {
+				hudActionUI->setCarInfo(0,0,0,0,0,false);
+			}
+			r3dPoint3D scrPos;
+			r3dProjectToScreen(dropObj->GetBBoxWorld().Center(), &scrPos);
+			hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);
+		}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		if(InputMappingMngr->isPressed(r3dInputMappingMngr::KS_INTERACT))
 		{
 			hudActionUI->enableProgressBlock();
@@ -12412,6 +13049,60 @@ void obj_Player::UpdateActionUI()
 						return;
 					}
 				}
+
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+				if(dropObj->Class->Name == "obj_Vehicle")
+				{
+					     if (!isInVehicle() || !isPassenger())
+						 {
+					        obj_Vehicle* target_Vehicle = canEnterVehicle();
+                            if ( target_Vehicle  ) // now we're going to try to use vehicles (otherwise UAV characters can't use vehicles).
+                            {
+								if (target_Vehicle->DamageCar<=0)
+								{
+									hudActionUI->Deactivate();
+									hudMain->VehicleDamaged();
+									return;
+								}
+								if (target_Vehicle->GasolineCar<=0)
+								{
+									hudActionUI->Deactivate();
+									hudMain->VehicleWithoutGasoline();
+									return;
+								}
+								if (target_Vehicle->Occupants<1)
+								{
+									enterVehicle( target_Vehicle );
+									//r3dOutToLog("######## %i\n",target_Vehicle->Occupants);
+									hudActionUI->showEBlock(false,false);
+									g_pPhysicsWorld->m_VehicleManager->DriveCar(target_Vehicle->vd);
+								}
+								else {
+									int MaxPassengers=2;
+									if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+										MaxPassengers=3;
+									else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/zombie_killer_car.sco")
+										MaxPassengers=2;
+									else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+										MaxPassengers=8;
+
+									if (target_Vehicle->Occupants>=MaxPassengers)
+									{
+										char Letters[128];
+										sprintf(Letters,"%i/%i",MaxPassengers,MaxPassengers);
+										hudMain->showCarFull(Letters);
+									}
+									else
+									{
+										EnterVehicleHowPassenger( target_Vehicle );
+										hudActionUI->showEBlock(false,false);
+									}
+								}
+				            }
+						 }
+				}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				if(dropObj->isObjType(OBJTYPE_NPC))
 				{
@@ -12770,6 +13461,30 @@ void obj_Player::OnNetPacket(const PKT_C2C_PlayerHitNothing_s& n)
 {
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+void obj_Player::OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n) // Server Vehicles
+{
+#if VEHICLES_ENABLED
+	    IsOnVehicle = n.PlayerOnVehicle;
+		VehicleID=n.VehicleID;
+		ImOwnerCar=n.ImOwnerCar;
+#endif
+}
+
+void obj_Player::OnNetPacket(const PKT_C2C_CarSeat_s& n) // Server Vehicles
+{
+	//r3dOutToLog("######## Tu posicion en el vehiculo es %i\n",n.Seat);
+	if (n.Seat>1)
+	{
+		vehicleViewActive_ = VehicleView_Passenger;
+		d_drive_vehicles->SetBool( true );
+		ActualVehicle->NetworkLocal = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
 void obj_Player::OnNetPacket(const PKT_C2C_PlayerHitStatic_s& n)
 {
 	r3d_assert(m_Weapons[m_SelectedWeapon]);
@@ -13048,6 +13763,8 @@ case xxx: { \
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_BackpackAddNew);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_BackpackModify);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerReputation);
+	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerOnVehicle); // Server Vehicles //Codex Carros
+	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_CarSeat); // Server Vehicles //Codex Carros
 	}
 
 	return TRUE;
@@ -13848,13 +14565,19 @@ obj_Player::AppendShadowRenderables( RenderArray & rarr, const r3dCamera& Cam )
 {
 	r3d_assert( &rarr - g_render_arrays - rsCreateSM < NumShadowSlices ) ;
 
-	// HACK: For the moment. 
-#if VEHICLES_ENABLED
-	if ( isInVehicle() ) 
+		// HACK: For the moment.
+#if VEHICLES_ENABLED//Codex Carros
+	if ( isInVehicle() || isPassenger()) // Server Vehicles
 	{
-		//return; 
+		return;
+	}
+	if (!NetworkLocal ) // Server Vehicles
+	{
+		if (IsOnVehicle == true)
+		        return;
 	}
 #endif
+
 
 	int firstPerson = g_camera_mode->GetInt() == 2 && NetworkLocal && !bDead;
 
@@ -13995,13 +14718,18 @@ obj_Player::AppendRenderables( RenderArray ( & render_arrays  )[ rsCount ], cons
 	if(!m_enableRendering)
 		return;
 
-	// HACK: For the moment. 
-#if VEHICLES_ENABLED
-	if ( isInVehicle() ) 
+#if VEHICLES_ENABLED //Codex Carros
+	if ( isInVehicle() || isPassenger()) // Server Vehicles
 	{
-		//return; 
+		return;
+	}
+	if (!NetworkLocal ) // Server Vehicles
+	{
+        if (IsOnVehicle == true)
+		       return;
 	}
 #endif
+
 
 
 	int firstPerson = g_camera_mode->GetInt() == 2 && NetworkLocal && !bDead;
@@ -14619,24 +15347,26 @@ void obj_Player::OnBackpackChanged(int idx)
 		SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/WarZ/PlayerSounds/PLAYER_CHANGECLOTHES"), GetPosition());
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
 #if VEHICLES_ENABLED
 obj_Vehicle* obj_Player::canEnterVehicle()
 {
 	// Fast version from Frank
+
 	for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
 	{
 		if( obj->ObjTypeFlags & OBJTYPE_Vehicle )
 		{
 			obj_Vehicle* vehicle= static_cast< obj_Vehicle* > ( obj );
 
-			float distSq = (GetPosition() - vehicle->GetPosition()).LengthSq();
-			if( distSq < gDist_To_Allow_Vehicle_Entry * gDist_To_Allow_Vehicle_Entry )
+			float distSq = (GetPosition() - vehicle->GetPosition()).Length();
+			if( distSq < gDist_To_Allow_Vehicle_Entry )
 			{
 				return vehicle;
 			}
 		}
 	}
-
 	return NULL;
 }
 
@@ -14660,69 +15390,126 @@ void obj_Player::TogglePhysicsSimulation(bool on)
 
 //////////////////////////////////////////////////////////////////////////
 
-void obj_Player::enterVehicle( obj_Vehicle* target_Vehicle )
+void obj_Player::EnterVehicleHowPassenger( obj_Vehicle* target_Vehicle )
 {
-	// Fast version from Frank
-	target_Vehicle->SwitchToDrivable( true );
-	vehicleViewActive_ = VehicleView_Driver; 
-	d_drive_vehicles->SetBool( true ); // to gain control currently. 
-	// HACK: bash this currently. 
-	target_Vehicle->NetworkLocal = true;
-
-	//	Exclude player physics shapes from simulation
+	switchToEmptyHands();
+	r3dOutToLog("#### Entrando como pasajero en %s\n",target_Vehicle->FileName);
+	SetPosition(GetPosition()+r3dPoint3D(0,8,0));
+	vehicleViewActive_ = VehicleView_Passenger;
+	ActualVehicle=target_Vehicle;
 	TogglePhysicsSimulation(false);
+	d_drive_vehicles->SetBool( true );
+
 }
 
-void obj_Player::exitVehicle()
+void obj_Player::exitVehicleHowPassenger()
 {
-
-	// first let's look for a good location
-	obj_Vehicle* currentCar = g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle();
-	r3d_assert(currentCar);
-
-
-	r3dVector rotationVector = currentCar->GetRotationVector();
-	r3dMatrix Matrix;
-	// NOTE: We might want to take out rotation in the x or z direction and only focus on the Y direction... 
-	r3dBuildRotationMatrix(Matrix, rotationVector );
-
-	bool success = false;
-	for ( int exitIndex = 0; exitIndex < 4; exitIndex++  )
+	hudMain->setCarInfo(0,0,0,0,0,0,false);
+	r3dOutToLog("#### Saliendo como pasajero en %s\n",ActualVehicle->FileName);
+	float pos1=4.0f;
+	float pos2=-4.0f;
+	switch((int)u_GetRandom(0,5))
 	{
-		r3dVector exitPosition;
-		bool returnValue = currentCar->getExitSpace( exitPosition, exitIndex );
-		r3d_assert( returnValue );
-
-		exitPosition *= Matrix;
-		r3dVector targetPosition = currentCar->GetPosition() + exitPosition; 
-
-		if ( TestExitPosition( targetPosition) )
-		{
-			TeleportPlayer( targetPosition, "Exiting vehicle");
-			success = true;
-			break;
-		}
+	case 0:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 1:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	case 2:
+		pos1=-4.0f;
+		pos2=4.0f;
+		break;
+	case 3:
+		pos1=-4.0f;
+		pos2=-4.0f;
+		break;
+	case 4:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 5:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
 	}
+	r3dVector targetPosition = ActualVehicle->GetPosition() + r3dPoint3D( pos1, 3, pos2); // Server Vehicles
+	TeleportPlayer( targetPosition, "Exiting vehicle");
 
-	if( success == false )
+	TogglePhysicsSimulation(true);
+	d_drive_vehicles->SetBool( false );
+	vehicleViewActive_ = VehicleView_None;
+	ActualVehicle=NULL;
+}
+
+void obj_Player::enterVehicle( obj_Vehicle* target_Vehicle ) // Server Vehicles
+{
+    switchToEmptyHands();
+	if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
 	{
-		// don't know the height right now. 
-		r3dVector targetPosition = currentCar->GetPosition() + r3dVector( 0, 3, 0 );
-		if ( TestExitPosition( targetPosition, true ) )
-		{
-			TeleportPlayer( targetPosition, "Exiting vehicle");
-			success = true;
-		}
+         SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"), GetPosition());
 	}
+	else {
+		 SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Start"), GetPosition());
+	}
+	SetPosition(GetPosition()+r3dPoint3D(0,8,0));
+	vehicleViewActive_ = VehicleView_Driver;
+	ActualVehicle=target_Vehicle;
+	TogglePhysicsSimulation(false);
+	d_drive_vehicles->SetBool( true );
+	ActualVehicle->NetworkLocal = true;
+	ActualVehicle->Occupants=1;
+}
 
-	if( success == true ) 
+void obj_Player::exitVehicle()  // Server Vehicles
+{
+     hudMain->setCarInfo(0,0,0,0,0,0,false);
+	if (ActualVehicle->DamageCar>0 && ActualVehicle->GasolineCar>=1)
 	{
-		// Fast version from Frank
-		vehicleViewActive_ = VehicleView_None; 
-		d_drive_vehicles->SetBool( false ); // to release control currently. 
-		TogglePhysicsSimulation(true);
+		if (ActualVehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+			SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Stop"), GetPosition());
+		else
+			SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Stop"), GetPosition());		
 	}
-
+	float pos1=4.0f;
+	float pos2=-4.0f;
+	switch((int)u_GetRandom(0,5))
+	{
+	case 0:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 1:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	case 2:
+		pos1=-4.0f;
+		pos2=4.0f;
+		break;
+	case 3:
+		pos1=-4.0f;
+		pos2=-4.0f;
+		break;
+	case 4:
+		pos1=4.0f;
+		pos2=-4.0f;
+		break;
+	case 5:
+		pos1=4.0f;
+		pos2=4.0f;
+		break;
+	}
+	r3dVector targetPosition = ActualVehicle->GetPosition() + r3dPoint3D( pos1, 3, pos2); // Server Vehicles
+	TeleportPlayer( targetPosition, "Exiting vehicle");
+	ActualVehicle->Occupants=0;
+	d_drive_vehicles->SetBool( false );
+	ActualVehicle->NetworkLocal = false;
+	TogglePhysicsSimulation(true);
+	vehicleViewActive_ = VehicleView_None;
+	ActualVehicle=NULL;
 }
 
 bool obj_Player::isDriving()
@@ -14730,9 +15517,14 @@ bool obj_Player::isDriving()
 	return vehicleViewActive_ == VehicleView_Driver;
 }
 
-bool obj_Player::isInVehicle() 
+bool obj_Player::isPassenger()
 {
-	return vehicleViewActive_ != VehicleView_None;
+	return vehicleViewActive_ == VehicleView_Passenger;
+}
+
+bool obj_Player::isInVehicle()
+{
+	return vehicleViewActive_ == VehicleView_Driver;
 }
 
 bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
@@ -14740,7 +15532,7 @@ bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
 
 	// snap to ground
 	if ( ignoreGround == false ) {
-		// first find out if there's ground. 
+		// first find out if there's ground.
 		PxRaycastHit hit;
 		PxSceneQueryFilterData filter(PxFilterData(COLLIDABLE_STATIC_MASK, 0, 0, 0), PxSceneQueryFilterFlag::eSTATIC);
 		if(g_pPhysicsWorld->raycastSingle(PxVec3(exitPosition.x, exitPosition.y+1, exitPosition.z), PxVec3(0, -1, 0), 2, PxSceneQueryFlag::eIMPACT, hit, filter))
@@ -14748,14 +15540,14 @@ bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
 			exitPosition.x = hit.impact.x;
 			exitPosition.y = hit.impact.y;
 			exitPosition.z = hit.impact.z;
-		} 
-		else 
+		}
+		else
 		{
 			return false;
 		}
 	}
 
-	// check spawn area. 
+	// check spawn area.
 	PxShape* overlapHit = NULL;
 	PxU32 collisionFlag = COLLIDABLE_STATIC_MASK ;
 	PxBoxGeometry playerBox( 0.2f, 0.9f, 0.2f) ;
@@ -14772,7 +15564,8 @@ bool obj_Player::TestExitPosition( r3dVector& exitPosition, bool ignoreGround)
 #endif
 
 
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 void ProcessCharacterEditor(obj_Player* pl, float left, float top, float height);
 void ProcessCharacterEditor()
@@ -15389,6 +16182,35 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 						particleIdx = SpawnImpactParticle(matHash, sourceHash, hitPoint, hitNormal);
 					}
 				}
+
+								//////////////////////////////////////////////////////////////////////////////////////////////
+				//Codex Carros
+				char NameOfMaterial[128];
+				if (strstr(strupr(NameOfMaterial), "METAL_VEHICLE") && category != storecat_MELEE)
+						{
+								for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
+								{
+									if(obj->isObjType(OBJTYPE_Vehicle))
+									{
+										obj_Vehicle* Vehicle = (obj_Vehicle*)obj;
+										if (Vehicle)
+										{
+											float dist = (shootTarget->GetPosition() - Vehicle->GetPosition()).Length();
+
+											if (dist <= 0.2f && Vehicle->DamageCar>0)
+											{	
+												if (weaponInfo->m_itemID != NULL)
+												{
+													Vehicle->ApplyDamage(Vehicle->GetNetworkID(),weaponInfo->m_itemID);
+													SpawnImpactParticle(r3dHash::MakeHash("Metal"),r3dHash::MakeHash(weaponInfo->m_PrimaryAmmo->getDecalSource()), hitPoint, hitNormal);
+													break;
+												}
+											}
+										}
+									}
+								}
+						}
+				//////////////////////////////////////////////////////////////////////////////////////////////
 
 				if( params.TypeID != INVALID_DECAL_ID )
 				{

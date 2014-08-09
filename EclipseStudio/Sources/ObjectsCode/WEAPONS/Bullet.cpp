@@ -263,7 +263,7 @@ bool obj_Bullet::OnHit( PxSweepHit &hit )
 
 	}
 
-	if ( ProcessBulletHit( m_DamageFromPiercable, ownerPlayer, hitPoint, hitNormal, shootTarget, shootMaterial, hitActorName,  m_Weapon, m_MuzzlerStartPos,FirePos )  == false ) 
+	if ( ProcessBulletHit( m_DamageFromPiercable, ownerPlayer, hitPoint, hitNormal, shootTarget, shootMaterial, hitActorName,  m_Weapon, m_MuzzlerStartPos,FirePos, 0)  == false ) //Codex Carros
 	{
 		// the bullet is still live. 
 		AHNHS_PROTECT_FUNCTION

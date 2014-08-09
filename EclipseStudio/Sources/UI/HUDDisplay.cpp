@@ -209,16 +209,38 @@ bool HUDDisplay::Unload()
 	return true;
 }
 
-void HUDDisplay::setCarInfo(int var1 , int var2 , int var3 ,int var4, int var5 , bool show)
+void HUDDisplay::setCarInfo(int var1 , int var2 , int var3 ,int var4, int var5,int var6 , bool show)
 {
 	if(!Inited) return;
 	Scaleform::GFx::Value var[5];
-	var[0].SetInt(var1);
-	var[1].SetInt(var2);
-	var[2].SetInt(var3);
-	var[3].SetInt(var4);
-	var[4].SetInt(var5);
+	var[0].SetInt(var1); // Damage
+	var[1].SetInt(100-var2); // RPM
+	var[2].SetInt(var3); // SPEED
+	var[3].SetInt(var4); // Gasoline
+	var[4].SetInt(100-var5); // RotationSpeed
+	Scaleform::GFx::Value seat[2];
+	if (gClientLogic().localPlayer_->isInVehicle())
+		seat[0].SetInt(0); // position where you feel
+	else
+		seat[0].SetInt(1); // position where you feel
+	seat[1].SetString("");
+	Scaleform::GFx::Value car[1];
+	switch(var6)
+	{
+	case 1: 	
+		  car[0].SetString("BUGGY");
+		  break;
+	case 2:
+		  car[0].SetString("TRUCK");
+		  break;
+	case 3:
+		  car[0].SetString("STRYKER");
+		  break;
+
+	}
 	gfxHUD.Invoke("_root.api.setCarInfo", var , 5);
+	gfxHUD.Invoke("_root.api.setCarTypeInfo",car,1);
+	gfxHUD.Invoke("_root.api.setCarSeatInfo",seat,2);
 	gfxHUD.Invoke("_root.api.setCarInfoVisibility", show);
 }
 
@@ -1442,6 +1464,65 @@ void HUDDisplay::showGraveNote(const char* plr,const char* plr2)
 	var[3].SetString(plr2);
 	gfxHUD.Invoke("_root.api.showGraveNote", var, 4);
 }
+/////////////////////////////////////////////////////////////////////////
+//Codex Carros
+void HUDDisplay::showCarFull(const char* msg) // Server Vehicles
+{
+if(!Inited) return;
+
+	r3dMouse::Show();
+	writeNoteSavedSlotIDFrom = 1; // temp, to prevent mouse from hiding
+	Scaleform::GFx::Value var[4];
+	var[0].SetBoolean(true);
+	var[1].SetStringW(gLangMngr.getString("$Vehicle"));
+	var[2].SetStringW(gLangMngr.getString("$Vehicle_tittle"));
+	var[3].SetString(msg);
+	gfxHUD.Invoke("_root.api.showGraveNote", var, 4);
+}
+
+void HUDDisplay::StatusVehicle(const wchar_t* plr,const wchar_t* plr2) // Server Vehicles
+{
+if(!Inited) return;
+
+	r3dMouse::Show();
+	writeNoteSavedSlotIDFrom = 1; // temp, to prevent mouse from hiding
+	Scaleform::GFx::Value var[4];
+	var[0].SetBoolean(true);
+	var[1].SetStringW(gLangMngr.getString("$Vehicle"));
+	var[2].SetStringW(plr);
+	var[3].SetStringW(plr2);
+	gfxHUD.Invoke("_root.api.showGraveNote", var, 4);
+}
+
+void HUDDisplay::VehicleWithoutGasoline() // Server Vehicles
+{
+if(!Inited) return;
+
+	r3dMouse::Show();
+	writeNoteSavedSlotIDFrom = 1; // temp, to prevent mouse from hiding
+	Scaleform::GFx::Value var[4];
+	var[0].SetBoolean(true);
+	var[1].SetStringW(gLangMngr.getString("$Vehicle"));
+	var[2].SetStringW(gLangMngr.getString("$NoGasoline1"));
+	var[3].SetString("$NoGasoline2");
+	gfxHUD.Invoke("_root.api.showGraveNote", var, 4);
+}
+
+void HUDDisplay::VehicleDamaged() // Server Vehicles
+{
+if(!Inited) return;
+
+	r3dMouse::Show();
+	writeNoteSavedSlotIDFrom = 1; // temp, to prevent mouse from hiding
+	Scaleform::GFx::Value var[4];
+	var[0].SetBoolean(true);
+	var[1].SetStringW(gLangMngr.getString("$Vehicle"));
+	var[2].SetStringW(gLangMngr.getString("$VehicleDamage1"));
+	var[3].SetString("$VehicleDamage2");
+	gfxHUD.Invoke("_root.api.showGraveNote", var, 4);
+}
+/////////////////////////////////////////////////////////////////////////
+
 
 void HUDDisplay::showReadNote(const char* msg)
 {

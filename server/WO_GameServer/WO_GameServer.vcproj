@@ -603,14 +603,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\ServerVehicleManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\ServerVehicleManager.h"
-				>
-			</File>
-			<File
 				RelativePath="..\MasterServer\Sources\SrvCrashHandler.cpp"
 				>
 			</File>
@@ -690,22 +682,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\ObjectsCode\obj_ServerVehicleSpawn.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\obj_ServerVehicleSpawn.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\obj_ServerVehicleSpawnRadius.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\obj_ServerVehicleSpawnRadius.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Sources\ObjectsCode\ServerDummyObjects.cpp"
 					>
 				</File>
@@ -759,14 +735,6 @@
 				</File>
 				<File
 					RelativePath=".\Sources\ObjectsCode\sobj_SpawnedItem.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\sobj_Vehicle.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\sobj_Vehicle.h"
 					>
 				</File>
 				<Filter
@@ -852,6 +820,26 @@
 				<Filter
 					Name="StrongHolds Objects"
 					>
+				</Filter>
+				<Filter
+					Name="Vehicles"
+					>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Vehicles\obj_ServerVehicle.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Vehicles\obj_ServerVehicle.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Vehicles\obj_ServerVehicleSpawn.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Vehicles\obj_ServerVehicleSpawn.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -1053,6 +1041,10 @@
 		</Filter>
 		<File
 			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
+		<File
+			RelativePath=".\ClassDiagram11.cd"
 			>
 		</File>
 	</Files>

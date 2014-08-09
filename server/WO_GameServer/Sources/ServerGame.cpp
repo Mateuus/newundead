@@ -112,7 +112,6 @@ void PlayGameServer()
   GameWorld().Update();
   ServerDummyWorld.Update();
 
-  r3dOutToLog("Spawning Vehicles... Count:%d\n",GameWorld().spawncar);
   //gServerLogic.SpawnNewCar();
 
   r3dGameLevel::SetStartGameTime(r3dGetTime());

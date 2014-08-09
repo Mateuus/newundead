@@ -284,13 +284,7 @@ bool MaterialTypes::Load()
 
 			xmlEntry		= xmlEntry.next_sibling();
 		}
-		// Vehicles Sound
-		xmlEntry = xmlType.child("vehicle");
-#ifndef WO_SERVER
-#ifdef VEHICLES_ENABLED
-en.type.VehiclesSound = SoundSys.GetEventIDByPath(xmlEntry.attribute("sound").value());
-#endif
-#endif
+
 		//	Footsteps sound
 		xmlEntry = xmlType.child("footsteps");
 #ifndef WO_SERVER

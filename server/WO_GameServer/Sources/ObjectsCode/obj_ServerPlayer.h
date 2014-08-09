@@ -45,6 +45,10 @@ class obj_ServerPlayer : public GameObject, INetworkHelper
 	// info about player
 	HANDLE tThread;
 	int		peerId_;
+	//Codex Carros
+	bool		PlayerOnVehicle;
+	bool		dieForExplosion;
+	int			IDOFMyVehicle;
 	
 	bool		wasDisconnected_;
 
@@ -184,20 +188,18 @@ public:
 	void		TeleportPlayer(const r3dPoint3D& pos);
 	
 	//void OnNetPacket(const PKT_C2S_SetVelocity_s& n);
-	void        OnNetPacket(const PKT_C2S_CarKill_s& n);
 	void		OnNetPacket(const PKT_C2C_PacketBarrier_s& n);
 	void		OnNetPacket(const PKT_C2C_MoveSetCell_s& n);
 	void		OnNetPacket(const PKT_C2C_MoveRel_s& n);
 	void		OnNetPacket(const PKT_C2C_PlayerJump_s& n);
-	void OnNetPacket(const PKT_C2S_StackClips_s& n);
+	void		OnNetPacket(const PKT_C2S_StackClips_s& n);
 	
 	void		OnNetPacket(const PKT_C2S_PlayerEquipAttachment_s& n);
 	void		OnNetPacket(const PKT_C2S_PlayerRemoveAttachment_s& n);
-	void OnNetPacket(const PKT_C2C_CarPass_s& n);
-	void OnNetPacket(const PKT_C2S_PlayerState_s& n);
+	void		OnNetPacket(const PKT_C2S_PlayerState_s& n);
 	//void OnNetPacket(const PKT_C2S_SendD3DLog_s& n);
-	void OnNetPacket(const PKT_C2S_TradeAccept_s& n);
-	void OnNetPacket(const PKT_C2S_ValidateBackpack_s& n);
+	void		OnNetPacket(const PKT_C2S_TradeAccept_s& n);
+	void		OnNetPacket(const PKT_C2S_ValidateBackpack_s& n);
 	void		OnNetPacket(const PKT_C2C_PlayerSwitchWeapon_s& n);
 	void		OnNetPacket(const PKT_C2C_PlayerUseItem_s& n);
 	void		OnNetPacket(const PKT_C2C_PlayerReload_s& n);
@@ -215,25 +217,26 @@ public:
 	void		OnNetPacket(const PKT_C2S_InventoryOp_s& n);
 	void		OnNetPacket(const PKT_C2S_DisconnectReq_s& n);
 	void		OnNetPacket(const PKT_C2S_UnloadClipReq_s& n); //Unload Clip
-	void OnNetPacket(const PKT_C2S_GroupInvite_s& n);
-	void OnNetPacket(const PKT_C2S_TradeRequest_s& n);
-	void OnNetPacket(const PKT_C2S_TradeAccept2_s& n);
-	void OnNetPacket(const PKT_C2S_TradeCancel_s& n);
-	void OnNetPacket(const PKT_C2S_TradeBacktoOp_s& n);
-	void OnNetPacket(const PKT_C2S_GroupAccept_s& n);
-	void OnNetPacket(const PKT_C2S_GroupKick_s& n);
-	void OnNetPacket(const PKT_C2S_SendHelpCall_s& n);
-	void OnNetPacket(const PKT_C2S_HackShieldLog_s& n);
+	void		OnNetPacket(const PKT_C2S_GroupInvite_s& n);
+	void		OnNetPacket(const PKT_C2S_TradeRequest_s& n);
+	void		OnNetPacket(const PKT_C2S_TradeAccept2_s& n);
+	void		OnNetPacket(const PKT_C2S_TradeCancel_s& n);
+	void		OnNetPacket(const PKT_C2S_TradeBacktoOp_s& n);
+	void		OnNetPacket(const PKT_C2S_GroupAccept_s& n);
+	void		OnNetPacket(const PKT_C2S_GroupKick_s& n);
+	void		OnNetPacket(const PKT_C2S_SendHelpCall_s& n);
+	void		OnNetPacket(const PKT_C2S_HackShieldLog_s& n);
 	void		OnNetPacket(const PKT_C2S_FallingDamage_s& n);
-	void OnNetPacket(const PKT_C2C_PlayerCraftItem_s& n);
-	void OnNetPacket(const PKT_C2C_CarStatus_s& n);
-	void OnNetPacket(const PKT_C2S_TradeOptoBack_s& n);
+	void		OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n); // Server Vehicles //Codex Carros
+	void		OnNetPacket(const PKT_C2S_CarKill_s& n); // Server Vehicles //Codex Carros
+	void		OnNetPacket(const PKT_C2C_PlayerCraftItem_s& n);
+	void		OnNetPacket(const PKT_C2S_TradeOptoBack_s& n);
 	void		OnNetPacket(const PKT_C2S_PlayerWeapDataRep_s& n);
-	void OnNetPacket(const PKT_C2S_WpnLog_s& n);
-	void OnNetPacket(const PKT_C2S_ValidateEnvironment_s& n);
-	void OnNetPacket(const PKT_C2S_BulletValidateConfig_s& n);
-	void OnNetPacket(const PKT_C2S_GroupNoAccept_s& n);
-	void OnNetPacket(const PKT_C2S_BuyItemReq_s& n);
+	void		OnNetPacket(const PKT_C2S_WpnLog_s& n);
+	void		OnNetPacket(const PKT_C2S_ValidateEnvironment_s& n);
+	void		OnNetPacket(const PKT_C2S_BulletValidateConfig_s& n);
+	void		OnNetPacket(const PKT_C2S_GroupNoAccept_s& n);
+	void		OnNetPacket(const PKT_C2S_BuyItemReq_s& n);
 	void		RelayPacket(const DefaultPacket* packetData, int packetSize, bool guaranteedAndOrdered = false);
 	float LeaveGroupTime;
 	bool isLeaveGroup;

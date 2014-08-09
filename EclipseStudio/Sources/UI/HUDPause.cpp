@@ -14,7 +14,7 @@
 #include "../ObjectsCode/weapons/Weapon.h"
 #include "../ObjectsCode/weapons/WeaponArmory.h"
 #include "../GameLevel.h"
-#include "..\GameEngine\gameobjects\obj_Vehicle.h"
+#include "../../GameEngine/gameobjects/obj_Vehicle.h"//Codex Carros
 
 void writeGameOptionsFile();
 
@@ -243,6 +243,114 @@ void HUDPause::eventBackpackUseItem(int slotID)
 			hudMain->currentslot = slotID;
 			hudMain->Cooldown = r3dGetTime() + 10.0f;
 		}
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//Codex Carros
+
+		if(wi.itemID == 101398) // Repair Car System
+	    {
+		obj_Player* plr = gClientLogic().localPlayer_;
+		if (plr->isInVehicle())
+		{
+			obj_Vehicle* target_Vehicle = plr->ActualVehicle;
+								if (target_Vehicle->DamageCar<5.0f)
+								{
+									if ((target_Vehicle->DamageCar+2.0f)>5)
+										target_Vehicle->DamageCar=5.0f;
+									else
+										target_Vehicle->DamageCar+=2.0f;
+
+									Scaleform::GFx::Value var[3];
+									var[0].SetString("$RepairwithExit");
+									var[1].SetBoolean(true);
+									var[2].SetString("");
+									gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+								}
+								else {
+
+									Scaleform::GFx::Value var[3];
+									var[0].SetString("$NoneedRepairCar2");
+									var[1].SetBoolean(true);
+									var[2].SetString("");
+									gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+									return;
+								}
+		}
+		else {
+			Scaleform::GFx::Value var[3];
+			var[0].SetString("$NeedYouAreOnVehicle");
+			var[1].SetBoolean(true);
+			var[2].SetString("");
+			gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+			return;
+		}
+	}
+			if(wi.itemID == 301321) // Server Vehicles Gasoline
+	{
+		obj_Player* plr = gClientLogic().localPlayer_;
+		if (plr->isInVehicle())
+		{
+			obj_Vehicle* target_Vehicle = plr->ActualVehicle;
+			if ( target_Vehicle )
+			{
+				if (target_Vehicle->DamageCar>0)
+				{
+							if (target_Vehicle->GasolineCar<100)
+							{
+									float maxGas=25.0f;
+									if ((target_Vehicle->GasolineCar+maxGas)>100)
+										target_Vehicle->GasolineCar=100.0f;
+									else
+										target_Vehicle->GasolineCar=target_Vehicle->GasolineCar+maxGas;
+									target_Vehicle->ExitVehicle=true;
+									Scaleform::GFx::Value var[3];
+									var[0].SetString("$GassFullOK");
+									var[1].SetBoolean(true);
+									var[2].SetString("");
+									gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+									//return;
+							}
+							else {
+									Scaleform::GFx::Value var[3];
+									var[0].SetString("$GassFULL");
+									var[1].SetBoolean(true);
+									var[2].SetString("");
+									gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+									return;
+							}
+						}
+						else {
+									Scaleform::GFx::Value var[3];
+									var[0].SetString("$NoGassVehDestroy");
+									var[1].SetBoolean(true);
+									var[2].SetString("");
+									gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+									return;
+						}
+				}
+		}
+		else {
+			if (plr->isPassenger())
+			{
+				Scaleform::GFx::Value var[3];
+				var[0].SetString("$GassPassenger");
+				var[1].SetBoolean(true);
+				var[2].SetString("");
+				gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+				return;
+			}
+			else {
+				Scaleform::GFx::Value var[3];
+				var[0].SetString("$Not_in_Vehicle");
+				var[1].SetBoolean(true);
+				var[2].SetString("");
+				gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+				return;
+			}
+		}
+	}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		plr->localPlayer_UseItem(slotID, wi.itemID, plr->GetPosition());
 	}
@@ -492,13 +600,6 @@ void HUDPause::eventShowContextMenuCallback(r3dScaleformMovie* pMovie, const Sca
 		Scaleform::GFx::Value var[2];
 		var[0].SetString("$FR_PAUSE_CHANGEBP");
 		var[1].SetInt(6);
-		gfxMovie.Invoke("_root.api.Main.Inventory.addContextMenuOption", var, 2);
-	}
-	else if (wi.itemID == 301321) // Jerry Can
-	{
-		Scaleform::GFx::Value var[2];
-		var[0].SetString("$FR_PAUSE_VEHICLE_REFUEL");
-		var[1].SetInt(7);
 		gfxMovie.Invoke("_root.api.Main.Inventory.addContextMenuOption", var, 2);
 	}
 	else if(wac){

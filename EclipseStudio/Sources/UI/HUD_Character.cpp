@@ -391,6 +391,10 @@ void CharacterHUD::DrawAllAnims(float& Y)
 //----------------------------------------------------------------
 void CharacterHUD :: Process()
 {
+#if VEHICLES_ENABLED//Codex Carros
+	if (m_Player->isInVehicle() || m_Player->isPassenger()) // Server Vehicles
+	      return;
+#endif
 	CreateCharacter();
 
 	FPS_Acceleration.Assign(0, 0, 0);

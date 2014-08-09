@@ -39,7 +39,8 @@
 #include "ui/m_LoadingScreen.h"
 #include "ui/HUDDisplay.h"
 
-#include "GameObjects/obj_Vehicle.h"
+#include "GameObjects/obj_Vehicle.h" //Codex Carros
+
 #include <string>
 
 extern HUDDisplay*	hudMain;
@@ -483,6 +484,77 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_StartGameAns)
 	gameStartResult_   = n.result;
 	return;
 }
+//Codex Carros
+IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PositionVehicle) // Server Vehicles
+{
+	GameObject* from = GameWorld().GetNetworkObject(n.spawnID);
+	if(from)
+	{
+		obj_Vehicle* ResPawnCar = (obj_Vehicle*)from;
+		if (n.RespawnCar==true)
+		{
+			if (!ResPawnCar)
+				return;
+			r3dOutToLog("VehicleID: %i is Respawned\n",n.FromID);
+		if (ResPawnCar->m_ParticleTracer)
+		{
+			ResPawnCar->m_ParticleTracer->SetPosition(n.spawnPos);
+			ResPawnCar->m_ParticleTracer->bKill=true;
+			ResPawnCar->m_ParticleTracer = NULL;
+		}
+
+		if (ResPawnCar->m_Particlebomb)
+			ResPawnCar->m_Particlebomb = NULL;
+
+		if (ResPawnCar->CollisionCar != NULL)
+		{
+			ResPawnCar->CollisionCar->SetPosition(n.spawnPos);
+			ResPawnCar->CollisionCar->SetRotationVector(n.RotationPos + r3dPoint3D(90,0,0));
+		}
+			ResPawnCar->SetPosition(n.spawnPos);
+			ResPawnCar->SetRotationVector(n.RotationPos);
+			ResPawnCar->DamageCar=n.DamageCar;
+			ResPawnCar->GasolineCar=n.GasolineCar;
+			ResPawnCar->Occupants=n.OccupantsVehicle;
+			ResPawnCar->DestroyOnWater=false;
+			ResPawnCar->curTime=0;
+			ResPawnCar->BombTime=0;
+			ResPawnCar->bOn=false;
+			if (ResPawnCar->Light)
+				ResPawnCar->Light->SetPosition(n.spawnPos+r3dPoint3D(0,2,0));
+		}
+		else {
+			if (ResPawnCar)
+			{
+			   if (!ResPawnCar->NetworkLocal)
+			   {
+				const float fTimePassed = r3dGetFrameTime();
+				if (ResPawnCar->CollisionCar != NULL)
+				{
+					if (n.DamageCar>0)
+					{
+					ResPawnCar->CollisionCar->SetPosition(n.spawnPos);
+					ResPawnCar->CollisionCar->SetRotationVector(n.RotationPos + r3dPoint3D(90,0,0));
+					}
+				}
+				if (n.DamageCar>0)
+				{
+					ResPawnCar->SetRotationVector(n.RotationPos);
+					ResPawnCar->SetPosition(n.spawnPos);
+				}
+				ResPawnCar->Occupants=n.OccupantsVehicle;
+				ResPawnCar->GasolineCar=n.GasolineCar;
+				ResPawnCar->DamageCar=n.DamageCar;
+				ResPawnCar->RPMPlayer=n.RPMPlayer;
+				ResPawnCar->RotationSpeed=n.RotationSpeed;
+				ResPawnCar->bOn=n.bOn;
+
+				g_pPhysicsWorld->m_VehicleManager->DoUserCarControl(n.timeStep,true,n.controlData,n.spawnID);
+			   }
+			}
+		}
+	}
+}
 
 IMPL_PACKET_FUNC(ClientGameLogic, PKT_C2C_ChatMessage)
 {
@@ -652,22 +724,6 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateBuilding)
 	//sprintf(bfname,"%s",n.fname);
 	//CreateThread(NULL,NULL,(LPTHREAD_START_ROUTINE)CreateBuildingThread,NULL,0,0);
 }
-IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateVehicles)
-{
-	return;
-
-	obj_Vehicle* vehi = (obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", "Data\\ObjectsDepot\\Vehicles\\Zombie_killer_car.sco", n.pos);
-	//vehi->DisablePhysX = false;
-	//vehi->setVehicleSpawner(NULL);
-	//vehi->bOn = n.bOn; // run LightOnOff() After OnCreate()!!!
-	//vehi->m_isSerializable = true;
-	vehi->NetworkLocal = false;
-	vehi->SetNetworkID(n.spawnID);
-	vehi->SetPosition(n.pos);
-	vehi->OnCreate();
-	vehi->SwitchToDrivable(false);
-	//vehi->LightOnOff(); // Vehicle Light Activated
-}
 IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateNetObject)
 {
 	if(n.itemID == WeaponConfig::ITEMID_BarbWireBarricade ||
@@ -797,6 +853,33 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_SetNoteData)
 
 	hudMain->showReadNote(obj->m_Text.c_str());
 }
+//Codex Carros
+IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateVehicle) // Server Vehicles
+{
+#if VEHICLES_ENABLED
+	r3d_assert(GameWorld().GetNetworkObject(n.spawnID) == NULL);
+
+	r3dOutToLog("Created vehicle -> %s\n",n.vehicle);
+
+	obj_Vehicle* obj = (obj_Vehicle*)srv_CreateGameObject("obj_Vehicle", n.vehicle, n.spawnPos);
+	obj->DisablePhysX = true;
+	obj->SetNetworkID(n.spawnID);
+	obj->NetworkLocal = false;
+	obj->m_isSerializable = true;
+	obj->SetRotationVector(n.spawnDir);
+	obj->GasolineCar=n.Gasolinecar;
+	obj->Occupants=n.Ocuppants;
+	obj->DamageCar=n.DamageCar;
+	obj->FirstRotationVector=n.FirstRotationVector;
+	obj->FirstPosition=n.FirstPosition;
+	obj->OnCreate();
+
+	// set base cell for movement data (must do it AFTER OnCreate())
+	obj->netMover.SetStartCell(n.moveCell);
+#endif
+}
+
+
 IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateAnimals)
 {
 	r3dOutToLog("obj_Animals %d\n", n.spawnID);
@@ -891,6 +974,23 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PlayerNameJoined)
 	}*/
 
 }
+
+//Codex Carros
+IMPL_PACKET_FUNC(ClientGameLogic, PKT_C2S_DamageCar)
+{
+	if (gClientLogic().localPlayer_)
+	{
+		if (gClientLogic().localPlayer_->ActualVehicle != NULL)
+		{
+			if (gClientLogic().localPlayer_->ActualVehicle->GetNetworkID() == n.CarID)
+			{
+				if (n.WeaponID != NULL)
+					gClientLogic().localPlayer_->ActualVehicle->ApplyDamage(gClientLogic().localPlayer_->ActualVehicle->GetNetworkID(),n.WeaponID);
+			}
+		}
+	}
+}
+
 
 IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PlayerNameLeft)
 {
@@ -1222,7 +1322,6 @@ int ClientGameLogic::ProcessWorldEvent(GameObject* fromObj, DWORD eventId, DWORD
 		DEFINE_PACKET_HANDLER(PKT_S2C_UpdateWeaponData);
 		DEFINE_PACKET_HANDLER(PKT_S2C_UpdateGearData);
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateNetObject);
-		DEFINE_PACKET_HANDLER(PKT_S2C_CreateVehicles);
 		//if (!g_FastLoad->GetBool())
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateBuilding);
 
@@ -1232,6 +1331,9 @@ int ClientGameLogic::ProcessWorldEvent(GameObject* fromObj, DWORD eventId, DWORD
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateGrave);
 		DEFINE_PACKET_HANDLER(PKT_S2C_SetGraveData);
 		DEFINE_PACKET_HANDLER(PKT_S2C_SetNoteData);
+		DEFINE_PACKET_HANDLER(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
+		DEFINE_PACKET_HANDLER(PKT_S2C_PositionVehicle);//Codex Carros
+		DEFINE_PACKET_HANDLER(PKT_C2S_DamageCar);//Codex Carros
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateZombie);
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateAnimals);
 		DEFINE_PACKET_HANDLER(PKT_S2C_CheatWarning);
@@ -1746,6 +1848,19 @@ void ClientGameLogic::ApplyExplosionDamage( const r3dVector& pos, float radius, 
 	ObjectManager& GW = GameWorld();
 	for(GameObject *obj = GW.GetFirstObject(); obj; obj = GW.GetNextObject(obj))
 	{
+       	if (obj->isObjType(OBJTYPE_Vehicle))//Codex Carros
+		{
+			obj_Vehicle* Vehicle = (obj_Vehicle*)obj;
+			float dist_to_obj_sq = (pos - obj->GetPosition()).LengthSq();
+			if(dist_to_obj_sq < 15 )
+			{
+				if (Vehicle->DamageCar>0)
+				{
+					Vehicle->ApplyDamage(Vehicle->GetNetworkID(),100999);
+				}
+			}
+		}
+
 		if(canDamageTarget(obj))
 		{
 			r3d_assert(obj->GetNetworkID());

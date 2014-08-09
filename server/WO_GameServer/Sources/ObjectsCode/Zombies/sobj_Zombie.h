@@ -34,6 +34,8 @@ public:
 	float		StateTimer;
 	void		SwitchToState(int in_state);
 
+	r3dPoint3D VehicleLastPost;//Codex Carros
+
 	float		ZombieHealth;
 
 	int		FastZombie;

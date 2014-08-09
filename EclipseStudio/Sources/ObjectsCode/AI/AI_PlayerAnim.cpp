@@ -185,8 +185,6 @@ void CUberData::LoadLowerAnimations()
 	i[7] = AddAnimation("Swim_Slow_Backward_Left");
 	i[8] = AddAnimation("Swim_Slow_Backward_Right");
 
-		i = aid_.Driver;
-	i[0] = AddAnimation("Vehicle_Idle_Driver1");
 
 	i = aid_.swimm;
 	i[0] = AddAnimation("Swim_Idle_Tread_Water");

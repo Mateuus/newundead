@@ -43,17 +43,14 @@ REG_VAR( d_ui_food,					-1,			0);
 REG_VAR( d_ui_stamina,				-1,			0);
 
 REG_VAR( d_allow_musictriggerarea,	0,			0);
-//REG_VAR( d_drive_vehicles,			true,			1 );	
+
+//Codex Carros
 #if VEHICLES_ENABLED
-REG_VAR( d_drive_vehicles,			false,			0 );	
-REG_VAR( d_drive_vehiclescon,			false,			0 );
-#endif // VEHICLES_ENABLED
-//#else
-#if VEHICLES_ENABLED
-//REG_VAR( d_drive_vehicles,			false,			0 );	
-//REG_VAR( d_drive_vehiclescon,			false,			0 );
-#endif // VEHICLES_ENABLED
-//#endif // FINAL BUILD
+REG_VAR( d_drive_vehicles,			false,			0 );
+#endif
+
+
+
 #if ENABLE_WEB_BROWSER
 REG_VAR( d_url_navigate,			"",				0 );
 REG_VAR( d_show_browser,			false,			0 );

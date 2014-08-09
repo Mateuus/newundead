@@ -168,6 +168,7 @@ int		  Cmd_Kicktome(obj_ServerPlayer* plr, const char* cmd);
 	int		  Cmd_Kickgoto(obj_ServerPlayer* plr, const char* cmd);
 	//int		  Cmd_Kickall(obj_ServerPlayer* plr, const char* cmd);
 	int		  Cmd_Kick(obj_ServerPlayer* plr, const char* cmd);
+	int		  Cmd_crtveh(obj_ServerPlayer* plr, const char* cmd);//Codex Carros
 	int		  Cmd_Kickban(obj_ServerPlayer* plr, const char* cmd);
 	obj_ServerPlayer* FindPlayer(char* Name);
 	obj_ServerPlayer* FindPlayerCustom(int CustomerID);

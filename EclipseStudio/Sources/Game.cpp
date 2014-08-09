@@ -57,7 +57,7 @@
 #include "Editors/CameraSpotsManager.h"
 
 #include "../../Eternity/Source/r3dEternityWebBrowser.h"
-#include "../../GameEngine/gameobjects/obj_Vehicle.h"
+#include "../../GameEngine/gameobjects/obj_Vehicle.h"//Codex Carros
 #include "../../GameEngine/ai/NavGenerationHelpers.h"
 #include "../../GameEngine/ai/AutodeskNav/AutodeskNavMesh.h"
 
@@ -694,9 +694,10 @@ void GameStateGameLoop()
 	extern float __r3dGlobalAspect;
 	gCam.Aspect = __r3dGlobalAspect;
 
-	//	Need to go before camera setup
+
+	//	Need to go before camera setup //Codex Carros
 #if VEHICLES_ENABLED
-	//_pPhysicsWorld->m_VehicleManager->UpdateVehiclePoses();
+    g_pPhysicsWorld->m_VehicleManager->UpdateVehiclePoses();
 #endif
 
 	//r3dOutToLog("2.001\n");
@@ -1178,7 +1179,7 @@ void UpdateAutoProfile()
 
 #endif
 
-static void SpawnTestVehicle();
+static void SpawnTestVehicle();//Codex Carros
 
 void PlayEditor()
 {
@@ -1226,7 +1227,7 @@ void PlayEditor()
 				ParticleEditorSetDefaultParticle ( NULL );
 				CurHUDID = 3;
 			}
-			if ( Keyboard->WasPressed(kbsF12))
+			if ( Keyboard->WasPressed(kbsF12))//Codex Carros
 			{
 				SpawnTestVehicle();
 			}
@@ -1296,7 +1297,7 @@ void PlayEditor()
 	DestroyGame();
 #endif
 }
-
+//Codex Carros
 void SpawnTestVehicle()
 {
 #if VEHICLES_ENABLED
@@ -1308,7 +1309,7 @@ void SpawnTestVehicle()
 	if ( currentVehicle != NULL ) {
 		for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject( obj ) )
 		{
-			// confirm it's a real object and not already deleted 
+			// confirm it's a real object and not already deleted
 			if (obj == currentVehicle )
 			{
 				found = true;
@@ -1316,7 +1317,7 @@ void SpawnTestVehicle()
 			}
 		}
 
-		if(	found == true ) 
+		if(	found == true )
 		{
 			currentVehicle->SetPosition( UI_TargetPos );
 			currentVehicle->SetRotationVector( R3D_ZERO_VECTOR );

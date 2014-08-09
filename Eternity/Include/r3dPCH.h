@@ -119,17 +119,20 @@
 
 
 #define APEX_ENABLED 0
-
+//Codex Carros
 #ifdef FINAL_BUILD
-#define VEHICLES_ENABLED 1
-//#define TPGLIB_ENABLED 1
-#define HS_ENABLED 1
+	#define VEHICLES_ENABLED 1
 #else 
 #ifndef WO_SERVER
-#define VEHICLES_ENABLED 1 // temp disabled due to new PhysX API changes
+    #define VEHICLES_ENABLED 1 // temp disabled due to new PhysX API changes
 #else
-#define VEHICLES_ENABLED 0
+	#define VEHICLES_ENABLED 1
 #endif
+#endif
+
+#ifdef FINAL_BUILD
+//#define TPGLIB_ENABLED 1
+#define HS_ENABLED 1
 #endif
 
 #ifndef FINAL_BUILD

@@ -8,22 +8,50 @@
 #include "GameObj.h"
 #include "vehicle/PxVehicleDrive.h"
 #include "../../EclipseStudio/Sources/multiplayer/NetCellMover.h"
+#include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/SharedUsableItem.h"
+#include "../../EclipseStudio/Sources/ObjectsCode/EFFECTS/obj_ParticleSystem.h"
+#include "../../EclipseStudio/Sources/ObjectsCode/world/Lamp.h"
 //////////////////////////////////////////////////////////////////////////
 
 #if VEHICLES_ENABLED
 
 class obj_VehicleSpawn;
+class obj_Player;
 struct VehicleDescriptor;
 
-class obj_Vehicle: public MeshGameObject
+//class obj_Vehicle: public MeshGameObject
+class obj_Vehicle: public SharedUsableItem
 {
-	DECLARE_CLASS(obj_Vehicle, MeshGameObject)
+	DECLARE_CLASS(obj_Vehicle, SharedUsableItem)
+	//DECLARE_CLASS(obj_Vehicle, MeshGameObject)
 
 	VehicleDescriptor *vd;
+	int Occupants;
+	int weaponID2;
+	float GasolineCar;
+	float DamageCar;
+	float extime;
+	bool ExitVehicle;
+	float oldSpeed;
+	bool oldInAir;
+	float falltime;
+	float RPMPlayer;
+	float RotationSpeed;
+	float curTime;
+	r3dVector FirstRotationVector;
+	r3dPoint3D FirstPosition;
+	obj_Building * CollisionCar;
+	bool enablesound;
+	bool DestroyOnWater;
+	float BombTime;
+	bool othershavesound;
+	float	m_sndBreathBaseVolume;
+	bool SoundEnabled;
+	int SoundIDCar;
+	bool Collobject;
 
 	CNetCellMover	netMover;
 	r3dPoint3D	netVelocity;
-	
 	void SyncPhysicsPoseWithObjectPose();
 	void SetBoneMatrices();
 
@@ -36,9 +64,22 @@ public:
 	virtual void SetPosition(const r3dPoint3D& pos);
 	virtual	void SetRotationVector(const r3dVector& Angles);
 	virtual void OnPreRender() { SetBoneMatrices(); }
+	void ApplyDamage(int vehicleID, int weaponID);
+	void ExplosionBlast(r3dPoint3D pos);
+	void ExternalSounds();
+	void LightOnOff();
+	bool bOn;
+	class obj_ParticleSystem* m_ParticleTracer;
+	class obj_ParticleSystem* m_Particlebomb;
+	class obj_ParticleSystem* m_ParticleSmoke;
+	class obj_ParticleSystem* m_SmallFire;
+	class obj_LightHelper* Light;
+	void*   m_sndVehicleFire;
+	void*	VehicleSnd;
 
 	void SwitchToDrivable(bool doDrive);
 	const VehicleDescriptor* getVehicleDescriptor() { return vd; }
+
 #ifndef FINAL_BUILD
 	float DrawPropertyEditor(float scrx, float scry, float scrw, float scrh, const AClass* startClass, const GameObjects& selected);
 #endif
@@ -46,11 +87,10 @@ public:
 	void setVehicleSpawner( obj_VehicleSpawn* targetSpawner) { spawner = targetSpawner;}
 	void UpdatePositionFromRemote();
 	void UpdatePositionFromPhysx();
-	void OnNetPacket(const PKT_C2C_MoveSetCell_s& n);
-	void OnNetPacket(const PKT_C2C_MoveRel_s& n);
 	BOOL OnNetReceive(DWORD EventID, const void* packetData, int packetSize);
 private:
 	obj_VehicleSpawn* spawner;
+	r3dPoint3D lastPos;
 
 };
 

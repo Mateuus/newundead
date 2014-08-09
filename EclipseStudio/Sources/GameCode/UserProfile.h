@@ -57,8 +57,10 @@ enum STORE_CATEGORIES
 	storecat_MELEE		 =29,   // melee items (knifes, etc)
 	storecat_Food		= 30,	// food 
 	storecat_Water		= 33,	// water
+	storecat_Vehicle    = 34,   // Server vehicles //Codex Carros
 	storecat_CraftRe		= 51,
 	storecat_CraftCom		= 50,
+	storecat_ShootVehicle    = 51, //Codex Carros
 
 	storecat_NUM_ITEMS, // should be the last one!!
 };

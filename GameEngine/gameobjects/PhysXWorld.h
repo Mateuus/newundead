@@ -3,12 +3,12 @@
 
 #define PHYSX_USE_CCD 1
 
+//Codex Carros
 #ifndef WO_SERVER
 #include "VehicleManager.h"
 #endif
 //////////////////////////////////////////////////////////////////////////
-
-class VehicleManager;
+class VehicleManager;//Codex Carros
 class PhysXWorld
 {
     bool    m_needFetchResults;
@@ -25,7 +25,7 @@ public:
 	PxCooking* Cooking; // for cooking meshes for PhysX
 	PxMaterial* defaultMaterial;
 	PxMaterial*	noBounceMaterial;
-	VehicleManager *m_VehicleManager;
+	VehicleManager *m_VehicleManager;//Codex Carros
 #ifndef WO_SERVER
 	PxObstacleContext*	m_PlayerObstaclesManager;
 #endif
