@@ -95,8 +95,8 @@ struct PhysicsMesh
 	PxTriangleMesh* mesh;
 };
 int			gob_NumMeshesInPhysicsFactoryCache=0;
-//PhysicsMesh	*gob_PhysicsFactoryCache[4096];
-PhysicsMesh	*gob_PhysicsFactoryCache[1024];//Mateuus
+PhysicsMesh	*gob_PhysicsFactoryCache[4096];
+//PhysicsMesh	*gob_PhysicsFactoryCache[1024];//Mateuus
 
 PxTriangleMesh *r3dGOBAddPhysicsMesh(const char* fname)
 {
@@ -110,8 +110,8 @@ PxTriangleMesh *r3dGOBAddPhysicsMesh(const char* fname)
 		if (strcmp(gob_PhysicsFactoryCache[i]->filename, fname)==0) 
 			return gob_PhysicsFactoryCache[i]->mesh;
 
-	//if (gob_NumMeshesInPhysicsFactoryCache > 4096)
-	if (gob_NumMeshesInPhysicsFactoryCache > 1023)//Mateuus
+	if (gob_NumMeshesInPhysicsFactoryCache > 4096)
+	//if (gob_NumMeshesInPhysicsFactoryCache > 1023)//Mateuus
 	{
 		r3dArtBug("r3dGOBAddPhysicsMesh:  Mesh Cache overflow !\n" );
 		return NULL;
@@ -145,8 +145,8 @@ struct PhysicsConvexMesh
 	PxConvexMesh* mesh;
 };
 int			gob_NumConvexMeshesInPhysicsFactoryCache=0;
-//PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[4096];
-PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[1024];//Mateuus
+PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[4096];
+//PhysicsConvexMesh	*gob_PhysicsConvexFactoryCache[1024];//Mateuus
 
 PxConvexMesh *r3dGOBAddPhysicsConvexMesh(const char* fname)
 {
@@ -158,8 +158,8 @@ PxConvexMesh *r3dGOBAddPhysicsConvexMesh(const char* fname)
 		if (strcmp(gob_PhysicsConvexFactoryCache[i]->filename, fname)==0) 
 			return gob_PhysicsConvexFactoryCache[i]->mesh;
 
-	//if (gob_NumConvexMeshesInPhysicsFactoryCache > 4096)
-	if (gob_NumConvexMeshesInPhysicsFactoryCache > 1023)//Mateuus
+	if (gob_NumConvexMeshesInPhysicsFactoryCache > 4096)
+	//if (gob_NumConvexMeshesInPhysicsFactoryCache > 1023)//Mateuus
 	{
 		r3dArtBug("r3dGOBAddPhysicsConvexMesh:  Mesh Cache overflow !\n" );
 		return NULL;
@@ -626,7 +626,7 @@ void PhysXWorld::StartSimulation()
 #endif
 #endif
 
-//#ifndef FINAL_BUILD
+#ifndef FINAL_BUILD
 	//PhysXScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, /*d_physx_debug->GetInt()?1.0f:*/0.0f);
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, d_physx_debug->GetInt()?1.0f:0.0f);//Mateuus
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES,	1.0f);
@@ -637,7 +637,7 @@ void PhysXWorld::StartSimulation()
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS,	0.0f);
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_EDGES,	0.0f);
 	PhysXScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_FNORMALS,	0.0f);
-//#endif
+#endif
 
 	if(!DisablePhysXSimulation)
 	{

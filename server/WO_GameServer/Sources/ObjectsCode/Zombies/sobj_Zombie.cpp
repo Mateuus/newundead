@@ -117,7 +117,7 @@ BOOL obj_Zombie::OnCreate()
 
 	FastZombie = u_GetRandom() > spawnObject->fastZombieChance;
 
-	HalloweenZombie = true; //NO more special zombies u_GetRandom() < (1.0f / 100) ? true : false; // every 100th zombie is special
+	HalloweenZombie = false;//true false //NO more special zombies u_GetRandom() < (1.0f / 100) ? true : false; // every 100th zombie is special
 	if(HalloweenZombie) FastZombie = 1;
 
 	HeadIdx = u_random(heroConfig->getNumHeads());
@@ -1320,7 +1320,7 @@ void obj_Zombie::DoDeath()
 		obj->m_Item.itemID   = u_GetRandom() >= 0.75f ? 101087 : 101002;
 		obj->m_Item.quantity = 1;
 	}
-	if(HalloweenZombie && u_GetRandom() < 1.0f) // 100% to drop that helmet
+	if(HalloweenZombie && u_GetRandom() < 0.3f) // 30% to drop that helmet
 	{
 
 		ZombieHealth = u_GetRandom(150.0f, 155.0f);

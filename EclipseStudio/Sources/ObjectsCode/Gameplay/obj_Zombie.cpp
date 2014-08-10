@@ -301,7 +301,7 @@ BOOL obj_Zombie::OnCreate()
 	zombieParts[1] = heroConfig->getBodyMesh(CreateParams.HeadIdx, false);
 	zombieParts[2] = heroConfig->getLegMesh(CreateParams.LegsIdx);
 
-	if(CreateParams.HeroItemID == 20190)//zombies with armor :)
+	/*if(CreateParams.HeroItemID == 20190)//zombies with armor :)
 		switch(u_random(6)) {
 				default:
 		case 0: zombieParts[3] = r3dGOBAddMesh("Data/ObjectsDepot/Characters/HGEAR_M9_Helmet_Urban_01.sco", true, false, true, true); break;
@@ -320,7 +320,7 @@ BOOL obj_Zombie::OnCreate()
 		case 2: zombieParts[4] = r3dGOBAddMesh("Data/ObjectsDepot/Characters/Armor_MTV_01_Forest.sco", true, false, true, true);  break;
 		case 3: zombieParts[4] = r3dGOBAddMesh("Data/ObjectsDepot/Characters/ARMOR_Light_Forest.sco", true, false, true, true);  break;
 		case 4: zombieParts[4] = r3dGOBAddMesh("Data/ObjectsDepot/Characters/ARMOR_Medium_Desert_02.sco", true, false, true, true);  break;
-	}
+	}*/
 
 	if(HalloweenZombie)
 		zombieParts[5] = r3dGOBAddMesh("Data/ObjectsDepot/Characters/hgear_pumpkin_01.sco", true, false, true, true );
