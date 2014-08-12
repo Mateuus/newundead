@@ -177,13 +177,16 @@ int		  Cmd_Kicktome(obj_ServerPlayer* plr, const char* cmd);
 	void		p2pBroadcastToAll(const GameObject* from, DefaultPacket* packetData, int packetSize, bool guaranteedAndOrdered = false);
 	void		p2pSendToPeer(DWORD peerId, const GameObject* from, DefaultPacket* packetData, int packetSize, bool guaranteedAndOrdered = false);
 	void		p2pSendRawToPeer(DWORD peerId, DefaultPacket* packetData, int packetSize, bool guaranteedAndOrdered = false);
-void ServerGameLogic::SendPacketZ(int value, DWORD peerId,obj_ServerPlayer* plr);
+    void        ServerGameLogic::SendPacketZ(int value, DWORD peerId,obj_ServerPlayer* plr);
 	bool		CanDamageThisObject(const GameObject* targetObj);
 	void		ApplyDamage(GameObject* sourceObj, GameObject* targetObj, const r3dPoint3D& dmgPos, float damage, bool force_damage, STORE_CATEGORIES damageSource,bool isSpecialBool);
 	bool		ApplyDamageToPlayer(GameObject* sourceObj, obj_ServerPlayer* targetPlr, const r3dPoint3D& dmgPos, float damage, int bodyBone, int bodyPart, bool force_damage, STORE_CATEGORIES damageSource, const int airState = 0 );  
 	bool		ApplyDamageToZombie(GameObject* sourceObj, GameObject* targetZombie, const r3dPoint3D& dmgPos, float damage, int bodyBone, int bodyPart, bool force_damage, STORE_CATEGORIES damageSource,bool isSpecialBool);  
+	bool		ApplyDamageToAnimal(GameObject* sourceObj, GameObject* targetAnimal, const r3dPoint3D& dmgPos, float damage, int bodyBone, int bodyPart, bool force_damage, STORE_CATEGORIES damageSource,bool isSpecialBool);//Codex Animal
 	void		DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targetPlr, STORE_CATEGORIES weaponCat, bool forced_by_server=false, bool fromPlayerInAir = false, bool targetPlayerInAir = false);
 	
+	
+
 	void		InformZombiesAboutSound(const obj_ServerPlayer* plr, const ServerWeapon* wpn);
 
 	void		AddPlayerReward(obj_ServerPlayer* plr, EPlayerRewardID rewardID,int HeroItemID);

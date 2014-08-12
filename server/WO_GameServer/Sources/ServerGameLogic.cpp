@@ -5,6 +5,7 @@
 #include "ServerGameLogic.h"
 #include "MasterServerLogic.h"
 #include "GameObjects/ObjManag.h"
+#include "ObjectsCode/Animals/sobj_Animals.h" //Codex Animal
 
 #include "ObjectsCode/obj_ServerPlayer.h"
 //Codex Carros
@@ -18,7 +19,6 @@
 #include "ObjectsCode/sobj_Grave.h"
 #include "ObjectsCode/sobj_SafeLock.h"
 #include "ObjectsCode/Zombies/sobj_Zombie.h"
-#include "ObjectsCode/sobj_Animals.h"
 #include "ObjectsCode/obj_ServerPlayerSpawnPoint.h"
 #include "ObjectsCode/obj_ServerBarricade.h"
 #include "ObjectsCode/obj_ServerPostBox.h"
@@ -861,10 +861,6 @@ bool ServerGameLogic::CanDamageThisObject(const GameObject* targetObj)
 	{
 		return true;
 	}
-	else if(targetObj->Class->Name == "obj_Animals")
-	{
-		return true;
-	}
 	else if(targetObj->isObjType(OBJTYPE_Zombie))
 	{
 		return true;
@@ -889,6 +885,25 @@ bool ServerGameLogic::CanDamageThisObject(const GameObject* targetObj)
 	}
 	return false;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Animal
+bool ServerGameLogic::ApplyDamageToAnimal(GameObject* fromObj, GameObject* targetAnimal, const r3dPoint3D& dmgPos, float damage, int bodyBone, int bodyPart, bool force_damage, STORE_CATEGORIES damageSource, bool isSpecialBool)
+{
+	r3d_assert(fromObj);
+	//r3d_assert(targetAnimal && targetAnimal->isObjType(OBJTYPE_Animal));
+
+	// relay to zombie logic
+	obj_Animal* d = (obj_Animal*)targetAnimal;
+	bool killed = d->ApplyDamage(fromObj, damage, bodyPart, damageSource, isSpecialBool);
+	if(IsServerPlayer(fromObj) && killed)
+	{
+		IsServerPlayer(fromObj)->loadout_->Stats.KilledZombies++;
+	}
+
+	return true;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 void ServerGameLogic::ApplyDamage(GameObject* fromObj, GameObject* targetObj, const r3dPoint3D& dmgPos, float damage, bool force_damage, STORE_CATEGORIES damageSource,bool isSpecialBool)
 {
@@ -922,6 +937,16 @@ void ServerGameLogic::ApplyDamage(GameObject* fromObj, GameObject* targetObj, co
 		shield->DoDamage(damage);
 		return;
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Codex Animal
+	else //if(targetObj->isObjType(OBJTYPE_Animal))
+	{
+		ApplyDamageToAnimal(fromObj, targetObj, dmgPos, damage, -1, 0, force_damage, damageSource, isSpecialBool);
+		r3dOutToLog("SHOT DETECTED TO ANIMAL\n");
+		return;
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	r3dOutToLog("!!! error !!! was trying to damage object %s [%s]\n", targetObj->Name.c_str(), targetObj->Class->Name.c_str());
 }
@@ -1103,6 +1128,9 @@ void ServerGameLogic::InformZombiesAboutSound(const obj_ServerPlayer* plr, const
 	{
 		if(obj->isObjType(OBJTYPE_Zombie))
 			((obj_Zombie*)obj)->SenseWeaponFire(plr, wpn);
+		//Codex Animal
+		else if(obj->isObjType(OBJTYPE_Animal) && wpn->m_pConfig->m_itemID != 101408)
+			((obj_Animal*)obj)->SenseWeaponFire(plr, wpn);
 	}
 }
 
@@ -2106,6 +2134,13 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_Temp_Damage)
 	if(!target)
 	{
 		//r3dOutToLog("PKT_C2S_Temp_Damage: targetPlr is NULL\n");
+		return;
+	}
+
+	//Codex Animal
+	if (target->Class->Name == "obj_Animal")
+	{
+		//gServerLogic.AddPlayerReward(fromPlr, RWD_AnimalKill);
 		return;
 	}
 

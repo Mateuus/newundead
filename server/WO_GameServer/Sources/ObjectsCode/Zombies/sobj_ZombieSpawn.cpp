@@ -8,7 +8,6 @@
 
 #include "sobj_ZombieSpawn.h"
 #include "sobj_Zombie.h"
-#include "../sobj_Animals.h"
 
 IMPLEMENT_CLASS(obj_ZombieSpawn, "obj_ZombieSpawn", "Object");
 AUTOREGISTER_CLASS(obj_ZombieSpawn);
@@ -59,20 +58,6 @@ BOOL obj_ZombieSpawn::OnCreate()
 		zombieSpawnDelay = _zai_MaxSpawnDelay;
 
 	GenerateNavPoints();
-
-	//for (int i=0;i<2;i++)
-	//{
-		/*r3dPoint3D curpos = GetPosition();
-		r3dPoint3D pos;
-		if (GetFreeNavPointIdx(&pos,true,500,&curpos) != -1)
-		{
-			obj_Animals* obj = 	(obj_Animals*)srv_CreateGameObject("obj_Animals", "obj_Animals", pos);
-			obj->SetNetworkID(gServerLogic.GetFreeNetId());
-			obj->NetworkLocal = true;
-			obj->z = this;
-			obj->OnCreate();
-		}*/
-	//}
 
 	return parent::OnCreate();
 }

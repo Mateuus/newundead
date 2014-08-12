@@ -996,14 +996,6 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Sources\ObjectsCode\Gameplay\obj_Animals.cpp"
-							>
-						</File>
-						<File
-							RelativePath=".\Sources\ObjectsCode\Gameplay\obj_Animals.h"
-							>
-						</File>
-						<File
 							RelativePath=".\Sources\ObjectsCode\Gameplay\obj_Zombie.cpp"
 							>
 						</File>
@@ -2178,6 +2170,10 @@
 				Name="gameobjects"
 				>
 				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\AnimalStates.h"
+					>
+				</File>
+				<File
 					RelativePath="..\GameEngine\gameobjects\AObject.cpp"
 					>
 				</File>
@@ -2251,6 +2247,30 @@
 				</File>
 				<File
 					RelativePath="..\GameEngine\gameobjects\GenericQuadTree.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\obj_Animal.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\obj_Animal.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\obj_AnimalDummy.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\obj_AnimalDummy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\obj_AnimalSpawn.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\Gameplay\obj_AnimalSpawn.h"
 					>
 				</File>
 				<File

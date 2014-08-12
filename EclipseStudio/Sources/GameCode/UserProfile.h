@@ -61,6 +61,7 @@ enum STORE_CATEGORIES
 	storecat_CraftRe		= 51,
 	storecat_CraftCom		= 50,
 	storecat_ShootVehicle    = 51, //Codex Carros
+	storecat_ShootAnimal    = 52, //Codex Animal
 
 	storecat_NUM_ITEMS, // should be the last one!!
 };

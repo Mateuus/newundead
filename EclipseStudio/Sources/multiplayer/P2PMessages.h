@@ -64,21 +64,18 @@ enum pkttype_e
 
   PKT_C2S_BulletValidateConfig, // for check cheats.
   PKT_C2S_ValidateBackpack, // for check sync
-  //PKT_C2S_ApplyDamageToAnimals,
-PKT_C2S_WpnLog,
-PKT_C2S_PlayerState,
+  PKT_C2S_WpnLog,
+  PKT_C2S_PlayerState,
 //PKT_C2C_GroupJoin, // Groups Packet
-PKT_S2C_SetPlayerGroupID,
+  PKT_S2C_SetPlayerGroupID,
   PKT_S2C_PlayerNameJoined,
   PKT_S2C_PlayerNameLeft,
 
-/*PKT_C2S_SendHelpCall,
-  PKT_S2C_SendHelpCall,*/
-PKT_C2S_SendHelpCall,
-PKT_S2C_SendHelpCallData,
- PKT_S2C_CreatePlayer,
+  PKT_C2S_SendHelpCall,
+  PKT_S2C_SendHelpCallData,
+  PKT_S2C_CreatePlayer,
 
-	PKT_C2S_HackShieldLog,
+  PKT_C2S_HackShieldLog,
 
   PKT_C2C_PlayerReadyGrenade,
   PKT_C2C_PlayerThrewGrenade,
@@ -98,9 +95,9 @@ PKT_S2C_SendHelpCallData,
   PKT_C2C_CarSeat,
 
  // PKT_S2C_CreateSafeLock,
-PKT_C2S_PlayerAcceptMission,
-PKT_C2s_PlayerSetMissionStatus,
-PKT_C2S_PlayerSetObStatus,
+  PKT_C2S_PlayerAcceptMission,
+  PKT_C2s_PlayerSetMissionStatus,
+  PKT_C2S_PlayerSetObStatus,
   PKT_S2C_SetPlayerVitals,
   PKT_S2C_SetPlayerLoadout,	// indicate loadout change for not local players
   PKT_S2C_SetPlayerAttachments,
@@ -109,7 +106,7 @@ PKT_C2S_PlayerSetObStatus,
   PKT_C2S_PlayerRemoveAttachment,
   PKT_C2C_PlayerSwitchWeapon,
   PKT_C2C_PlayerUseItem,
-   PKT_C2C_PlayerCraftItem,
+  PKT_C2C_PlayerCraftItem,
   PKT_S2C_PlayerUsedItemAns, // this packet is sent for immediate action items, like bandages, or morphine shot
   PKT_C2S_PlayerChangeBackpack,
   PKT_C2S_BackpackDrop,		// player backpack operation
@@ -149,8 +146,15 @@ PKT_C2S_PlayerSetObStatus,
   PKT_C2S_DamageCar,
   //////////////////////////////////////////
 
-  // server animals
+  
+  //Codex Animal
+  /////////////////////////////////////////
   PKT_S2C_CreateAnimals,
+  PKT_S2C_AnimalsMove,
+  PKT_C2S_AnimalKill, // Kill Animal
+  PKT_S2C_AnimalSetState, //Animals
+  PKT_S2C_CreateAnimal,
+ /////////////////////////////////////////
 
   // server zombies
   PKT_S2C_CreateZombie,
@@ -159,7 +163,6 @@ PKT_C2S_PlayerSetObStatus,
   PKT_C2S_Zombie_DBG_AIReq,
   PKT_S2C_Zombie_DBG_AIInfo,
   
-  PKT_S2C_AnimalsMove,
   // movement packets
   PKT_S2C_MoveTeleport,
   PKT_C2C_MoveSetCell,			// set cell origin for PKT_C2C_MoveRel updates
@@ -715,12 +718,6 @@ struct PKT_C2S_InventoryOp_s : public DefaultPacketMixin<PKT_C2S_InventoryOp>
 	__int64		InventoryID;
 	int		Quantity;
 };
-struct PKT_S2C_AnimalsMove_s : public DefaultPacketMixin<PKT_S2C_AnimalsMove>
-{
-	r3dVector angle;
-	r3dPoint3D pos;
-	int state;
-};
 struct PKT_S2C_CreateBuilding_s : public DefaultPacketMixin<PKT_S2C_CreateBuilding>
 {
 	gp2pnetid_t	spawnID;
@@ -842,12 +839,6 @@ struct PKT_S2C_PositionVehicle_s : public DefaultPacketMixin<PKT_S2C_PositionVeh
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-struct PKT_S2C_CreateAnimals_s : public DefaultPacketMixin<PKT_S2C_CreateAnimals>
-{
-gp2pnetid_t	spawnID;
-r3dPoint3D	spawnPos;
-};
 struct PKT_S2C_CreateZombie_s : public DefaultPacketMixin<PKT_S2C_CreateZombie>
 {
 	gp2pnetid_t	spawnID;
@@ -1070,6 +1061,50 @@ struct PKT_C2S_CarKill_s : public DefaultPacketMixin<PKT_C2S_CarKill> // Server 
 	bool DieForExplosion;
 	int weaponID;
 };
+
+//Codex Animal
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct PKT_C2S_AnimalKill_s : public DefaultPacketMixin<PKT_C2S_AnimalKill> // Server vehicles
+{
+	DWORD targetId;
+	int weaponID;
+};
+
+struct PKT_S2C_CreateAnimal_s : public DefaultPacketMixin<PKT_S2C_CreateAnimal>
+{
+	gp2pnetid_t	spawnID;
+	r3dPoint3D	spawnPos;
+	float		spawnDir;
+	r3dPoint3D	moveCell;	// cell position from PKT_C2C_MoveSetCell
+	DWORD		HeroItemID;	// ItemID of base character
+	BYTE		HeadIdx;
+	BYTE		BodyIdx;
+	BYTE		LegsIdx;
+	BYTE		State;		// AnimalStates::EAnimalStates
+	BYTE		FastZombie;
+	float		WalkSpeed;
+	float		RunSpeed;
+};
+
+struct PKT_S2C_AnimalSetState_s : public DefaultPacketMixin<PKT_S2C_AnimalSetState>
+{
+	BYTE		State;		// Animals
+};
+
+struct PKT_S2C_CreateAnimals_s : public DefaultPacketMixin<PKT_S2C_CreateAnimals>
+{
+	gp2pnetid_t    spawnID;
+	r3dPoint3D    spawnPos;
+};
+
+struct PKT_S2C_AnimalsMove_s : public DefaultPacketMixin<PKT_S2C_AnimalsMove>
+{
+    r3dVector angle;
+    r3dPoint3D pos;
+    int state;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct PKT_C2S_WpnLog_s : public DefaultPacketMixin<PKT_C2S_WpnLog>
 {

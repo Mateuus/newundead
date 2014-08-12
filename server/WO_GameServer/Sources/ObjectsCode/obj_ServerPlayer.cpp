@@ -3,6 +3,7 @@
 
 #include "obj_ServerPlayer.h"
 #include "ObjectsCode/Vehicles/obj_ServerVehicle.h"//Codex Carros
+#include "ObjectsCode/Animals/sobj_Animals.h"//Codex Animal
 
 #include "ServerWeapons/ServerWeapon.h"
 #include "ServerWeapons/ServerGear.h"
@@ -17,7 +18,6 @@
 #include "ObjectsCode/sobj_Note.h"
 #include "ObjectsCode/sobj_Grave.h"
 #include "ObjectsCode/sobj_SafeLock.h"
-#include "ObjectsCode/sobj_Animals.h"
 #include "ObjectsCode/obj_ServerBarricade.h"
 #include "AsyncFuncs.h"
 #include "Async_Notes.h"
@@ -3050,11 +3050,6 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2C_PlayerHitDynamic_s& n)
 	{
 		gServerLogic.ApplyDamageToZombie(this, targetObj, GetPosition()+r3dPoint3D(0,1,0), damage, n.hit_body_bone, n.hit_body_part, false, m_WeaponArray[m_SelectedWeapon]->getCategory(),isSpecial);
 	}
-	else if(targetObj->Class->Name == "obj_Animals")
-	{
-		obj_Animals* animal = (obj_Animals*)targetObj;
-		animal->ApplyDamage(damage,this);
-	}
 	else
 	{
 		gServerLogic.TrackWeaponUsage(m_WeaponArray[m_SelectedWeapon]->getConfig()->m_itemID, 0, 1, 0);
@@ -4353,6 +4348,7 @@ BOOL obj_ServerPlayer::OnNetReceive(DWORD EventID, const void* packetData, int p
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_ValidateEnvironment);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_SendHelpCall);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_CarKill); // Server Vehicles //Codex Carros
+		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_AnimalKill); //Codex Animal
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_HackShieldLog);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_BulletValidateConfig);
 	}
@@ -4543,13 +4539,18 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2S_CarKill_s& n) // Server Vehicle
 		else
 			gServerLogic.ApplyDamageToZombie(this,target,GetPosition()+r3dPoint3D(0,1,0),100, 1, 1, false, storecat_ShootVehicle, isSpecial);
 	}
-	/*else if(target->isObjType(OBJTYPE_Animal))
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Codex Animal
+	else if(target->isObjType(OBJTYPE_Animal))
 	{
 		if (n.weaponID==6)
-			gServerLogic.ApplyDamageToAnimal(this,target,GetPosition()+r3dPoint3D(0,1,0),100, 1, 1, false, storecat_Vehicle);
+			gServerLogic.ApplyDamageToAnimal(this,target,GetPosition()+r3dPoint3D(0,1,0),100, 1, 1, false, storecat_Vehicle, isSpecial);
 		else
-			gServerLogic.ApplyDamageToAnimal(this,target,GetPosition()+r3dPoint3D(0,1,0),100, 1, 1, false, storecat_ShootVehicle);
-	}*/ //Codex Carros Falta //tenho que colocar o animal pra pode mata-lo
+			gServerLogic.ApplyDamageToAnimal(this,target,GetPosition()+r3dPoint3D(0,1,0),100, 1, 1, false, storecat_ShootVehicle, isSpecial);
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   //Codex Carros
 	else if (target->Class->Name == "obj_Vehicle")
 	{
 		obj_Vehicle* Vehicle = (obj_Vehicle*)target;
@@ -4600,7 +4601,27 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2S_CarKill_s& n) // Server Vehicle
 			gServerLogic.DoKillPlayer(this,targetPlr,storecat_Vehicle);
 		}
 	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Animal
+void obj_ServerPlayer::OnNetPacket(const PKT_C2S_AnimalKill_s& n)
+{
+	bool isSpecial = false;
+
+	if (profile_.ProfileData.isDevAccount || profile_.ProfileData.isPunisher)
+	{
+		isSpecial = true;
+	}
+	//r3dOutToLog("ENTRA %i\n",n.targetId);
+	GameObject* target = GameWorld().GetNetworkObject(n.targetId);
+	if (!target) return;
+	if(target->isObjType(OBJTYPE_Animal))
+	{
+			gServerLogic.ApplyDamageToAnimal(this,target,GetPosition()+r3dPoint3D(0,1,0),30, 1, 1, false, storecat_ShootAnimal, isSpecial);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void obj_ServerPlayer::RelayPacket(const DefaultPacket* packetData, int packetSize, bool guaranteedAndOrdered)
 {

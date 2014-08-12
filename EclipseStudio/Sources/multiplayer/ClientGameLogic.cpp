@@ -22,8 +22,8 @@
 #include "ObjectsCode/Gameplay/obj_DroppedItem.h"
 #include "ObjectsCode/Gameplay/obj_Note.h"
 #include "ObjectsCode/Gameplay/obj_Grave.h"
+#include "ObjectsCode/Gameplay/obj_Animal.h"//Codex Animal
 #include "ObjectsCode/Gameplay/obj_Zombie.h"
-#include "ObjectsCode/Gameplay/obj_Animals.h"
 #include "ObjectsCode/weapons/Weapon.h"
 #include "ObjectsCode/weapons/WeaponArmory.h"
 #include "ObjectsCode/weapons/Ammo.h"
@@ -879,24 +879,6 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateVehicle) // Server Vehicles
 #endif
 }
 
-
-IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateAnimals)
-{
-	r3dOutToLog("obj_Animals %d\n", n.spawnID);
-	r3d_assert(GameWorld().GetNetworkObject(n.spawnID) == NULL);
-
-	GameObject* obj1 = GameWorld().GetNetworkObject(n.spawnID);
-	if (obj1)
-	{
-		GameWorld().DeleteObject(obj1);
-	}
-
-	obj_Animals* obj = (obj_Animals*)srv_CreateGameObject("obj_Animals", "Data\\ObjectsDepot\\WZ_Animals\\char_deer_01.sco", n.spawnPos);
-	obj->SetNetworkID(n.spawnID);
-	obj->NetworkLocal = false;
-	//memcpy(&obj->CreateParams, &n, sizeof(n));
-	obj->OnCreate();
-}
 IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateZombie)
 {
 	//r3dOutToLog("obj_Zombie %d\n", n.spawnID);
@@ -989,6 +971,21 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_C2S_DamageCar)
 			}
 		}
 	}
+}
+
+//Codex Animal
+IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateAnimal)
+{
+	r3dOutToLog("obj_Animal %d\n", n.spawnID);
+	r3d_assert(GameWorld().GetNetworkObject(n.spawnID) == NULL);
+	obj_Animal* obj = (obj_Animal*)srv_CreateGameObject("obj_Animal", "obj_Animal", n.spawnPos);
+	obj->SetNetworkID(n.spawnID);
+	obj->NetworkLocal = false;
+	memcpy(&obj->CreateParams, &n, sizeof(n));
+	obj->OnCreate();
+
+	// set base cell for movement data (must do it AFTER OnCreate())
+	obj->netMover.SetStartCell(n.moveCell);
 }
 
 
@@ -1334,8 +1331,8 @@ int ClientGameLogic::ProcessWorldEvent(GameObject* fromObj, DWORD eventId, DWORD
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
 		DEFINE_PACKET_HANDLER(PKT_S2C_PositionVehicle);//Codex Carros
 		DEFINE_PACKET_HANDLER(PKT_C2S_DamageCar);//Codex Carros
+		DEFINE_PACKET_HANDLER(PKT_S2C_CreateAnimal); //Codex Animal
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateZombie);
-		DEFINE_PACKET_HANDLER(PKT_S2C_CreateAnimals);
 		DEFINE_PACKET_HANDLER(PKT_S2C_CheatWarning);
 		// DEFINE_PACKET_HANDLER(PKT_C2C_GroupJoin);
 		//	DEFINE_PACKET_HANDLER(PKT_S2C_SendHelpCall);
@@ -1848,6 +1845,33 @@ void ClientGameLogic::ApplyExplosionDamage( const r3dVector& pos, float radius, 
 	ObjectManager& GW = GameWorld();
 	for(GameObject *obj = GW.GetFirstObject(); obj; obj = GW.GetNextObject(obj))
 	{
+
+       if(obj->isObjType(OBJTYPE_Animal))//Codex Animal
+		{
+			obj_Animal* animal = (obj_Animal*)obj;
+			float dist_to_obj_sq = (pos - obj->GetPosition()).LengthSq();
+			if(dist_to_obj_sq < 15 )
+			{
+				if (!animal->bDead)
+				{
+					PKT_C2S_Temp_Damage_s n2;
+					n2.targetId = toP2pNetId(animal->GetNetworkID());
+					n2.wpnIdx = (BYTE)wpnIdx;
+					n2.damagePercentage = 0;
+					n2.explosion_pos = pos;
+					p2pSendToHost(localPlayer_, &n2, sizeof(n2));
+
+					obj_Player* plr = gClientLogic().localPlayer_;
+					PKT_C2S_CarKill_s n;
+					n.weaponID = 0;
+					n.DieForExplosion = false;
+					n.targetId = animal->GetNetworkID();
+					p2pSendToHost(plr, &n, sizeof(n));
+					//zombiedetect=true;
+				}
+			}
+		}
+
        	if (obj->isObjType(OBJTYPE_Vehicle))//Codex Carros
 		{
 			obj_Vehicle* Vehicle = (obj_Vehicle*)obj;

@@ -36,6 +36,7 @@ void CGameRewards::InitDefaultRewards()
 	SetReward(1, "ZombieKill", 10, 10, 10, 10);
 	SetReward(2, "ZombieKillP", 20, 20, 20, 20);
 	SetReward(3, "PlayerKill", 25, 25, 25, 25);
+	SetReward(4, "AnimalKill", 10, 10, 10, 10);//Codex Animal
 }
 
 void CGameRewards::ExportDefaultRewards()

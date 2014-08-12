@@ -69,7 +69,7 @@ enum EGameObjectType
 	OBJTYPE_Zombie				= (1<<17),
 	OBJTYPE_Human				= (1<<18), // obj_Player
 	OBJTYPE_NPC					= (1<<19),
-	OBJTYPE_Animals			= (1<<20),
+	OBJTYPE_Animal				= (1<<23),//Codex Animal
 };
 
 

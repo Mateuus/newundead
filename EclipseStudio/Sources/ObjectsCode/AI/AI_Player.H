@@ -529,11 +529,11 @@ extern void InitializePhysSkeletonCache( int count, float progressStart, float p
 extern void DestroyPhysSkeletonCache() ;
 extern r3dPhysSkeleton* AquireCacheSkeleton();
 extern void ReleaseCachedPhysSkeleton(r3dPhysSkeleton* skel);
+extern void UpdateAnimalObstacle(int idx, const r3dPoint3D& pos);//Codex Animal
 
 extern void InitializePhysObstacleCache(int count);
 extern void DestroyPhysObstacleCache();
 extern int AcquirePlayerObstacle(const r3dPoint3D& pos);
-extern void UpdateAnimalsObstacle(int idx, const r3dPoint3D& pos);
 extern void ReleasePlayerObstacle(int* out_idx);
 extern void UpdatePlayerObstacle(int idx, const r3dPoint3D& pos);
 

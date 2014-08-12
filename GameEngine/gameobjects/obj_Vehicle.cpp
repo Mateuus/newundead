@@ -19,7 +19,7 @@
 #include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_Zombie.h"
 #include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_ZombieDummy.h"
 #include "../../EclipseStudio/Sources/multiplayer/ClientGameLogic.h"
-//#include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_Animal.h"
+#include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_Animal.h" //Codex Animal
 
 #include "ObjectsCode/AI/AI_Player.h"
 
@@ -262,7 +262,7 @@ if(NetworkLocal)
 				}
 			}
 		}
-		/*else if(obj->isObjType(OBJTYPE_Animal))
+		else if(obj->isObjType(OBJTYPE_Animal))
 		{
 			obj_Animal* animal = (obj_Animal*)obj;
 
@@ -295,7 +295,7 @@ if(NetworkLocal)
 					DamageCar=DamageCar-0.01f;
 				}
 			}
-		}*/
+		}
 		else if( obj->isObjType(OBJTYPE_Human) )
 		{
 			obj_Player* Player= static_cast< obj_Player* > ( obj );
@@ -754,7 +754,7 @@ void obj_Vehicle::ExplosionBlast(r3dPoint3D pos)
 				}
 			}
 		}
-		/*if(obj->isObjType(OBJTYPE_Animal))
+		if(obj->isObjType(OBJTYPE_Animal))
 		{
 			obj_Animal* animal = (obj_Animal*)obj;
 
@@ -773,7 +773,7 @@ void obj_Vehicle::ExplosionBlast(r3dPoint3D pos)
 					p2pSendToHost(plr, &n, sizeof(n));
 				}
 			}
-		}*/
+		}
 		
 	}
 

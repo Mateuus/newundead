@@ -1231,11 +1231,6 @@ void PlayEditor()
 			{
 				SpawnTestVehicle();
 			}
-			if (Keyboard->WasPressed(kbsF10))
-			{
-				extern r3dPoint3D UI_TargetPos;
-				srv_CreateGameObject("obj_Animals", "Data\\ObjectsDepot\\WZ_Animals\\char_deer_01.sco", UI_TargetPos);
-			}
 			if (Keyboard->WasPressed(kbsF8))
 			{
 				CurHUDID = CurHUDID == 1 ? 0 : 1;

@@ -798,7 +798,7 @@ void ObjectManager::Update()
 	{
 		GameObject *obj = vObjs[i];
 
-		//if(/*!(obj->ObjTypeFlags <= OBJTYPE_Terrain && obj->ObjTypeFlags >= OBJTYPE_Animals)*/ 1)
+		//if(/*!(obj->ObjTypeFlags <= OBJTYPE_Terrain)*/ 1)
 		//{
 			//TemporaryObjects.PushBack( obj );
 			if(!obj->Update())

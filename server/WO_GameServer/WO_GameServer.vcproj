@@ -690,14 +690,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\ObjectsCode\sobj_Animals.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\sobj_Animals.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Sources\ObjectsCode\sobj_DroppedItem.cpp"
 					>
 				</File>
@@ -838,6 +830,26 @@
 					</File>
 					<File
 						RelativePath=".\Sources\ObjectsCode\Vehicles\obj_ServerVehicleSpawn.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Animals"
+					>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Animals\sobj_Animals.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Animals\sobj_Animals.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Animals\sobj_AnimalSpawn.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Animals\sobj_AnimalSpawn.h"
 						>
 					</File>
 				</Filter>

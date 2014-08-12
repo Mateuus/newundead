@@ -6,6 +6,7 @@ enum EPlayerRewardID
 	RWD_ZombieKill		= 1,	//Standard
 	RWD_ZombieKillP		= 2,    //Premium
 	RWD_PlayerKill		= 3,
+	RWD_AnimalKill      = 4, //For Deer Kill Standard //Code Animal
 		
 	RWD_MAX_REWARD_ID	= 512,
 };

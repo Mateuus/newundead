@@ -144,42 +144,41 @@ virtual	void		OnNetData(DWORD peerId, const r3dNetPacketHeader* packetData, int 
 	 DEFINE_PACKET_FUNC(PKT_S2C_UpdateEnvironment);
 	 DEFINE_PACKET_FUNC(PKT_S2C_PlayerNameLeft);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreatePlayer);
-	  DEFINE_PACKET_FUNC(PKT_C2S_PlayerSetObStatus);
+	 DEFINE_PACKET_FUNC(PKT_C2S_PlayerSetObStatus);
 	 DEFINE_PACKET_FUNC(PKT_S2C_Damage);
 	 DEFINE_PACKET_FUNC(PKT_S2C_ZombieAttack);
 	 DEFINE_PACKET_FUNC(PKT_S2C_KillPlayer);
 	 DEFINE_PACKET_FUNC(PKT_C2S_DisconnectReq);
-	  DEFINE_PACKET_FUNC(PKT_S2C_SetAlreadyLoadMaps);
-	  DEFINE_PACKET_FUNC(PKT_C2S_BuyItemAns);
+	 DEFINE_PACKET_FUNC(PKT_S2C_SetAlreadyLoadMaps);
+	 DEFINE_PACKET_FUNC(PKT_C2S_BuyItemAns);
 	  
 	 DEFINE_PACKET_FUNC(PKT_C2C_ChatMessage);
-	  DEFINE_PACKET_FUNC(PKT_S2C_CheatMsg);
+	 DEFINE_PACKET_FUNC(PKT_S2C_CheatMsg);
 		
 		     
-			   DEFINE_PACKET_FUNC(PKT_S2C_SendHelpCallData);
-			    DEFINE_PACKET_FUNC(PKT_C2S_SendHelpCall);
-	//  DEFINE_PACKET_FUNC(PKT_C2C_GroupJoin);
+	 DEFINE_PACKET_FUNC(PKT_S2C_SendHelpCallData);
+	 DEFINE_PACKET_FUNC(PKT_C2S_SendHelpCall);
+     //DEFINE_PACKET_FUNC(PKT_C2C_GroupJoin);
 	 DEFINE_PACKET_FUNC(PKT_S2C_UpdateWeaponData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_UpdateGearData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateNetObject);
 	 // if (!g_FastLoad->GetBool())
-	  DEFINE_PACKET_FUNC(PKT_S2C_CreateBuilding);
+	 DEFINE_PACKET_FUNC(PKT_S2C_CreateBuilding);
 
 	 DEFINE_PACKET_FUNC(PKT_S2C_DestroyNetObject);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateDroppedItem);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateNote);
-	  DEFINE_PACKET_FUNC(PKT_S2C_CreateGrave);
-	   DEFINE_PACKET_FUNC(PKT_S2C_SetGraveData);
-	     DEFINE_PACKET_FUNC(PKT_S2C_SetSafeLockData);
-	    DEFINE_PACKET_FUNC(PKT_S2C_CreateSafeLock);
+	 DEFINE_PACKET_FUNC(PKT_S2C_CreateGrave);
+	 DEFINE_PACKET_FUNC(PKT_S2C_SetGraveData);
+	 DEFINE_PACKET_FUNC(PKT_S2C_SetSafeLockData);
+	 DEFINE_PACKET_FUNC(PKT_S2C_CreateSafeLock);
 	 DEFINE_PACKET_FUNC(PKT_S2C_SetNoteData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
 	 DEFINE_PACKET_FUNC(PKT_S2C_PositionVehicle);//CodexCarros
 	 DEFINE_PACKET_FUNC(PKT_C2S_DamageCar);//Codex Carros
+	 DEFINE_PACKET_FUNC(PKT_S2C_CreateAnimal);//Codex Animal
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateZombie);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CheatWarning);
-	 DEFINE_PACKET_FUNC(PKT_S2C_CreateAnimals);
-    // DEFINE_PACKET_FUNC(PKT_S2C_SendHelpCall);
 
 	r3dPoint3D	AdjustSpawnPositionToGround(const r3dPoint3D& pos);
 
