@@ -820,6 +820,11 @@ void obj_Player::UpdateLoadoutSlot(const wiCharDataFull& slot)
 		m_Weapons[i] = new Weapon(this, i, wcfg, isFirstPerson, true, i <= wiCharDataFull::CHAR_LOADOUT_WEAPON2 ? &CurLoadout.Attachment[i] : NULL);
 		r3d_assert(m_Weapons[i]); // to check for out of memory
 	}
+	////////////////////////////////////////////////////////////////////////////
+	//Codex Soco
+	const WeaponConfig* wcfg2 = g_pWeaponArmory->getWeaponConfig(101399); // Temporal
+	m_Weapons[7] = new Weapon(this, 7, wcfg2, isFirstPerson, true, NULL); // Temporal
+	////////////////////////////////////////////////////////////////////////////
 
 	if(NetworkLocal)
 	{
@@ -1103,6 +1108,7 @@ BOOL obj_Player::OnCreate()
 	R3D_LOG_TIMESPAN_START(Ai_Player_OnCreate);
 
 	parent::OnCreate();
+	punchtime=0;//Codex Soco
 
 #if VEHICLES_ENABLED//Codex Carros
 	vehicleViewActive_ = VehicleView_None;
@@ -2075,33 +2081,52 @@ if (isInVehicle() || isPassenger())
 	lifeProperties.weaponFired = false;
 
 	Weapon* wpn = m_Weapons[m_SelectedWeapon];
-	/*	if(wpn != NULL && wpn->getItemID() != WeaponConfig::ITEMID_Flashlight && wpn->m_FlashlightParticle && wpn->m_Flashlight.IsOn())
-	{
-	wpn->m_FlashlightParticle->ObjFlags |= OBJFLAG_SkipDraw;
-	wpn->m_Flashlight.TurnOff();
-	}*/
 	if((wpn == NULL || forcedEmptyHands))
 	{
-		/*if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_PRIMARY_FIRE) && bAllowToUseWeapons)
-		{
-		uberAnim_->StartHands();
-		/*int aid = 0;
-		aid = CUberData().AddAnimation("Stand_Shooting_MEL_Hands_R_Punch");
-		uberAnim_->anim.StartAnimation(aid, ANIMFLAG_RemoveOtherFade | ANIMFLAG_Looped, 0.0f, 1.0f, 0.2f);
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//Codex Soco
 		if (!needExit)
 		{
-		if(g_toggle_aim->GetBool())
-		{
-		if(InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_AIM))
-		m_isAiming = !m_isAiming;
+			if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_PRIMARY_FIRE) && bAllowToUseWeapons && !bProne)  // Unarmed Combat
+			{
+					if ((r3dGetTime() - punchtime) > 1)
+					{
+						if (hudMain)
+						{
+							SoundPunch = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/NewWeapons/Melee/Melee_Whoosh_auto"), GetPosition());
+							SoundSys.Stop(SoundPunch);
+							SoundSys.Start(SoundPunch);
+							float volume=1.0f;
+							SoundSys.SetProperty(SoundPunch, FMOD_EVENTPROPERTY_VOLUME, &volume);
+						}
+						punchtime=r3dGetTime();
+
+						int LasSelectWeapon=m_SelectedWeapon;
+						m_SelectedWeapon=7;
+
+						executeWeaponFireLocalPlayer(gCam, 0, 0, 0, 0, true, 0, 0);
+                          
+						m_SelectedWeapon=LasSelectWeapon;				
+						uberAnim_->UnarmedCombat(false,PlayerState);
+						PKT_C2C_UnarmedCombat_s n;
+						n.UnarmedCombat=PlayerState;
+						p2pSendToHost(this, &n, sizeof(n));
+						
+					}
+			}
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+			if(g_toggle_aim->GetBool())
+			{
+				if(InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_AIM))
+					m_isAiming = !m_isAiming;
+			}
+			else
+			{
+				m_isAiming = InputMappingMngr->isPressed(r3dInputMappingMngr::KS_AIM);
+			}
 		}
-		else
-		{
-		m_isAiming = InputMappingMngr->isPressed(r3dInputMappingMngr::KS_AIM);
-		}
-		}*/
-		return;
+		return;		
 	}
 
 	if (gClientLogic().m_gameInfo.ispre && wpn->getCategory()==storecat_SNP)
@@ -2823,12 +2848,27 @@ float g_ScopeFeedbackTimer = 0.0f;
 
 void obj_Player::executeWeaponFireLocalPlayer(const r3dPoint3D& from, float recoil, float spread, float recoilCoolDownMod, float holdingDelay, bool executeWeaponFireCode, bool checkAgainsMuzzler, int damagePercFromPiercing)
 {
-	AHNHS_PROTECT_FUNCTION
+	//AHNHS_PROTECT_FUNCTION
 		r3d_assert(NetworkLocal);
 
 	Weapon* wpn = m_Weapons[m_SelectedWeapon];
-	r3d_assert(wpn);
-	r3d_assert(!wpn->isUsableItem());
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Codex Soco
+	if(forcedEmptyHands)
+	{
+		wpn = m_Weapons[7];
+		if (wpn == NULL)
+		{
+			bool isFirstPerson = g_camera_mode->GetInt()==2 && NetworkLocal;
+			const WeaponConfig* wcfg2 = g_pWeaponArmory->getWeaponConfig(101399); // Temporal
+			m_Weapons[7] = new Weapon(this, 7, wcfg2, isFirstPerson, true, NULL); // Temporal
+			wpn = m_Weapons[7];
+		}
+	}
+	//r3d_assert(wpn);
+	//r3d_assert(!wpn->isUsableItem());
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	r3dPoint3D	shootTargetPos;
 	r3dPoint3D	shootTargetNorm;
@@ -2879,7 +2919,7 @@ void obj_Player::executeWeaponFireLocalPlayer(const r3dPoint3D& from, float reco
 
 
 	// send weapon fired event
-	if(wpn->getCategory() != storecat_GRENADE)
+	if(wpn->getCategory() != storecat_GRENADE && wpn->getItemID() != 101399)//Codex Soco
 	{
 		PKT_C2C_PlayerFired_s n; 
 		n.fire_from = GetPosition();
@@ -2900,7 +2940,7 @@ void obj_Player::executeWeaponFireLocalPlayer(const r3dPoint3D& from, float reco
 	*/
 	if(wpn->isImmediateShooting())
 	{
-		if ( ProcessBulletHit(damagePercFromPiercing, this, shootTargetPos, shootTargetNorm, shootTarget, shootMaterial, shootActorName,  wpn->getConfig(), GetMuzzlerPosition(), GetPosition(), wpn->getCategory())  == false ) 
+		if ( ProcessBulletHit(damagePercFromPiercing, this, shootTargetPos, shootTargetNorm, shootTarget, shootMaterial, shootActorName,  wpn->getConfig(), GetMuzzlerPosition(), GetPosition(), wpn->getCategory(), wpn->getItemID())  == false ) 
 		{	
 			r3dPoint3D dir = shootTargetPos - from;
 			dir.Normalize();
@@ -3967,6 +4007,17 @@ BOOL obj_Player::Update()
 	R3DPROFILE_FUNCTION("obj_Player::Update");
 	if(!NetworkLocal) // for local already done in UpdateLocalPlayerMovement
 		parent::Update();
+	
+	///////////////////////////////////////////
+	//Codex Soco
+	
+	if ((r3dGetTime() - punchtime) > 0.5)
+	{
+		if (hudMain)
+		SoundSys.Stop(SoundPunch);
+	}
+
+	///////////////////////////////////////////
 
 	if(CurLoadout.GameFlags & wiCharDataFull::GAMEFLAG_isSpawnProtected)
 		m_AuraType = AT_SPAWNPROTECTION;
@@ -6073,6 +6124,22 @@ case xxx: { \
 	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerOnVehicle); // Server Vehicles //Codex Carros
 	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_CarSeat); // Server Vehicles //Codex Carros
 		//DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_SetVelocity);
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		//Codex Soco
+		case PKT_C2C_UnarmedCombat: // Unarmed Combat
+		{
+ 	        if(!NetworkLocal)
+	        {
+				const PKT_C2C_UnarmedCombat_s& n = *(PKT_C2C_UnarmedCombat_s*)packetData;
+				r3d_assert(packetSize == sizeof(n));
+				//if (n.UnarmedCombat==1)
+				//{
+                    uberAnim_->UnarmedCombat(true,n.UnarmedCombat);
+				//}
+			}
+			break;
+		}
+	   ////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
 	return TRUE;
@@ -6349,8 +6416,19 @@ void obj_Player::DrawLabel()
 	{
 		// show a warning if FPS or PING is low
 		float fps = r3dGetAvgFPS();
+		/*if(fps < 20.0f)
+			Font_Label->PrintF(r3dRenderer->ScreenW-80, 0, r3dColor(243,43,37), "FPS: %.1f", fps);*/
 		if(fps < 20.0f)
-			Font_Label->PrintF(r3dRenderer->ScreenW-80, 0, r3dColor(243,43,37), "FPS: %.1f", fps);
+			Font_Label->PrintF(r3dRenderer->ScreenW-85, 0, r3dColor(243,43,37), "FPS: %.1f", r3dGetAvgFPS());
+		else
+			Font_Label->PrintF(r3dRenderer->ScreenW-85, 0, r3dColor(0,255,68), "FPS: %.1f", r3dGetAvgFPS());
+
+		if(gClientLogic().net_->lastPing_ > 50)
+			Font_Label->PrintF(r3dRenderer->ScreenW-85, 15, r3dColor(255,0,0), "PING: %i", gClientLogic().net_->lastPing_);
+		else
+			Font_Label->PrintF(r3dRenderer->ScreenW-85, 15, r3dColor(0,255,68), "PING: %i", gClientLogic().net_->lastPing_);
+
+
 
 #ifdef CHEATS_ENABLED
 		Font_Label->PrintF(r3dRenderer->ScreenW-120, 0, r3dColor(243,43,37), "Ping: %d", gClientLogic().net_->lastPing_);
@@ -8620,7 +8698,7 @@ static void AdjustHitPosition( DecalParams& params, GameObject* target )
 }
 
 //------------------------------------------------------------------------
-bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart , const r3dPoint3D& FirePos, int category) 
+bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart , const r3dPoint3D& FirePos, int category, int weaponID) 
 {	
 	r3d_assert(owner);
 	r3d_assert(owner->NetworkLocal==true);
@@ -8642,7 +8720,7 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 		if(ownerPlayer && shootTarget != NULL)
 		{
 			char bloodpunch[512];
-			if (shootTarget->isObjType(OBJTYPE_Human) || shootTarget->isObjType(OBJTYPE_Zombie))
+			if (shootTarget->isObjType(OBJTYPE_Human) || shootTarget->isObjType(OBJTYPE_Zombie) || shootTarget->isObjType(OBJTYPE_Animal))
 			{
 				PKT_C2S_CarKill_s n;
 				n.weaponID = 101399;

@@ -35,6 +35,12 @@ public:
 	bool ImOwnerCar;
 #endif
 
+	////////////////////////
+	//Codex Soco
+	float punchtime;
+    void*	SoundPunch;
+	////////////////////////
+
 	enum AuraType
 	{
 		AT_NONE,
@@ -179,7 +185,7 @@ public:
 
 	r3dPoint3D	GetHeadPosition();
 
-	Weapon*		m_Weapons[NUM_WEAPONS_ON_PLAYER]; // 0,1 - rifles. 2-item, 3-item, 4-item, 5-item
+	Weapon*		m_Weapons[NUM_WEAPONS_ON_PLAYER+2]; // 0,1 - rifles. 2-item, 3-item, 4-item, 5-item //Codex Soco
 	//Weapon*		Old_Weapons[NUM_WEAPONS_ON_PLAYER]; // 0,1 - rifles. 2-item, 3-item, 4-item, 5-item
 	//int m_WeaponItemID[NUM_WEAPONS_ON_PLAYER];
 	int		m_SelectedWeapon;
@@ -540,4 +546,4 @@ extern void UpdatePlayerObstacle(int idx, const r3dPoint3D& pos);
 
 
 // for use when processing a bullet hit by obj_bullet or obj_Player::executeWeaponFireLocalPlayer
-bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart, const r3dPoint3D& FirePos, int category);
+bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoint3D &hitPoint, const r3dPoint3D &hitNormal, GameObject* shootTarget, const r3dMaterial* shootMaterial, const char* hitActorName, const WeaponConfig *weaponInfo, const r3dPoint3D& muzzlerPosAtFireStart, const r3dPoint3D& FirePos, int category, int weaponID);

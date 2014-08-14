@@ -212,6 +212,23 @@ void CUberData::LoadLowerAnimations()
 	i[0] = AddAnimation("Walk_Str_TurnIn", "Walk_Str");
 	i[1] = AddAnimation("Crouch_Str_TurnIn", "Crouch_Str");
 
+	//////////////////////////////////////////////////////////////////////////////
+	//Codex Soco
+
+	i = aid_.Unarmed; // Hands Combat
+    i[0] = AddAnimation("Stand_Shooting_MEL_Hands_L_Hook");
+	i[1] = AddAnimation("Stand_Shooting_MEL_Hands_R_Punch");
+	i[2] = AddAnimation("Stand_Shooting_MEL_Hands_L_Jab");
+	i[3] = AddAnimation("Stand_Shooting_MEL_Hands_R_Punch");
+
+	i = aid_.Unarmedfps; // Unarmed combat
+    i[0] = AddAnimation("FPS_Stand_Shooting_MEL_Hands_L_Hook");
+	i[1] = AddAnimation("FPS_Stand_Shooting_MEL_Hands_R_Punch");
+	i[2] = AddAnimation("FPS_Stand_Shooting_MEL_Hands_L_Jab");
+	i[3] = AddAnimation("FPS_Stand_Shooting_MEL_Hands_R_Punch");
+
+	//////////////////////////////////////////////////////////////////////////////
+
 	i = aid_.hands;
 	i[0] = AddAnimation("FPS_Stand_Shooting_Mel_Hands_R_Punch");
 }
@@ -982,6 +999,7 @@ CUberAnim::CUberAnim(obj_Player* in_player, CUberData* in_data)
 	extern void _player_AdjustBoneCallback(DWORD dwData, int boneId, D3DXMATRIX &mp, D3DXMATRIX &anim);
 	anim.Init(data_->bindSkeleton_, &data_->animPool_, _player_AdjustBoneCallback, (DWORD)in_player);
 
+	HandsCombatID	    = INVALID_TRACK_ID;//Codex Soco
 	reloadAnimTrackID	= INVALID_TRACK_ID;
 	recoilAnimTrackID	= INVALID_TRACK_ID;
 	turnInPlaceTrackID	= INVALID_TRACK_ID;
@@ -1229,6 +1247,8 @@ case PLAYER_SWIM:
 		if(ai.iTrackId == reloadAnimTrackID)
 			top.push_back(ai);
 		else if(ai.iTrackId == shootAnimTrackID)
+			top.push_back(ai);
+		else if (ai.iTrackId == HandsCombatID)//Codex Soco
 			top.push_back(ai);
 		else if(ai.iTrackId == jumpTrackID)
 			jumpAnim = ai;
@@ -1942,6 +1962,33 @@ anim.GetTrack(id)->fSpeed = 1.0f;
 	// resync animation, so jump track will be relocated to top of lower bodys anim
 	
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Soco
+void CUberAnim::UnarmedCombat(bool Network, int PlayerState)   // Unarmed Combat with FPS and not FPS
+{
+   	if(CurrentWeapon)
+		return;
+
+	  HandsAnim=rand() % 3;
+
+	   int ID;
+	   if (Network==false)
+	   {
+			if (IsFPSMode())
+				 ID = data_->aid_.Unarmedfps[HandsAnim];
+			else 
+				 ID = data_->aid_.Unarmed[HandsAnim];
+	   }
+	   else {
+				 ID = data_->aid_.Unarmed[HandsAnim];
+	   }
+
+    anim.Stop(HandsCombatID);
+	HandsCombatID = anim.StartAnimation(ID, 0, 0.0f, 1.0f, 0.0f);
+    SwitchToState(PlayerState, AnimMoveDir);
+		
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void CUberAnim::UpdateJump(bool bOnGround)
 {

@@ -58,6 +58,7 @@ enum STORE_CATEGORIES
 	storecat_Food		= 30,	// food 
 	storecat_Water		= 33,	// water
 	storecat_Vehicle    = 34,   // Server vehicles //Codex Carros
+	storecat_punch		= 35,   //Codex Soco
 	storecat_CraftRe		= 51,
 	storecat_CraftCom		= 50,
 	storecat_ShootVehicle    = 51, //Codex Carros

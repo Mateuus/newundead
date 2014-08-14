@@ -94,6 +94,9 @@ enum pkttype_e
   PKT_C2C_PlayerOnVehicle, // Server Vehicles
   PKT_C2C_CarSeat,
 
+  //Codex Soco
+  PKT_C2C_UnarmedCombat,  // Unarmed Combat
+
  // PKT_S2C_CreateSafeLock,
   PKT_C2S_PlayerAcceptMission,
   PKT_C2s_PlayerSetMissionStatus,
@@ -468,6 +471,13 @@ struct PKT_C2C_PlayerOnVehicle_s : public DefaultPacketMixin<PKT_C2C_PlayerOnVeh
   int myID;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Soco
+struct PKT_C2C_UnarmedCombat_s : public DefaultPacketMixin<PKT_C2C_UnarmedCombat> // Unarmed Combat
+{
+  BYTE UnarmedCombat;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 

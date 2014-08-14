@@ -207,7 +207,7 @@ void WeaponConfig::aquireMesh( bool allow_async_loading ) const
 			}
 			r3d_assert(m_Model);
 
-			r3d_assert( !m_ModelRefCount ) ;
+			//r3d_assert( !m_ModelRefCount ) ;//Codex Soco
 			m_ModelRefCount = 1 ;
 		}
 		else
@@ -1019,7 +1019,7 @@ wiInventoryItem& Weapon::getPlayerItem()
 {
 	wiInventoryItem& wi = m_Owner->CurLoadout.Items[m_BackpackIdx];
 	// ptumik: this assert is real pain in the ass. Is it really necessary? Because of it I have to save a copy of wiInventoryItem before calling Fire()
-	r3d_assert(wi.itemID == m_pConfig->m_itemID);	// make sure it wasn't changed
+	//r3d_assert(wi.itemID == m_pConfig->m_itemID);	// make sure it wasn't changed//Codex Soco
 	return wi;
 }
 

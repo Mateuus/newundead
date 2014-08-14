@@ -1845,6 +1845,31 @@ void ClientGameLogic::ApplyExplosionDamage( const r3dVector& pos, float radius, 
 	ObjectManager& GW = GameWorld();
 	for(GameObject *obj = GW.GetFirstObject(); obj; obj = GW.GetNextObject(obj))
 	{
+		if(obj->isObjType(OBJTYPE_Zombie))
+		{
+			obj_Zombie* zombie = (obj_Zombie*)obj;
+			float dist_to_obj_sq = (pos - obj->GetPosition()).LengthSq();
+			if(dist_to_obj_sq < 15 )
+			{
+				if (!zombie->bDead)
+				{
+					PKT_C2S_Temp_Damage_s n2;
+					n2.targetId = toP2pNetId(zombie->GetNetworkID());
+					n2.wpnIdx = (BYTE)wpnIdx;
+					n2.damagePercentage = 0;
+					n2.explosion_pos = pos;
+					p2pSendToHost(localPlayer_, &n2, sizeof(n2));
+
+					obj_Player* plr = gClientLogic().localPlayer_;
+					PKT_C2S_CarKill_s n;
+					n.weaponID = 0;
+					n.DieForExplosion = false;
+					n.targetId = zombie->GetNetworkID();
+					p2pSendToHost(plr, &n, sizeof(n));
+					//zombiedetect=true;
+				}
+			}
+		}
 
        if(obj->isObjType(OBJTYPE_Animal))//Codex Animal
 		{

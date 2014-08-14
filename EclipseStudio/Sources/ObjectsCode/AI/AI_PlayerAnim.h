@@ -114,7 +114,12 @@ static	int		GetMoveDirFromAcceleration(const r3dPoint3D& accel);
 
 	  // misc ones
 	  int		turnins[5];
-	   int		hands[1];
+	  int		hands[1];
+	  /////////////////////////////////////////
+	  //Codex Soco
+	  int		Unarmed[4]; // Hands Combat
+	  int		Unarmedfps[4]; // Hands Combat
+	  /////////////////////////////////////////
 	  int		grenades_tps[20];
 	  int		grenades_fps[20];
 	  //int		bombs_tps[20];
@@ -251,6 +256,11 @@ class CUberAnim
 	int		grenadePinPullTrackID;
 	int		grenadeThrowTrackID;
 	int		shootAnimTrackID;
+	/////////////////////////////
+	//Codex Soco
+	int     HandsCombatID;  // Hands Combat
+	int		HandsAnim;
+	/////////////////////////////
 
 	int		jumpTrackID;
 	int		jumpState;
@@ -312,7 +322,8 @@ class CUberAnim
 	float		jumpStartTimeByState[2];
 	float		jumpStartTime;
 	void		StartJump();
-		void		StartHands();
+	void		StartHands();
+	void		UnarmedCombat(bool Network, int PlayerState);//Codex Soco
 	void		UpdateJump(bool bOnGround);
 	
 	void		StartDeathAnim();

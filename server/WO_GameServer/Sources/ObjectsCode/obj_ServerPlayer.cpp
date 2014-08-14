@@ -4349,6 +4349,7 @@ BOOL obj_ServerPlayer::OnNetReceive(DWORD EventID, const void* packetData, int p
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_SendHelpCall);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_CarKill); // Server Vehicles //Codex Carros
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_AnimalKill); //Codex Animal
+		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_UnarmedCombat); // Unarmed Combat //Codex Soco
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_HackShieldLog);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_BulletValidateConfig);
 	}
@@ -4517,11 +4518,11 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2S_CarKill_s& n) // Server Vehicle
 	}
 
 
-	if (n.weaponID==101399)
+	if (n.weaponID==101399)//Codex Soco
 	{
-		/*if (target->isObjType(OBJTYPE_Zombie))
-			gServerLogic.ApplyDamageToZombie(this,target,GetPosition()+r3dPoint3D(0,1,0),10, 1, 1, false, storecat_punch);
-		else*/ if (target->isObjType(OBJTYPE_Human))
+		if (target->isObjType(OBJTYPE_Zombie))
+			gServerLogic.ApplyDamageToZombie(this,target,GetPosition()+r3dPoint3D(0,1,0),10, 1, 1, false, storecat_punch, isSpecial); //Codex Soco
+		else if (target->isObjType(OBJTYPE_Human))
 		{
 			obj_ServerPlayer* targetPlr = IsServerPlayer(target);
 			if (/* targetPlr->loadout_->GameMapId == GBGameInfo::MAPID_WZ_PVE_Colorado ||*/ targetPlr->PlayerOnVehicle == true || targetPlr->loadout_->Alive <=0 || targetPlr->profile_.ProfileData.isGod || (targetPlr->loadout_->GameFlags & wiCharDataFull::GAMEFLAG_isSpawnProtected) || (targetPlr->loadout_->GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox))
@@ -4621,6 +4622,15 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2S_AnimalKill_s& n)
 			gServerLogic.ApplyDamageToAnimal(this,target,GetPosition()+r3dPoint3D(0,1,0),30, 1, 1, false, storecat_ShootAnimal, isSpecial);
 	}
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Soco
+void obj_ServerPlayer::OnNetPacket(const PKT_C2C_UnarmedCombat_s& n)  // Unarmed Combat
+{
+	RelayPacket(&n, sizeof(n), false);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void obj_ServerPlayer::RelayPacket(const DefaultPacket* packetData, int packetSize, bool guaranteedAndOrdered)
