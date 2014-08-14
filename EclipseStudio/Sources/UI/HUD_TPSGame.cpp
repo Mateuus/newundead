@@ -1153,14 +1153,22 @@ static void DrawMenus()
 		{
 			if(!hudPause->isActive())
 			{
+				gClientLogic().localPlayer_->ShowCrosshair=false;
 				hudPause->Activate();
 				if(InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_SWITCH_MINIMAP))
 					hudPause->showMap();
 				else if(InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_INVENTORY))
 					hudPause->showInventory();
 			}
-			else
-				hudPause->Deactivate();
+			/*else
+				hudPause->Deactivate();*/
+			else {
+				if (Keyboard->WasPressed(kbsEsc))
+				{
+						hudPause->Deactivate();
+						gClientLogic().localPlayer_->ShowCrosshair=true;//Codex Mira
+				}
+			}
 		}
 		// toggle hud - gay using this!
 		if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_TOGGLEHUD))
@@ -1198,7 +1206,12 @@ static void DrawMenus()
 		{
 			if(!hudCraft->isActive())
 			{
+				gClientLogic().localPlayer_->ShowCrosshair=false;//Codex Mira
 				hudCraft->Activate();
+			}
+			else {
+				hudCraft->Deactivate();
+				gClientLogic().localPlayer_->ShowCrosshair=true;//Codex Mira
 			}
 		}
 		bool showAttachment = InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_SHOW_ATTACHMENTS);
@@ -1213,16 +1226,28 @@ static void DrawMenus()
 		}
 
 		if(hudAttm->isActive() && Keyboard->WasPressed(kbsEsc))
+		{
 			hudAttm->Deactivate();
+			gClientLogic().localPlayer_->ShowCrosshair=true;
+		}
 
 		if(hudGeneralStore->isActive() && Keyboard->WasPressed(kbsEsc))
+		{
+			gClientLogic().localPlayer_->ShowCrosshair=true;
 			hudGeneralStore->Deactivate();
+		}
 
 		if(hudVault->isActive() && Keyboard->WasPressed(kbsEsc))
+		{
+			gClientLogic().localPlayer_->ShowCrosshair=true;
 			hudVault->Deactivate();
+		}
 
 		if(hudCraft->isActive() && Keyboard->WasPressed(kbsEsc))
+		{
+			gClientLogic().localPlayer_->ShowCrosshair=true;
 			hudVault->Deactivate();
+		}
 	}
 
 	if(hudPause->isActive())

@@ -454,6 +454,7 @@ void HUDPause::eventMsgBoxCallback(r3dScaleformMovie* pMovie, const Scaleform::G
 void HUDPause::eventBackToGame(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
 {
 	Deactivate();
+	gClientLogic().localPlayer_->ShowCrosshair=true;
 }
 
 void HUDPause::eventQuitGame(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
@@ -749,6 +750,7 @@ void HUDPause::eventContextMenu_Action(r3dScaleformMovie* pMovie, const Scalefor
 	case 4:
 		if(wac)
 		{
+			gClientLogic().localPlayer_->ShowCrosshair=false;
 			Deactivate();
 			hudAttm->Activate();
 			return;

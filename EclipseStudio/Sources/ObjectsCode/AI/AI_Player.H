@@ -40,6 +40,7 @@ public:
 	float punchtime;
     void*	SoundPunch;
 	////////////////////////
+	bool ShowCrosshair;//Codex Mira
 
 	enum AuraType
 	{
