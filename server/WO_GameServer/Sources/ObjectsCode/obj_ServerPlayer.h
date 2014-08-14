@@ -50,6 +50,8 @@ class obj_ServerPlayer : public GameObject, INetworkHelper
 	bool		dieForExplosion;
 	int			IDOFMyVehicle;
 	
+	bool Radioactive; //Codex Radioactive
+	
 	bool		wasDisconnected_;
 
 	bool isDestroy;

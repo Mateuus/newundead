@@ -670,6 +670,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Sources\ObjectsCode\obj_ServerRadioactiveArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\ObjectsCode\obj_ServerRadioactiveArea.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Sources\ObjectsCode\obj_ServerStoreNPC.cpp"
 					>
 				</File>

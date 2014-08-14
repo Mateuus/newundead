@@ -933,6 +933,14 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Sources\ObjectsCode\Gameplay\obj_RadioactiveArea.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Sources\ObjectsCode\Gameplay\obj_RadioactiveArea.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Sources\ObjectsCode\Gameplay\obj_SafeLock.cpp"
 						>
 					</File>

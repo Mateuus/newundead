@@ -4,6 +4,7 @@
 #include "obj_ServerPlayer.h"
 #include "ObjectsCode/Vehicles/obj_ServerVehicle.h"//Codex Carros
 #include "ObjectsCode/Animals/sobj_Animals.h"//Codex Animal
+#include "obj_ServerRadioactiveArea.h"//Codex Radioactive
 
 #include "ServerWeapons/ServerWeapon.h"
 #include "ServerWeapons/ServerGear.h"
@@ -1245,6 +1246,24 @@ BOOL obj_ServerPlayer::Update()
 		}
 	}
 
+	{
+	//////////////////////////////////////////////////////////////////////////////////////
+	//Codex Radioactive
+	if (loadout_->GameFlags & wiCharDataFull::GAMEFLAG_RadioactiveArea) // Radiactive
+	  {
+		  loadout_->Toxic += 10.0f;
+		  if (loadout_->Toxic>100.0f)
+		  {
+			  loadout_->Toxic=100.0f;
+			  loadout_->Health=0.0f;
+		  }
+		  loadout_->GameFlags = 0;
+	  }
+	///////////////////////////////////////////////////////////////////////////////////////
+
+
+	}
+
 	// physics checking on server-side.
 	//controllerPhysObj* controller = (ControllerPhysObj*)PhysicsObject;
 	/*if(GetVelocity().LengthSq() > 0.0001f)
@@ -1330,6 +1349,7 @@ BOOL obj_ServerPlayer::Update()
 	loadout_->Health -= 0.00050f;
 	}*/
 
+   
 	// send vitals if they're changed
 	PKT_S2C_SetPlayerVitals_s vitals;
 	vitals.FromChar(loadout_);
@@ -1514,9 +1534,6 @@ void obj_ServerPlayer::UpdateGameWorldFlags()
 		}
 	}
 
-	//Codex Carros Falta 
-	//this->PlayerOnVehicle
-
 	if (loadout_->Health > 100)
 	{
 		loadout_->Health = 100;
@@ -1538,6 +1555,34 @@ void obj_ServerPlayer::UpdateGameWorldFlags()
 			break;
 		}
 	}
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   //Codex RadioActive
+	if (loadout_->GameFlags & wiCharDataFull::GAMEFLAG_isSpawnProtected && loadout_->GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox  || loadout_->GameFlags & wiCharDataFull::GAMEFLAG_isSpawnProtected || loadout_->GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox)
+	{
+		// If you in SafeZone, or have Spawn Protection, you not Have Radioactive
+	}
+	else if(this->PlayerOnVehicle == true || this->profile_.ProfileData.isGod || loadout_->Items[wiCharDataFull::CHAR_LOADOUT_HEADGEAR].itemID == 20199|| loadout_->Items[wiCharDataFull::CHAR_LOADOUT_HEADGEAR].itemID == 20177 || loadout_->Items[wiCharDataFull::CHAR_LOADOUT_HEADGEAR].itemID == 20178 || loadout_->Items[wiCharDataFull::CHAR_LOADOUT_HEADGEAR].itemID == 20211 || loadout_->Items[wiCharDataFull::CHAR_LOADOUT_HEADGEAR].itemID == 20199)
+	{
+		    // If you Have GasMask You nat Have Radioactive
+	}
+	else
+	{
+		    // You not have GasMask. Scan for Radioactive Area
+			for(int i=0; i<gRadioactiveAreaMngr.numRadioactiveArea_; i++)
+			{
+					obj_ServerRadioactiveArea* rbox = gRadioactiveAreaMngr.RadioactiveArea_[i];
+					float dist = (GetPosition() - rbox->GetPosition()).Length();
+					if(dist < rbox->useRadius)
+					{
+						loadout_->GameFlags |= wiCharDataFull::GAMEFLAG_RadioactiveArea;
+						break;
+					}
+			}
+	}
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 	if(lastWorldFlags_ != loadout_->GameFlags)
 	{

@@ -231,7 +231,8 @@ struct wiCharDataFull
 	enum
 	{
 	  GAMEFLAG_NearPostBox = (1 << 0),
-	  GAMEFLAG_isSpawnProtected = (2 << 0 ),
+	  GAMEFLAG_isSpawnProtected = (1 << 1),//Mateuus Edit
+	  GAMEFLAG_RadioactiveArea = (1 << 2), //Codex Radioactive
 	};
 
 	// current game data
