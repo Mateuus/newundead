@@ -1517,7 +1517,7 @@ void obj_ServerPlayer::UpdateGameWorldFlags()
 	loadout_->GameFlags = 0;
 
 	//Spawn Protection Code here
-	if(loadout_->GameMapId == GBGameInfo::MAPID_WZ_Valley || loadout_->GameMapId == GBGameInfo::MAPID_WZ_Deserto)
+	if(loadout_->GameMapId == GBGameInfo::MAPID_WZ_Valley || loadout_->GameMapId == GBGameInfo::MAPID_WZ_Area51)
 	{
 		if((((r3dGetTime() - startPlayTime_) <= 20.0f)))
 		{

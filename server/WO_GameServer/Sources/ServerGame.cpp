@@ -78,14 +78,17 @@ void PlayGameServer()
     case GBGameInfo::MAPID_WZ_Colorado:
       r3dGameLevel::SetHomeDir("WZ_Colorado");
       break;
+	case GBGameInfo::MAPID_WZ_Cliffside:
+      r3dGameLevel::SetHomeDir("WZ_Cliffside");
+      break;
     case GBGameInfo::MAPID_WZ_CaliWood:
       r3dGameLevel::SetHomeDir("WZ_CaliWood");
       break;
     case GBGameInfo::MAPID_WZ_Valley:
       r3dGameLevel::SetHomeDir("WZ_Valley");
       break;
-    case GBGameInfo::MAPID_WZ_Deserto:
-      r3dGameLevel::SetHomeDir("WZ_Deserto");
+    case GBGameInfo::MAPID_WZ_Area51:
+      r3dGameLevel::SetHomeDir("WZ_Area51");
       break;
   }
 

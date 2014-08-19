@@ -14,7 +14,7 @@
 #include "ObjectsCode/sobj_DroppedItem.h"
 #include "ServerWeapons/ServerWeapon.h"
 
-#include "C:\WarZ\src\EclipseStudio\Sources\ObjectsCode\Gameplay\AnimalStates.h"
+#include "../../EclipseStudio/Sources/ObjectsCode/Gameplay\AnimalStates.h"
 
 #include "../../GameEngine/ai/AutodeskNav/AutodeskNavMesh.h"
 

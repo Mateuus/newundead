@@ -9,7 +9,7 @@ class obj_ServerPlayer;
 class ServerWeapon;
 class ZombieNavAgent;
 
-#include "C:\UndeadBrasil\src\server\WO_GameServer\Sources\ObjectsCode\Zombies\ZombieNavAgent.h"
+#include "../../server/WO_GameServer/Sources/ObjectsCode/Zombies\ZombieNavAgent.h"
 
 class obj_Animal : public GameObject, INetworkHelper
 {

@@ -41,9 +41,10 @@ struct GBGameInfo
 	  MAPID_Editor_Particles = 0,
 	  MAPID_ServerTest,
 	  MAPID_WZ_Colorado,
+	  MAPID_WZ_Cliffside,
 	  MAPID_WZ_CaliWood,
 	  MAPID_WZ_Valley,
-	  MAPID_WZ_Deserto,
+	  MAPID_WZ_Area51,
 	  // NOTE: do *NOT* add maps inside current IDs, add ONLY at the end
 	  // otherwise current map statistics in DB will be broken
 	  MAPID_MAX_ID,
