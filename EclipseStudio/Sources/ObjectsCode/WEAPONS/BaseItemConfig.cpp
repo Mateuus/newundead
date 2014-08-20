@@ -80,6 +80,19 @@ bool FoodConfig::loadBaseFromXml(pugi::xml_node& xmlItem)
 bool CraftArmoryConfig::loadBaseFromXml(pugi::xml_node& xmlItem)
 {
 	BaseItemConfig::loadBaseFromXml(xmlItem);
+	r3d_assert(m_ModelPath==NULL);
+	m_ModelPath = strdup(xmlItem.child("Model").attribute("file").value());
+	return true;
+}
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//Mateus Craft Recipe
+bool CraftRecipeArmoryConfig::loadBaseFromXml(pugi::xml_node& xmlItem)
+{
+	BaseItemConfig::loadBaseFromXml(xmlItem);
+	r3d_assert(m_ModelPath==NULL);
+	m_ModelPath = strdup(xmlItem.child("Model").attribute("file").value());
 	return true;
 }
 //////////////////////////////////////////////////////////////////////////

@@ -28,6 +28,7 @@ WeaponArmory::WeaponArmory()
 	m_NumLootBoxLoaded = 0;
 	m_NumFoodItemsLoaded = 0;
 	m_NumCraftArmoryItemsLoaded = 0;//Mateuus Craft
+	m_NumCraftRecipeArmoryItemsLoaded = 0;//Mateuus Craft Recipe
 
 	memset(m_AmmoArray, 0, sizeof(Ammo*)*MAX_NUMBER_AMMO);
 	m_NumAmmoLoaded = 0;
@@ -48,6 +49,7 @@ WeaponArmory::~WeaponArmory()
 	r3d_assert(m_NumLootBoxLoaded==0);
 	r3d_assert(m_NumFoodItemsLoaded==0);
 	r3d_assert(m_NumCraftArmoryItemsLoaded==0);//Mateuus Craft
+	r3d_assert(m_NumCraftRecipeArmoryItemsLoaded==0);//Mateuus Craft Recipe
 	
 
 	r3d_assert(m_AmmoArray[0]==NULL);
@@ -72,6 +74,7 @@ bool WeaponArmory::Init()
 	r3d_assert(m_NumLootBoxLoaded==0);
 	r3d_assert(m_NumFoodItemsLoaded==0);
 	r3d_assert(m_NumCraftArmoryItemsLoaded==0);//Mateuus Craft
+	r3d_assert(m_NumCraftRecipeArmoryItemsLoaded==0);//Mateuus Craft Recipe
 
 	r3d_assert(m_AmmoArray[0]==NULL);
 	r3d_assert(m_NumAmmoLoaded==0);
@@ -265,6 +268,18 @@ bool WeaponArmory::Init()
 		while(!xmlItem.empty())
 		{
 			loadCraftArmoryItem(xmlItem);
+			xmlItem = xmlItem.next_sibling();
+		}
+	}
+	/////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//Mateuus Craft Recipe
+	{
+		pugi::xml_node xmlItems = xmlDB.child("CraftRecipeArmory");
+		pugi::xml_node xmlItem = xmlItems.child("Item");
+		while(!xmlItem.empty())
+		{
+			loadCraftRecipeArmoryItem(xmlItem);
 			xmlItem = xmlItem.next_sibling();
 		}
 	}
@@ -752,6 +767,43 @@ CraftArmoryConfig* WeaponArmory::loadCraftArmoryItem(pugi::xml_node& xmlItem)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//Mateuus Craft Recipe
+CraftRecipeArmoryConfig* WeaponArmory::loadCraftRecipeArmoryItem(pugi::xml_node& xmlItem)
+{
+	r3d_assert(!xmlItem.empty());
+
+	uint32_t itemID = xmlItem.attribute("itemID").as_uint();
+	{
+		BaseItemConfig* temp = NULL;
+		if(m_itemsHash.GetObject(itemID, &temp))
+		{
+			r3dArtBug("Trying to load food item with id '%d' that is already loaded!", itemID);
+			return NULL;
+		}
+	}
+
+	CraftRecipeArmoryConfig* craft = new CraftRecipeArmoryConfig(itemID);
+	craft->category = (STORE_CATEGORIES)xmlItem.attribute("category").as_int();
+
+	const char* desc = xmlItem.child("Store").attribute("desc").value();
+	r3d_assert(desc);
+	craft->m_Description = strdup(desc);
+	craft->m_StoreIcon = strdup(xmlItem.child("Store").attribute("icon").value());
+	craft->m_StoreName = strdup(xmlItem.child("Store").attribute("name").value());
+	craft->m_StoreNameW = wcsdup(utf8ToWide(craft->m_StoreName));
+	craft->m_DescriptionW = wcsdup(utf8ToWide(craft->m_Description));
+
+	if(!xmlItem.child("Model").empty())
+	craft->m_ModelPath = strdup(xmlItem.child("Model").attribute("file").value());
+
+	m_itemsHash.Add(itemID, craft);
+	m_NumCraftRecipeArmoryItemsLoaded++;
+
+	return craft;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void WeaponArmory::Destroy()
 {
 	m_itemsHash.IterateStart();
@@ -765,6 +817,7 @@ void WeaponArmory::Destroy()
 	m_NumLootBoxLoaded = 0;
 	m_NumFoodItemsLoaded = 0;
 	m_NumCraftArmoryItemsLoaded = 0;//Mateuus Craft
+	m_NumCraftRecipeArmoryItemsLoaded = 0;//Mateuus Craft Recipe
 	m_NumItemLoaded = 0;
 	m_NumGearLoaded = 0;
 	m_NumBackpackLoaded = 0;
@@ -827,6 +880,20 @@ const CraftArmoryConfig* WeaponArmory::getCraftArmoryConfig(uint32_t itemID)
 	{
 		if(item->category == storecat_CraftCom)
 			return (CraftArmoryConfig*)item;
+	}
+	return NULL;
+}
+/////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//Mateus Craft Recipe
+const CraftRecipeArmoryConfig* WeaponArmory::getCraftRecipeArmoryConfig(uint32_t itemID)
+{
+	BaseItemConfig* item = NULL;
+	if(m_itemsHash.GetObject(itemID, &item))
+	{
+		if(item->category == storecat_CraftRe)
+			return (CraftRecipeArmoryConfig*)item;
 	}
 	return NULL;
 }

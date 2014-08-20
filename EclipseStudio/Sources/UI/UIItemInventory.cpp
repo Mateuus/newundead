@@ -99,6 +99,7 @@ void UIItemInventory::addItems()
 	std::vector<const HeroConfig*> allHeroes;
 	std::vector<const FoodConfig*> allFood;
 	std::vector<const CraftArmoryConfig*> allCraftArmory;//Mateuus Craft
+	std::vector<const CraftRecipeArmoryConfig*> allCraftRecipeArmory;//Mateuus Craft Recipe
 	std::vector<const BackpackConfig*> allBackpack;
 	std::vector<const WeaponAttachmentConfig*> allAmmo;
 	std::vector<const WeaponAttachmentConfig*> allAttachments;
@@ -138,6 +139,14 @@ void UIItemInventory::addItems()
 		if(CraftArmoryConfig)
 		{
 			allCraftArmory.push_back(CraftArmoryConfig);
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////
+		//Mateuus Craft Recipe
+		const CraftRecipeArmoryConfig* CraftRecipeArmoryConfig = g_pWeaponArmory->getCraftRecipeArmoryConfig(itemID);
+		if(CraftRecipeArmoryConfig)
+		{
+			allCraftRecipeArmory.push_back(CraftRecipeArmoryConfig);
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 		const BackpackConfig* backpackConfig = g_pWeaponArmory->getBackpackConfig(itemID);
@@ -401,6 +410,24 @@ void UIItemInventory::addItems()
 		var[4].SetString(CraftArmory->m_StoreIcon);
 		var[5].SetBoolean(false); // is stackable
 		var[6].SetNumber(CraftArmory->m_Weight);
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////
+	//Mateuus Craft Recipe
+	const int CraftRecipeArmorySize = allCraftRecipeArmory.size ();
+	for(int i = 0; i < CraftRecipeArmorySize; ++i)
+	{
+		const CraftRecipeArmoryConfig* CraftRecipeArmory = allCraftRecipeArmory[i];
+
+		var[0].SetUInt(CraftRecipeArmory->m_itemID);
+		var[1].SetNumber(CraftRecipeArmory->category);
+		var[2].SetStringW(CraftRecipeArmory->m_StoreNameW);
+		var[3].SetStringW(CraftRecipeArmory->m_DescriptionW);
+		var[4].SetString(CraftRecipeArmory->m_StoreIcon);
+		var[5].SetBoolean(false); // is stackable
+		var[6].SetNumber(CraftRecipeArmory->m_Weight);
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
 	////////////////////////////////////////////////////////

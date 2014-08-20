@@ -42,6 +42,7 @@ public:
 	const LootBoxConfig* getLootBoxConfig(uint32_t itemID);
 	const FoodConfig*	getFoodConfig(uint32_t itemID);
 	const CraftArmoryConfig*	getCraftArmoryConfig(uint32_t itemID);//Mateuus Craft
+	const CraftRecipeArmoryConfig*	getCraftRecipeArmoryConfig(uint32_t itemID);//Mateuus Craft Recipe
 	const ScopeConfig* getScopeConfig(const char* name);
 	const AchievementConfig* getAchievementConfig(const char* name);
 
@@ -54,6 +55,7 @@ public:
 	int getNumLootBoxes() const { return m_NumLootBoxLoaded; }
 	int getNumFoodItems() const { return m_NumFoodItemsLoaded; }
 	int getNumCraftArmoryItems() const { return m_NumCraftArmoryItemsLoaded; }//Mateuus Craft
+	int getNumCraftRecipeArmoryItems() const { return m_NumCraftRecipeArmoryItemsLoaded; }//Mateuus Craft Recipe
 	int getNumAchievements() const { return m_NumAchievementLoaded; }
 
 	void startItemSearch();
@@ -77,6 +79,7 @@ protected:
 	virtual LootBoxConfig* loadLootBox(pugi::xml_node& xmlItem);
 	virtual FoodConfig* loadFoodItem(pugi::xml_node& xmlItem);
 	virtual CraftArmoryConfig* loadCraftArmoryItem(pugi::xml_node& xmlItem);//Mateuus Craft
+	virtual CraftRecipeArmoryConfig* loadCraftRecipeArmoryItem(pugi::xml_node& xmlItem);//Mateuus Craft Recipe
 	virtual ScopeConfig* loadScope(pugi::xml_node& xmlScope);
 	virtual AchievementConfig* loadAchievement(pugi::xml_node& xmlAchievement);
 	
@@ -98,6 +101,7 @@ protected:
 	uint32_t	m_NumLootBoxLoaded;
 	uint32_t	m_NumFoodItemsLoaded;
 	uint32_t	m_NumCraftArmoryItemsLoaded;//Mateuus Craft
+	uint32_t	m_NumCraftRecipeArmoryItemsLoaded;//Mateuus Craft Recipe
 
 	static const int MAX_NUMBER_SCOPE = 128;
 	ScopeConfig* m_ScopeArray[MAX_NUMBER_SCOPE]; // todo: rewrite into hash later

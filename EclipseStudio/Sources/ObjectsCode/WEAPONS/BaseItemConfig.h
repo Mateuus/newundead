@@ -148,6 +148,39 @@ public:
 
 //////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////
+//Mateus Craft Recipe
+class CraftRecipeArmoryConfig : public BaseItemConfig
+{
+protected:
+	mutable r3dMesh* m_Model;
+public:
+	char* m_ModelPath;
+
+	CraftRecipeArmoryConfig(uint32_t id) : BaseItemConfig(id)
+	{
+		m_Model = NULL;
+		m_ModelPath = NULL;
+	}
+	virtual ~CraftRecipeArmoryConfig() 
+	{
+		resetMesh();
+		free(m_ModelPath);
+	}
+
+	const char* getModelPath() { return m_ModelPath ; }
+
+	r3dMesh* getMesh() const;
+	int getMeshRefs() const ;
+
+	// called when unloading level
+	virtual void resetMesh() { m_Model = 0; }
+
+	virtual bool loadBaseFromXml(pugi::xml_node& xmlItem);
+};
+
+//////////////////////////////////////////////////////////////////////////////////////
+
 
 struct ScopeConfig
 {
