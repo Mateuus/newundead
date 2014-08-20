@@ -336,6 +336,14 @@ void CUserProfile::ParseLoadouts(pugi::xml_node& xmlItem)
 		st.skillid32 = xmlItem.attribute("SkillID32").as_int();
 		st.skillid33 = xmlItem.attribute("SkillID33").as_int();
 
+		//Crafting //Codex Craft
+		st.Wood = xmlItem.attribute("Wood").as_int();
+		st.Stone = xmlItem.attribute("Stone").as_int();
+		st.Metal = xmlItem.attribute("Metal").as_int();
+		w.Wood = xmlItem.attribute("Wood").as_int();
+		w.Stone = xmlItem.attribute("Stone").as_int();
+		w.Metal = xmlItem.attribute("Metal").as_int();
+
 		xmlItem = xmlItem.next_sibling();
 	}
 }

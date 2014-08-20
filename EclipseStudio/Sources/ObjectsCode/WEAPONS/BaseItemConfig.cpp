@@ -75,4 +75,12 @@ bool FoodConfig::loadBaseFromXml(pugi::xml_node& xmlItem)
 
 	return true;
 }
+//////////////////////////////////////////////////////////////////////////
+//Mateus Craft
+bool CraftArmoryConfig::loadBaseFromXml(pugi::xml_node& xmlItem)
+{
+	BaseItemConfig::loadBaseFromXml(xmlItem);
+	return true;
+}
+//////////////////////////////////////////////////////////////////////////
 

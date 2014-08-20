@@ -681,6 +681,11 @@ int CJobUpdateChar::Exec()
 	req.AddParam("SkillID32",	slot.Stats.skillid32);
 	req.AddParam("SkillID33",	slot.Stats.skillid33);
 
+	//Codex Craft
+	req.AddParam("Wood",	slot.Wood);
+	req.AddParam("Stone",	slot.Stone);
+	req.AddParam("Metal",	slot.Metal);
+
 	r3dOutToLog("UpdateData '%s'\n",slot.Gamertag);
 	if(!req.Issue())
 	{

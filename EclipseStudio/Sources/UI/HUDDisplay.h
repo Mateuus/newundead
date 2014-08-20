@@ -44,7 +44,6 @@ public:
 	r3dScaleformMovie gfxHUD;
 	r3dScaleformMovie gfxBloodStreak;
 	r3dScaleformMovie gfxRangeFinder;
-//	r3dScaleformMovie gfxCraft;
 void removeMissionInfo(int var1);
 	void	eventChatMessage(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
 	void HUDDisplay::addplayertogroup(const char* gamertag,bool legend);

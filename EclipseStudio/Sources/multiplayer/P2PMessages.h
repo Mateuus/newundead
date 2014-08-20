@@ -97,6 +97,10 @@ enum pkttype_e
   //Codex Soco
   PKT_C2C_UnarmedCombat,  // Unarmed Combat
 
+  //Codex Craft
+  PKT_S2C_UpdateSlotsCraft,
+  PKT_C2C_PlayerCraftItem,
+
  // PKT_S2C_CreateSafeLock,
   PKT_C2S_PlayerAcceptMission,
   PKT_C2s_PlayerSetMissionStatus,
@@ -109,7 +113,6 @@ enum pkttype_e
   PKT_C2S_PlayerRemoveAttachment,
   PKT_C2C_PlayerSwitchWeapon,
   PKT_C2C_PlayerUseItem,
-  PKT_C2C_PlayerCraftItem,
   PKT_S2C_PlayerUsedItemAns, // this packet is sent for immediate action items, like bandages, or morphine shot
   PKT_C2S_PlayerChangeBackpack,
   PKT_C2S_BackpackDrop,		// player backpack operation
@@ -478,6 +481,32 @@ struct PKT_C2C_UnarmedCombat_s : public DefaultPacketMixin<PKT_C2C_UnarmedCombat
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Craft
+struct PKT_C2C_PlayerCraftItem_s : public DefaultPacketMixin<PKT_C2C_PlayerCraftItem>
+{
+	int slotid1;
+	int slotid2;
+	int slotid1q;
+	int slotid2q;
+	int slotid3;
+	int slotid4;
+	int slotid3q;
+	int slotid4q;
+	int slotid5;
+	int slotid5q;
+	int itemid;
+};
+
+struct PKT_S2C_UpdateSlotsCraft_s : public DefaultPacketMixin<PKT_S2C_UpdateSlotsCraft> // Server Vehicles
+{
+	int Wood;
+	int Stone;
+	int Metal;
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -638,18 +667,7 @@ struct PKT_C2C_PlayerSwitchWeapon_s : public DefaultPacketMixin<PKT_C2C_PlayerSw
 {
 	BYTE		wid; // 255 - means empty hands
 };
-struct PKT_C2C_PlayerCraftItem_s : public DefaultPacketMixin<PKT_C2C_PlayerCraftItem>
-{
-	int slotid1;
-	int slotid2;
-	int slotid1q;
-	int slotid2q;
-	int slotid3;
-	int slotid4;
-	int slotid3q;
-	int slotid4q;
-	int itemid;
-};
+
 struct PKT_C2C_PlayerUseItem_s : public DefaultPacketMixin<PKT_C2C_PlayerUseItem>
 {
 	BYTE		SlotFrom;	// backpack slot

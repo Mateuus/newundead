@@ -59,8 +59,8 @@ enum STORE_CATEGORIES
 	storecat_Water		= 33,	// water
 	storecat_Vehicle    = 34,   // Server vehicles //Codex Carros
 	storecat_punch		= 35,   //Codex Soco
-	storecat_CraftRe		= 51,
-	storecat_CraftCom		= 50,
+	storecat_CraftRe	= 51,   //Codex Craft
+	storecat_CraftCom	= 50,   //Codex Craft
 	storecat_ShootVehicle    = 51, //Codex Carros
 	storecat_ShootAnimal    = 52, //Codex Animal
 
@@ -114,6 +114,10 @@ struct wiStats
 	int		TimePlayed;
 	int		Reputation;
 	int		SkillXPPool;
+	//Codex Craft
+	int		Wood;
+	int		Stone;
+	int		Metal;
 
 	// generic trackable stats
 	int		KilledZombies;	// normal zombie kills
@@ -275,6 +279,11 @@ char		groupgamertag[128];
 	int		ClanRank;
 	char		ClanTag[5*2]; //utf8
 	int		ClanTagColor;
+
+	//Craft Info //Codex Craft
+	int Wood;
+	int Stone;
+	int Metal;
 
 	// backpack content, including loadout
 	enum {

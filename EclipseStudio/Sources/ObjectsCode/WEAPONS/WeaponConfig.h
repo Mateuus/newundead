@@ -114,6 +114,7 @@ public:
 		ITEMID_Antibiotics  = 101256, 
 		ITEMID_Bandages  = 101261,
 		ITEMID_Bandages2 = 101262,
+		ITEMID_CraftedBandages = 101263,//Codex Craft
 		ITEMID_Painkillers = 101300,
 		ITEMID_ZombieRepellent = 101301,
 		ITEMID_C01Vaccine = 101302,

@@ -39,10 +39,14 @@ public partial class api_SrvCharUpdate : WOApiWebPage
         sqcmd.Parameters.AddWithValue("@in_Stat04", web.Param("ts04"));
         sqcmd.Parameters.AddWithValue("@in_Stat05", web.Param("ts05"));
 
-  sqcmd.Parameters.AddWithValue("@in_GroupID", web.Param("GroupID"));
- sqcmd.Parameters.AddWithValue("@in_legfall", web.Param("legfall"));
- sqcmd.Parameters.AddWithValue("@in_bleeding", web.Param("bleeding"));
- sqcmd.Parameters.AddWithValue("@in_Mission1", web.Param("Mission1"));
+        sqcmd.Parameters.AddWithValue("@in_GroupID", web.Param("GroupID"));
+        sqcmd.Parameters.AddWithValue("@in_legfall", web.Param("legfall"));
+        sqcmd.Parameters.AddWithValue("@in_bleeding", web.Param("bleeding"));
+        sqcmd.Parameters.AddWithValue("@in_Mission1", web.Param("Mission1"));
+        //Codex Craft
+        sqcmd.Parameters.AddWithValue("@in_Wood", web.Param("Wood"));
+        sqcmd.Parameters.AddWithValue("@in_Stone", web.Param("Stone"));
+        sqcmd.Parameters.AddWithValue("@in_Metal", web.Param("Metal"));
         if (!CallWOApi(sqcmd))
             return;
     }

@@ -2753,6 +2753,31 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2C_ChatMessage)
 
 	}
 }
+/////////////////////////////////////////////////////////////////////////////////
+//Codex Craft
+IMPL_PACKET_FUNC(ServerGameLogic, PKT_S2C_UpdateSlotsCraft)
+{
+	GameObject* from = GameWorld().GetNetworkObject(n.FromID);
+	if(from)
+	{
+		obj_ServerPlayer* Player= static_cast< obj_ServerPlayer* > ( from );
+
+		if (!Player)
+           return;
+
+		Player->loadout_->Wood=n.Wood;
+		Player->loadout_->Stone=n.Stone;
+		Player->loadout_->Metal=n.Metal;
+		Player->loadout_->Stats.Wood=n.Wood;
+		Player->loadout_->Stats.Stone=n.Stone;
+		Player->loadout_->Stats.Metal=n.Metal;
+		ApiPlayerUpdateChar(Player);
+		Player->OnLoadoutChanged();
+		//r3dOutToLog("Saving craft Data...Wood %i Stone %i Metal %i\n",n.Wood,n.Stone,n.Metal);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////
 
 IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_DataUpdateReq)
 {
@@ -3086,6 +3111,7 @@ int ServerGameLogic::ProcessWorldEvent(GameObject* fromObj, DWORD eventId, DWORD
 		DEFINE_PACKET_HANDLER(PKT_C2S_PlayerAcceptMission);
 		//DEFINE_PACKET_HANDLER(PKT_C2S_TradeRequest);
 		DEFINE_PACKET_HANDLER(PKT_C2C_ChatMessage);
+		DEFINE_PACKET_HANDLER(PKT_S2C_UpdateSlotsCraft);//Codex Craft
 
 		DEFINE_PACKET_HANDLER(PKT_S2C_CheatMsg);
 		DEFINE_PACKET_HANDLER(PKT_C2S_DataUpdateReq);

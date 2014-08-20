@@ -1009,6 +1009,8 @@ r3dInputMappingMngr::r3dInputMappingMngr()
 
 	m_Mapping[KS_PUSH_TO_TALK] = KeyboardMapping(INPUTMAP_KEYBOARD, kbsB, "$HUD_Cntrl_VoicePTT");
 
+	m_Mapping[KS_CRAFT] =			KeyboardMapping(INPUTMAP_KEYBOARD, kbsK, "$HUD_Cntrl_ShowCraftMenu");//Codex Craft
+
 
 }
 

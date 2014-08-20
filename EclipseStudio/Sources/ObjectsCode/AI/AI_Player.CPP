@@ -70,6 +70,7 @@
 #include "..\..\ui\HUD_EditorGame.h"
 #include "..\..\ui\FrontEndShared.h"
 #include "..\..\ui\HUDPause.h"
+#include "..\..\ui\HUDCraft.h"//Codex Craft
 #include "..\..\ui\HUDTrade.h"
 #include "..\..\ui\HUDActionUI.h"
 #include "..\..\ui\HUDAttachments.h"
@@ -85,6 +86,7 @@
 extern HUDDisplay*	hudMain;
 extern HUDPause*	hudPause;
 extern HUDAttachments*	hudAttm;
+extern HUDCraft*	hudCraft;//Codex Craft
 extern HUDActionUI*	hudActionUI;
 extern HUDGeneralStore*	hudGeneralStore;
 extern HUDVault* hudVault;
@@ -2360,7 +2362,7 @@ if (isInVehicle() || isPassenger())
 
 					}
 					if((wpn->getItemID() == WeaponConfig::ITEMID_Bandages || wpn->getItemID() == WeaponConfig::ITEMID_Bandages2 || wpn->getItemID() == WeaponConfig::ITEMID_Antibiotics ||
-						wpn->getItemID() == WeaponConfig::ITEMID_Painkillers || wpn->getItemID() == WeaponConfig::ITEMID_Medkit) 
+						wpn->getItemID() == WeaponConfig::ITEMID_Painkillers || wpn->getItemID() == WeaponConfig::ITEMID_Medkit || wpn->getItemID() == WeaponConfig::ITEMID_CraftedBandages/*//Codex Craft*/) 
 						&& CurLoadout.Health > 99 && !CurLoadout.legfall && !CurLoadout.bleeding)
 					{
 						if(hudMain) hudMain->showMessage(gLangMngr.getString("InfoMsg_MaxHealthAlready"));
@@ -3960,7 +3962,7 @@ void obj_Player::localPlayer_UseItem(int slotID, uint32_t itemID, const r3dPoint
 
 		m_Stamina = m_Stamina + GPP->c_fSprintMaxEnergy*fc->Stamina;
 	}
-	if (itemID==WeaponConfig::ITEMID_Antibiotics||itemID==WeaponConfig::ITEMID_Painkillers||itemID==WeaponConfig::ITEMID_Medkit)   
+	if (itemID==WeaponConfig::ITEMID_Antibiotics||itemID==WeaponConfig::ITEMID_Painkillers||itemID==WeaponConfig::ITEMID_Medkit || itemID==WeaponConfig::ITEMID_CraftedBandages/*//Codex Craft*/)   
 	{        
 		if(var4!=0)        
 		{            
@@ -4957,7 +4959,7 @@ void obj_Player::UpdateActionUI()
 		uint32_t wpnItemID = 0;
 		if(m_Weapons[m_SelectedWeapon])
 			wpnItemID = m_Weapons[m_SelectedWeapon]->getItemID();
-		selectHumans = wpnItemID==WeaponConfig::ITEMID_Antibiotics||wpnItemID==WeaponConfig::ITEMID_Bandages||wpnItemID==WeaponConfig::ITEMID_Bandages2||
+		selectHumans = wpnItemID==WeaponConfig::ITEMID_Antibiotics||wpnItemID==WeaponConfig::ITEMID_Bandages||wpnItemID==WeaponConfig::ITEMID_CraftedBandages/*//Codex Craft*/||wpnItemID==WeaponConfig::ITEMID_Bandages2||
 			wpnItemID==WeaponConfig::ITEMID_Painkillers||wpnItemID==WeaponConfig::ITEMID_ZombieRepellent||wpnItemID==WeaponConfig::ITEMID_C01Vaccine||
 			wpnItemID==WeaponConfig::ITEMID_C04Vaccine||wpnItemID==WeaponConfig::ITEMID_Medkit;
 		if(m_Weapons[m_SelectedWeapon])
@@ -9036,6 +9038,70 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 										}
 									}
 								}
+						}
+				//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+				//////////////////////////////////////////////////////////////////////////////////////////////
+				//Codex Craft
+				if (category == storecat_MELEE)
+						{
+							if (weaponID == 101408)
+							{
+								obj_Player* plr = gClientLogic().localPlayer_;
+								char NameOfMaterial[128];
+								sprintf(NameOfMaterial,"%s",shootMaterial->TypeName);
+
+								if (strstr(strupr(NameOfMaterial), "METAL_RESOURCES"))
+								{
+									if (plr)
+									{
+										wiCharDataFull& slot = plr->CurLoadout;
+										if (slot.Stats.Metal<100)
+										{
+											slot.Stats.Metal++;
+											PKT_S2C_UpdateSlotsCraft_s n;
+											n.Wood=slot.Stats.Wood;
+											n.Stone=slot.Stats.Stone;
+											n.Metal=slot.Stats.Metal;
+											p2pSendToHost(plr, &n, sizeof(n));
+										}
+									}
+								}
+								else if (strstr(strupr(NameOfMaterial), "STONE_RESOURCES"))
+								{
+									if (plr)
+									{
+										wiCharDataFull& slot = plr->CurLoadout;
+										if (slot.Stats.Stone<100)
+										{
+											slot.Stats.Stone++;
+											PKT_S2C_UpdateSlotsCraft_s n;
+											n.Wood=slot.Stats.Wood;
+											n.Stone=slot.Stats.Stone;
+											n.Metal=slot.Stats.Metal;
+											p2pSendToHost(plr, &n, sizeof(n));
+										}
+									}
+								}
+								else if (strstr(strupr(NameOfMaterial), "WOOD_RESOURCES"))
+								{
+									if (plr)
+									{
+										wiCharDataFull& slot = plr->CurLoadout;
+										if (slot.Stats.Wood<100)
+										{
+											slot.Stats.Wood++;
+											PKT_S2C_UpdateSlotsCraft_s n;
+											n.Wood=slot.Stats.Wood;
+											n.Stone=slot.Stats.Stone;
+											n.Metal=slot.Stats.Metal;
+											p2pSendToHost(plr, &n, sizeof(n));
+										}
+									}
+								}
+							}
+							return TRUE;
 						}
 				//////////////////////////////////////////////////////////////////////////////////////////////
 					}

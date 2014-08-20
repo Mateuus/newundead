@@ -4,6 +4,7 @@
 #include "../../../Eternity/sf/Console/config.h"
 #include "HUDPause.h"
 #include "HUDDisplay.h"
+#include "HUDCraft.h"//Codex Craft
 #include "HUDAttachments.h"
 #include "LangMngr.h"
 
@@ -20,6 +21,7 @@ void writeGameOptionsFile();
 
 extern HUDAttachments*	hudAttm;
 extern HUDDisplay* hudMain;
+extern HUDCraft* hudCraft;//Codex Craft
 
 HUDPause::HUDPause()
 {
@@ -630,7 +632,7 @@ void HUDPause::eventShowContextMenuCallback(r3dScaleformMovie* pMovie, const Sca
 				var[1].SetInt(3);
 				gfxMovie.Invoke("_root.api.Main.Inventory.addContextMenuOption", var, 2);
 			}
-		}else if(wc->category != storecat_Backpack){
+		}else if(wc->category != storecat_Backpack || storecat_CraftCom || storecat_CraftRe/*//Mateus Craft */){
 			Scaleform::GFx::Value var[2];
 			var[0].SetString("$FR_PAUSE_USE_ITEM");
 			var[1].SetInt(5);
@@ -952,6 +954,21 @@ void HUDPause::Activate()
 
 		gfxMovie.Invoke("_root.api.addClientSurvivor", var, 23);
 	}
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	//Resources for Crafting////
+	//Codex Craft
+	{
+		obj_Player* plr = gClientLogic().localPlayer_;
+		r3d_assert(plr);
+		wiCharDataFull& slot = plr->CurLoadout;
+
+		Scaleform::GFx::Value var[3];
+		var[0].SetUInt(slot.Stats.Wood); //Wood slot.Stats.Wood
+		var[1].SetUInt(slot.Stats.Stone);//Stone slot.Stats.Stone
+		var[2].SetUInt(slot.Stats.Metal);//Metal slot.Stats.Metal
+        gfxMovie.Invoke("_root.api.setResourcesNum", var, 3);
+	}
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 	{
 		char tmpStr[256];

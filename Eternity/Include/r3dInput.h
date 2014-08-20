@@ -298,6 +298,8 @@ public:
 
 		KS_TOGGLE_FLASHLIGHT, // ultraporing - flashlight key
 
+		KS_CRAFT,//Codex Craft
+
 		KS_TOGGLEHUD,
 		KS_PUSH_TO_TALK, // voip
 

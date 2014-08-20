@@ -3,7 +3,6 @@
 
 #include "HUDDisplay.h"
 
-#include "HUDCraft.h"
 
 #include "ObjectsCode/Gameplay/BasePlayerSpawnPoint.h"
 #include "ObjectsCode/Gameplay/obj_Grave.h"
@@ -107,7 +106,6 @@ bool HUDDisplay::Init()
 	if(!gfxRangeFinder.Load("Data\\Menu\\WarZ_HUD_RangeFinder.swf", false))
 		return false;
 
-	//hudCraft->Init();
 	gfxHUD.SetCurentRTViewport( Scaleform::GFx::Movie::SM_ExactFit );
 	gfxBloodStreak.SetCurentRTViewport(Scaleform::GFx::Movie::SM_ExactFit);
 	gfxRangeFinder.SetCurentRTViewport(Scaleform::GFx::Movie::SM_ExactFit);
@@ -933,10 +931,7 @@ void HUDDisplay::eventChatMessage(r3dScaleformMovie* pMovie, const Scaleform::GF
 			return;
 		}
 	}
-	if(strncmp(s_chatMsg, "/craft", 6) == NULL)
-	{
-		//hudCraft->Activate();
-	}
+
 	/*if (r_voip->GetBool())
 	{
 	if(strncmp(s_chatMsg, "/dists3", 6) == NULL)

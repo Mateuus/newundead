@@ -34,7 +34,7 @@
 #include "UI\HUDActionUI.h"
 #include "UI\HUDGeneralStore.h"
 #include "UI\HUDVault.h"
-#include "UI\HUDCraft.h"
+#include "UI\HUDCraft.h"//Codex Craft
 #include "UI\HUDTrade.h"
 #include "UI\HUDRepair.h"
 
@@ -55,8 +55,8 @@ HUDAttachments*	hudAttm = NULL;
 HUDActionUI*	hudActionUI = NULL;
 HUDGeneralStore* hudGeneralStore = NULL;
 HUDVault* hudVault = NULL;
-HUDCraft* hudCraft = NULL;
 HUDTrade* hudTrade = NULL;
+HUDCraft* hudCraft = NULL;//Codex Craft
 HUDRepair* hudRepair = NULL;
 
 #define VEHICLE_CINEMATIC_MODE 0 //Codex Carros
@@ -359,7 +359,7 @@ void TPSGameHUD_OnStartGame()
 	hudAttm = new HUDAttachments();
 	hudGeneralStore = new HUDGeneralStore();
 	hudVault = new HUDVault();
-	hudCraft = new HUDCraft();
+	hudCraft = new HUDCraft();//Codex Craft
 	hudTrade = new HUDTrade();
 	hudRepair = new HUDRepair();
 
@@ -371,7 +371,7 @@ void TPSGameHUD_OnStartGame()
 	hudAttm->Init();
 	hudGeneralStore->Init();
 	hudVault->Init();
-	hudCraft->Init();
+	hudCraft->Init();//Codex Craft
 	hudTrade->Init();
 	hudRepair->Init();
 #ifdef VOIP_ENABLED
@@ -421,7 +421,7 @@ void TPSGameHUD :: DestroyPure()
 		hudAttm->Unload();
 		hudGeneralStore->Unload();
 		hudVault->Unload();
-		hudCraft->Unload();
+		hudCraft->Unload();//Codex Craft
 		hudTrade->Unload();
 		hudRepair->Unload();
 
@@ -431,9 +431,9 @@ void TPSGameHUD :: DestroyPure()
 		SAFE_DELETE(hudAttm);
 		SAFE_DELETE(hudGeneralStore);
 		SAFE_DELETE(hudVault);
-		SAFE_DELETE(hudCraft);
 		SAFE_DELETE(hudTrade);
 		SAFE_DELETE(hudRepair);
+		SAFE_DELETE(hudCraft);//Codex Craft
 	}
 }
 
@@ -1014,7 +1014,7 @@ void TPSGameHUD :: SetCameraPure ( r3dCamera &Cam)
 		return;
 	if(hudVault->isActive())
 		return;
-	if(hudCraft->isActive())
+	if(hudCraft->isActive())//Codex Craft
 		return;
 	if(hudTrade->isActive())
 		return;
@@ -1178,7 +1178,6 @@ static void DrawMenus()
 		if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_MOVE_FORWARD_AUTORUN))
 			d_autorun->SetBool(!d_autorun->GetBool());
 
-		bool showCraft = false;
 		/*if (Keyboard->WasPressed(kbsU) && !hudTrade->isActive())
 		{
 		hudTrade->Activate();
@@ -1202,18 +1201,7 @@ static void DrawMenus()
 			else
 				hudRepair->Deactivate();
 		}
-		if(showCraft)
-		{
-			if(!hudCraft->isActive())
-			{
-				gClientLogic().localPlayer_->ShowCrosshair=false;//Codex Mira
-				hudCraft->Activate();
-			}
-			else {
-				hudCraft->Deactivate();
-				gClientLogic().localPlayer_->ShowCrosshair=true;//Codex Mira
-			}
-		}
+
 		bool showAttachment = InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_SHOW_ATTACHMENTS);
 		if(showAttachment)
 		{
@@ -1224,6 +1212,26 @@ static void DrawMenus()
 			else
 				hudAttm->Deactivate();
 		}
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		//Codex Craft
+		bool showCraft = InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_CRAFT);
+		if (!gClientLogic().localPlayer_)
+			showCraft=false;
+		if (gClientLogic().localPlayer_->bDead)
+			showCraft=false;
+		if(showCraft)
+		{
+			if(!hudCraft->isActive())
+			{
+				gClientLogic().localPlayer_->ShowCrosshair=false;
+				hudCraft->Activate();
+			}
+			else {
+				hudCraft->Deactivate();
+				gClientLogic().localPlayer_->ShowCrosshair=true;
+			}
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////////
 
 		if(hudAttm->isActive() && Keyboard->WasPressed(kbsEsc))
 		{
@@ -1242,11 +1250,10 @@ static void DrawMenus()
 			gClientLogic().localPlayer_->ShowCrosshair=true;
 			hudVault->Deactivate();
 		}
-
-		if(hudCraft->isActive() && Keyboard->WasPressed(kbsEsc))
+		if(hudCraft->isActive() && Keyboard->WasPressed(kbsEsc))//Codex Craft
 		{
+			hudCraft->Deactivate();
 			gClientLogic().localPlayer_->ShowCrosshair=true;
-			hudVault->Deactivate();
 		}
 	}
 
@@ -1306,19 +1313,7 @@ static void DrawMenus()
 		return;
 	}
 
-	if(hudCraft->isActive())
-	{
-		r3dMouse::Show(); // make sure that mouse is visible
 
-		R3DPROFILE_START( "hudCraft->" );
-
-		hudCraft->Update();
-		hudCraft->Draw();
-
-		R3DPROFILE_END( "hudCraft->" );
-
-		return;
-	}
 	if(hudTrade->isActive())
 	{
 		r3dMouse::Show(); // make sure that mouse is visible
@@ -1353,6 +1348,20 @@ static void DrawMenus()
 		hudActionUI->Update();
 		hudActionUI->Draw();
 		R3DPROFILE_END( "hudActionUI->" );
+	}
+
+	if(hudCraft->isActive())//Codex Craft
+	{
+		r3dMouse::Show(); // make sure that mouse is visible
+
+		R3DPROFILE_START( "hudCraft->" );
+
+		hudCraft->Update();
+		hudCraft->Draw();
+
+		R3DPROFILE_END( "hudCraft->" );
+
+		return;
 	}
 
 

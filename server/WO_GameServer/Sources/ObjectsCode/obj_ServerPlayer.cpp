@@ -2397,6 +2397,8 @@ void obj_ServerPlayer::UseItem_Barricade(const r3dPoint3D& pos, float rotX, uint
 	shield->NetworkLocal = true;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Craft
 void obj_ServerPlayer::OnNetPacket(const PKT_C2C_PlayerCraftItem_s& n)
 {
 	r3dOutToLog("Plr %s craft slot %d\n",loadout_->Gamertag,n.slotid1);
@@ -2406,87 +2408,80 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2C_PlayerCraftItem_s& n)
 	r3dOutToLog("Plr %s craft %d\n",loadout_->Gamertag,n.itemid);
 	wiInventoryItem& wi1 = loadout_->Items[n.slotid1];
 	wiInventoryItem& wi2 = loadout_->Items[n.slotid2];
-	if (n.slotid3 != 99999)
-	{
-		wiInventoryItem& wi3 = loadout_->Items[n.slotid3];
-		int q3 = wi3.quantity;
-		q3 -= n.slotid3q;
-		PKT_S2C_BackpackModify_s n1;
-		n1.SlotTo     = n.slotid3;
-		n1.Quantity   = q3;
-		n1.dbg_ItemID = wi3.itemID;
-		gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
-		if (wi3.quantity < 1)
-		{
-			wi3.Reset();
-		}
-	}
-	if (n.slotid4 != 99999)
-	{
-		wiInventoryItem& wi4 = loadout_->Items[n.slotid4];
-		int q4 = wi4.quantity;
-		q4 -= n.slotid4q;
-		PKT_S2C_BackpackModify_s n1;
-		n1.SlotTo     = n.slotid4;
-		n1.Quantity   = q4;
-		n1.dbg_ItemID = wi4.itemID;
-		gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
-		if (wi4.quantity < 1)
-		{
-			wi4.Reset();
-		}
 
-	}
-	// Remove CraftComp item
-	/*wi1.quantity--;
-	if(wi1.quantity <= 0) {
-	wi1.Reset();
-	}
-
-	wi2.quantity--;
-	if(wi2.quantity <= 0) {
-	wi2.Reset();
-	}*/
-
-	// Send Remove Packet
-
+if (n.slotid1 != 99999)
+{
+	wiInventoryItem& wi1 = loadout_->Items[n.slotid1];
 	int q1 = wi1.quantity;
-	int q2 = wi2.quantity;
-
-
 	q1 -= n.slotid1q;
-	q2 -= n.slotid2q;
-
-
 	PKT_S2C_BackpackModify_s n1;
 	n1.SlotTo     = n.slotid1;
 	n1.Quantity   = q1;
 	n1.dbg_ItemID = wi1.itemID;
 	gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
+	wi1.Reset();
+}
 
-	PKT_S2C_BackpackModify_s n2;
-	n2.SlotTo     = n.slotid2;
-	n2.Quantity   = q2;
-	n2.dbg_ItemID = wi2.itemID;
-	gServerLogic.p2pSendToPeer(peerId_, this, &n2, sizeof(n2));
+if (n.slotid2 != 99999)
+{
+	wiInventoryItem& wi2 = loadout_->Items[n.slotid2];
+	int q2 = wi2.quantity;
+	q2 -= n.slotid2q;
+	PKT_S2C_BackpackModify_s n1;
+	n1.SlotTo     = n.slotid2;
+	n1.Quantity   = q2;
+	n1.dbg_ItemID = wi2.itemID;
+	gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
+	wi2.Reset();
+}
 
-	if (wi1.quantity < 1)
-	{
-		wi1.Reset();
-	}
-	if (wi2.quantity < 1)
-	{
-		wi2.Reset();
-	}
+if (n.slotid3 != 99999)
+{
+	wiInventoryItem& wi3 = loadout_->Items[n.slotid3];
+	int q3 = wi3.quantity;
+	q3 -= n.slotid3q;
+	PKT_S2C_BackpackModify_s n1;
+	n1.SlotTo     = n.slotid3;
+	n1.Quantity   = q3;
+	n1.dbg_ItemID = wi3.itemID;
+	gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
+	wi3.Reset();
+}
+if (n.slotid4 != 99999)
+{
+	wiInventoryItem& wi4 = loadout_->Items[n.slotid4];
+	int q4 = wi4.quantity;
+	q4 -= n.slotid4q;
+	PKT_S2C_BackpackModify_s n1;
+	n1.SlotTo     = n.slotid4;
+	n1.Quantity   = q4;
+	n1.dbg_ItemID = wi4.itemID;
+	gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
+	wi4.Reset();
 
-	//r3dOutToLog("Send Packet");
+}
+if (n.slotid5 != 99999)
+{
+	wiInventoryItem& wi5 = loadout_->Items[n.slotid5];
+	int q5 = wi5.quantity;
+	q5 -= n.slotid5q;
+	PKT_S2C_BackpackModify_s n1;
+	n1.SlotTo     = n.slotid5;
+	n1.Quantity   = q5;
+	n1.dbg_ItemID = wi5.itemID;
+	gServerLogic.p2pSendToPeer(peerId_, this, &n1, sizeof(n1));
+	wi5.Reset();
+}
+
 	// Add Crafted item to player
-	int itemids = n.itemid;
+    int itemids = n.itemid;
 	wiInventoryItem wi;
 	wi.itemID   = itemids;
 	wi.quantity = 1;	
 	BackpackAddItem(wi);
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void obj_ServerPlayer::OnNetPacket(const PKT_C2C_PlayerUseItem_s& n)
 {
 	//gServerLogic.LogInfo(peerId_, "UseItem", "%d", n.dbg_ItemID); CLOG_INDENT;
@@ -4380,7 +4375,6 @@ BOOL obj_ServerPlayer::OnNetReceive(DWORD EventID, const void* packetData, int p
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_PlayerRemoveAttachment);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerSwitchWeapon);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerUseItem);
-		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerCraftItem);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_TradeAccept2);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_GroupInvite);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_GroupNoAccept);

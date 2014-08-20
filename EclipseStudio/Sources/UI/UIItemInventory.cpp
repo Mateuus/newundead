@@ -98,6 +98,7 @@ void UIItemInventory::addItems()
 	std::vector<const ModelItemConfig*> allItem;
 	std::vector<const HeroConfig*> allHeroes;
 	std::vector<const FoodConfig*> allFood;
+	std::vector<const CraftArmoryConfig*> allCraftArmory;//Mateuus Craft
 	std::vector<const BackpackConfig*> allBackpack;
 	std::vector<const WeaponAttachmentConfig*> allAmmo;
 	std::vector<const WeaponAttachmentConfig*> allAttachments;
@@ -130,7 +131,15 @@ void UIItemInventory::addItems()
 		if(foodConfig)
 		{
 			allFood.push_back(foodConfig);
-		}			
+		}	
+		/////////////////////////////////////////////////////////////////////////////////////////
+		//Mateuus Craft
+		const CraftArmoryConfig* CraftArmoryConfig = g_pWeaponArmory->getCraftArmoryConfig(itemID);
+		if(CraftArmoryConfig)
+		{
+			allCraftArmory.push_back(CraftArmoryConfig);
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////
 		const BackpackConfig* backpackConfig = g_pWeaponArmory->getBackpackConfig(itemID);
 		if(backpackConfig)
 		{
@@ -178,9 +187,11 @@ void UIItemInventory::addItems()
 		var[6].SetNumber(gear->m_Weight);
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
-{
+//////////////////////////////////////////////////////////////////////////////
+	//Codex Craft
+	{ //Craft Item show Inventory Name
 		Scaleform::GFx::Value var[9];
-	var[0].SetUInt(301365);
+	    var[0].SetUInt(301365);
 		var[1].SetNumber(28);
 		var[2].SetString("Metal Pipe");
 		var[3].SetString("Craft Component Item");
@@ -189,20 +200,9 @@ void UIItemInventory::addItems()
 		var[6].SetNumber(0);						// weight
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
-{
+	{
 		Scaleform::GFx::Value var[9];
-	var[0].SetUInt(301321);
-		var[1].SetNumber(50);
-		var[2].SetString("Gas");
-		var[3].SetString("");
-		var[4].SetString("$Data/Weapons/StoreIcons/Craft_Gas_01.dds");
-		var[5].SetBoolean(false);					// is Stackable
-		var[6].SetNumber(0);						// weight
-		gfxMovie_->Invoke("_root.api.addItem", var, 7);
-	}
-		{
-		Scaleform::GFx::Value var[9];
-	var[0].SetUInt(301370);
+	    var[0].SetUInt(301370);
 		var[1].SetNumber(28);
 		var[2].SetString("Rope");
 		var[3].SetString("Craft Component Item");
@@ -211,9 +211,9 @@ void UIItemInventory::addItems()
 		var[6].SetNumber(0);						// weight
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
-				{
+	{
 		Scaleform::GFx::Value var[9];
-	var[0].SetUInt(301319);
+	    var[0].SetUInt(301319);
 		var[1].SetNumber(28);
 		var[2].SetString("Duck Tape");
 		var[3].SetString("Craft Component Item");
@@ -222,9 +222,9 @@ void UIItemInventory::addItems()
 		var[6].SetNumber(0);						// weight
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
-				{
+	{
 		Scaleform::GFx::Value var[9];
-	var[0].SetUInt(301335);
+	    var[0].SetUInt(301335);
 		var[1].SetNumber(28);
 		var[2].SetString("Scissors");
 		var[3].SetString("Craft Component Item");
@@ -233,6 +233,130 @@ void UIItemInventory::addItems()
 		var[6].SetNumber(0);						// weight
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301332);
+		var[1].SetNumber(28);
+		var[2].SetString("Razer Wire");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_RazerWire_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(101389);
+		var[1].SetNumber(28);
+		var[2].SetString("Police Baton");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Mel_PoliceBaton.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301328);
+		var[1].SetNumber(28);
+		var[2].SetString("Nails");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_Nails_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301339);
+		var[1].SetNumber(28);
+		var[2].SetString("Thread");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_thread_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301327);
+		var[1].SetNumber(28);
+		var[2].SetString("Metal Scrap");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_MetalScrap_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301324);
+		var[1].SetNumber(28);
+		var[2].SetString("Gun Powder");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_GunPowder_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+    {
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301318);
+		var[1].SetNumber(28);
+		var[2].SetString("Empty Can");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_EmptyCan_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301366);
+		var[1].SetNumber(28);
+		var[2].SetString("Ointment");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_Ointment_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+    {
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301331);
+		var[1].SetNumber(28);
+		var[2].SetString("Rag");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_Rag_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	{
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301357);
+		var[1].SetNumber(28);
+		var[2].SetString("Charcoal");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_Charcoal_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+    {
+		Scaleform::GFx::Value var[9];
+	    var[0].SetUInt(301320);
+		var[1].SetNumber(28);
+		var[2].SetString("Empty Bottle");
+		var[3].SetString("Craft Component Item");
+		var[4].SetString("$Data/Weapons/StoreIcons/Craft_EmptyBottle_01.dds");
+		var[5].SetBoolean(false);					// is Stackable
+		var[6].SetNumber(0);						// weight
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 	const int itemSize = allItem.size ();
 	for(int i = 0; i < itemSize; ++i)
 	{
@@ -262,6 +386,24 @@ void UIItemInventory::addItems()
 		var[6].SetNumber(food->m_Weight);
 		gfxMovie_->Invoke("_root.api.addItem", var, 7);
 	}
+
+	////////////////////////////////////////////////////////
+	//Mateuus Craft
+	const int CraftArmorySize = allCraftArmory.size ();
+	for(int i = 0; i < CraftArmorySize; ++i)
+	{
+		const CraftArmoryConfig* CraftArmory = allCraftArmory[i];
+
+		var[0].SetUInt(CraftArmory->m_itemID);
+		var[1].SetNumber(CraftArmory->category);
+		var[2].SetStringW(CraftArmory->m_StoreNameW);
+		var[3].SetStringW(CraftArmory->m_DescriptionW);
+		var[4].SetString(CraftArmory->m_StoreIcon);
+		var[5].SetBoolean(false); // is stackable
+		var[6].SetNumber(CraftArmory->m_Weight);
+		gfxMovie_->Invoke("_root.api.addItem", var, 7);
+	}
+	////////////////////////////////////////////////////////
 
 	const int heroSize = allHeroes.size ();
 	for(int i = 0; i < heroSize; ++i)
