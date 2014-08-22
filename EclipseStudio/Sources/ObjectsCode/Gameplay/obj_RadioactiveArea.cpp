@@ -140,7 +140,7 @@ float obj_RadioactiveArea::DrawPropertyEditor(float scrx, float scry, float scrw
 	if( IsParentOrEqual( &ClassData, startClass ) )
 	{		
 		starty += imgui_Static ( scrx, starty, "Radioactive Area Parameters" );
-		starty += imgui_Value_Slider(scrx, starty, "Radioactive Radius", &useRadius, 0, 30.0f, "%.0f");
+		starty += imgui_Value_Slider(scrx, starty, "Radioactive Radius", &useRadius, 0, 500.0f, "%.0f");
 	}
 
 	return starty-scry;

@@ -130,10 +130,10 @@ wiInventoryItem RollItem(const LootBoxConfig* lootCfg, int depth)
 	for(size_t i=0; i<lootCfg->entries.size(); i++)
 	{
 		const LootBoxConfig::LootEntry& le = lootCfg->entries[i];
-		{
-			const BaseItemConfig* cfg2 = g_pWeaponArmory->getConfig(le.itemID);
+		//{
+			//const BaseItemConfig* cfg2 = g_pWeaponArmory->getConfig(le.itemID);
 			double	chance = le.chance;
-			if (cfg2 && gServerLogic.ginfo_.ispre && cfg2->category != storecat_LootBox)
+			/*if (cfg2 && gServerLogic.ginfo_.ispre && cfg2->category != storecat_LootBox)
 			{
 				STORE_CATEGORIES cat = cfg2->category;
 				//if (cat != storecat_ASR && cat != storecat_SNP && cat != storecat_SHTG && cat != storecat_MG && cat != storecat_SMG && cat != storecat_SHTG) // if not weapons decrease 30% chance drop.
@@ -163,6 +163,7 @@ wiInventoryItem RollItem(const LootBoxConfig* lootCfg, int depth)
 			// Other Server Except PremiumServer not Chance drop Scar
 			if(cfg2 && cfg2->m_itemID == 101210 && !gServerLogic.ginfo_.ispre)
 				chance = 0;
+			*/
 
 		//if(gServerLogic.ginfo_.ispre)
         //roll *= 0.80; // increase 20% drop chance for PREMIUM servers.
@@ -188,7 +189,7 @@ wiInventoryItem RollItem(const LootBoxConfig* lootCfg, int depth)
 		}
 
 		// check if this is nested lootbox
-		//const BaseItemConfig* cfg2 = g_pWeaponArmory->getConfig(wi.itemID);
+		const BaseItemConfig* cfg2 = g_pWeaponArmory->getConfig(wi.itemID);
 		if(!cfg2) {
 			r3dOutToLog("!! lootbox %d contain not existing item %d\n", lootCfg->m_itemID, wi.itemID);
 			wi.itemID = 0;
@@ -196,24 +197,23 @@ wiInventoryItem RollItem(const LootBoxConfig* lootCfg, int depth)
 		}
 		r3dOutToLog("won %d %s\n", cfg2->m_itemID, cfg2->m_StoreName);
 
-		if (cfg2->category == storecat_SNP && !gServerLogic.ginfo_.ispre)
+		/*if (cfg2->category == storecat_SNP && !gServerLogic.ginfo_.ispre)
 		{
 		r3dOutToLog("LootBox Can Rolling a Sniper. random is dropping...\n");
-		bool drop = u_GetRandom() >= 0.90f ? true : false;
-        r3dOutToLog("Rolling result %d\n",(int)drop);
+		bool drop = u_GetRandom() >= 100.0f ? true : false;
+         r3dOutToLog("Rolling result %d\n",(int)drop);
 
-		if (!drop)
 		{
 			wi.itemID = 0;
 			return wi;
 		}
-		}
+		}*/
 
 		if(cfg2->category == storecat_LootBox)
 			return RollItem((const LootBoxConfig*)cfg2, ++depth);
 		break;
 		}
-	}
+//}
 	
 	return wi;
 }

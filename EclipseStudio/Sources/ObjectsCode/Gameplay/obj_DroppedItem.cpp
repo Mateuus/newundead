@@ -78,12 +78,19 @@ BOOL obj_DroppedItem::OnCreate()
 			default:
 					switch(LootID) // Specific lootID for other maps
 					{
+					///////////////////////////////////////////////////////////////////////////
+					//TEST
 					case 301130:
 							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
 							break;
-					/*case 301131:
+					///////////////////////////////////////////////////////////////////////////
+					//SUPER ZOMBIE WOODBOX RARO
+					case 301257:
 							cpMeshName = "data/objectsdepot/Weapons/item_lootcrate_01.sco";
-							break;*/
+							break;
+					///////////////////////////////////////////////////////////////////////////
+
+					///////////////////////////////////////////////////////////////////////////
 					default:
 							cpMeshName = cfg->m_ModelPath;
 							SpawnedItem=false;

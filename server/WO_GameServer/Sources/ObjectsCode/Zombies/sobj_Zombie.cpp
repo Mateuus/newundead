@@ -33,6 +33,7 @@ float		_zai_NoPatrolPlayerDist  = -1.0f;
 float		_zai_PlayerSpawnProtect  = 0.0f;
 float		_zai_MaxSpawnDelay       = 0.1f;
 float		_zai_AttackDamage        = 0.0f;
+float		_zai_SZAttackDamage        = 0.0f; //Codex Super Zombie
 int		_zai_DebugAI             = 1;
 #else
 int		_zai_DisableDetect       = 0;
@@ -41,11 +42,13 @@ float		_zai_NoPatrolPlayerDist  = 500.0;
 float		_zai_PlayerSpawnProtect  = 35.0f;	// radius where zombie won't be spawned because of player presense
 float		_zai_MaxSpawnDelay       = 9999.0f;
 float		_zai_AttackDamage        = 23.0f;
+float		_zai_SZAttackDamage        = 69.0f; //Codex Super Zombie
 int		_zai_DebugAI             = 0;
 #endif
 float		_zai_MaxPatrolDistance   = 30.0f;	// distance to search for navpoints when switchint to patrol
 float		_zai_MaxPursueDistance   = 300.0f;
 float		_zai_AttackRadius        = 1.2f;
+float		_zai_SZAttackTimer		 = 0.3f;	//Codex Super Zombie
 float		_zai_AttackTimer         = 1.2f;
 float		_zai_DistToRecalcPath    = 0.8f; // _zai_AttackRadius / 2
 float		_zai_VisionConeCos       = cosf(50.0f); // have 100 degree vision
@@ -133,11 +136,11 @@ BOOL obj_Zombie::OnCreate()
 	//WalkSpeed += WalkSpeed * u_GetRandom(-spawnObject->speedVariation, +spawnObject->speedVariation);
 	//RunSpeed  += RunSpeed  * u_GetRandom(-spawnObject->speedVariation, +spawnObject->speedVariation);
 
-	if (HeroItemID == 20204)
+	if (HeroItemID == 20207)//Codex Super Zombie
 	{
 		WalkSpeed += WalkSpeed * u_GetRandom(-spawnObject->speedVariation, +spawnObject->speedVariation);
 		RunSpeed  += RunSpeed  * u_GetRandom(-spawnObject->speedVariation, +spawnObject->speedVariation);
-		ZombieHealth = u_GetRandom(150.0f, 200.0f);
+		ZombieHealth = u_GetRandom(200.0f, 400.0f);
 		r3dOutToLog("SuperZombie Spawned\n");
 	}
 	/*else
@@ -428,6 +431,12 @@ bool obj_Zombie::CheckForBarricadeBlock()
 
 		// found barricade, wreck it!
 		hardObjLock = shield->GetSafeID();
+		////////////////////////////////////////
+		//Codex Super Zombie
+		if (HeroItemID == 20207)
+		attackTimer = _zai_SZAttackTimer / 2;
+		else
+		////////////////////////////////////////
 		attackTimer = _zai_AttackTimer / 2;
 		SwitchToState(EZombieStates::ZState_BarricadeAttack);
 		return true;
@@ -712,6 +721,11 @@ bool obj_Zombie::StartAttack(const GameObject* trg)
 		if(ZombieState != EZombieStates::ZState_Attack)
 			SwitchToState(EZombieStates::ZState_Attack);
 
+		//////////////////////////////////////////////////////
+		if (HeroItemID == 20207)
+		attackTimer   = _zai_SZAttackTimer / 2;
+		else
+		//////////////////////////////////////////////////////
 		attackTimer   = _zai_AttackTimer / 2;
 		isFirstAttack = true;
 		return true;
@@ -976,6 +990,12 @@ BOOL obj_Zombie::Update()
 				{
 					StopNavAgent();
 					SwitchToState(EZombieStates::ZState_Attack);
+					///////////////////////////////////////////////
+					//Codex Super Zombie
+					if (HeroItemID == 20207)
+					attackTimer   = _zai_SZAttackTimer / 2;
+					else
+					///////////////////////////////////////////////
 					attackTimer   = _zai_AttackTimer / 2;
 					isFirstAttack = true;
 					break;
@@ -1110,17 +1130,51 @@ BOOL obj_Zombie::Update()
 						// temp code for applying damage from zombie to player
 						if (trg->profile_.ProfileData.isPunisher || trg->profile_.ProfileData.isDevAccount)
 						{
-							_zai_AttackDamage = 15.0f;
+							////////////////////////////////////////
+							//Codex Super Zombie
+							if (HeroItemID == 20207)
+							{
+                               _zai_SZAttackDamage = 58.0f;
+							}
+							else
+							{
+							/////////////////////////////////////
+							   _zai_AttackDamage = 15.0f;
+							}
 						}
 
-						trg->loadout_->Health -= _zai_AttackDamage;
+						////////////////////////////////////////////
+						//Codex Super Zombie
+						if (HeroItemID == 20207)
+						 {
+                               trg->loadout_->Health -= _zai_SZAttackDamage;
+						 }
+						else
+						 {
+						////////////////////////////////////////////
+							   trg->loadout_->Health -= _zai_AttackDamage;
+						 }
+				
+
 						if (!trg->loadout_->bleeding)
 						{
 							trg->loadout_->bleeding = u_GetRandom() >= 0.20f ? false : true;
 						}
-						if(u_GetRandom(0.0f, 100.0f) < 7.0f) // chance of infecting
+
+                        ///////////////////////////////////////////////////////////////////////
+						//Codex Super Zombie
+						if(HeroItemID == 20207)
 						{
-							trg->loadout_->Toxic += 1.0f;
+							if(u_GetRandom(0.0f, 100.0f) < 20.0f) // chance of infecting
+							{
+								trg->loadout_->Toxic += 1.0f;
+							}
+						}else{
+                        ////////////////////////////////////////////////////////////////////////
+							if(u_GetRandom(0.0f, 100.0f) < 7.0f) // chance of infecting
+							{
+								trg->loadout_->Toxic += 1.0f;
+							}
 						}
 
 						if(trg->loadout_->Health <= 0)
@@ -1165,12 +1219,28 @@ BOOL obj_Zombie::Update()
 			}
 
 			attackTimer += r3dGetFrameTime();
+		    ////////////////////////////////////////
+			//Codex Super Zombie
+			if (HeroItemID == 20207)
+			{
+			if(attackTimer >= _zai_SZAttackTimer)
+			{
+				attackTimer = 0;
+				shield->DoDamage(_zai_SZAttackDamage);
+			}
+			break;      
+			}
+			else
+			{
+			/////////////////////////////////////
 			if(attackTimer >= _zai_AttackTimer)
 			{
 				attackTimer = 0;
 				shield->DoDamage(_zai_AttackDamage);
 			}
-			break;
+		     	break;      
+			}
+			
 		}
 
 	case EZombieStates::ZState_Dead:
@@ -1284,7 +1354,7 @@ void obj_Zombie::DoDeath()
 	extern wiInventoryItem RollItem(const LootBoxConfig* lootCfg, int depth);
 
 	// drop loot
-	if(spawnObject->lootBoxCfg && HeroItemID != 20204)
+	if(spawnObject->lootBoxCfg && HeroItemID != 20207) //Codex Super Zombie
 	{
 		wiInventoryItem wi = RollItem(spawnObject->lootBoxCfg, 0);
 		if(wi.itemID > 0)
@@ -1304,22 +1374,34 @@ void obj_Zombie::DoDeath()
 		}
 	}
 
-	if (HeroItemID == 20204 && u_GetRandom() < 0.3f)
-	{
-		// create random position around zombie
-		r3dPoint3D pos = GetPosition();
-		pos.y += 0.4f;
-		pos.x += u_GetRandom(-1, 1);
-		pos.z += u_GetRandom(-1, 1);
 
-		// create network object
-		obj_DroppedItem* obj = (obj_DroppedItem*)srv_CreateGameObject("obj_DroppedItem", "obj_DroppedItem", pos);
-		obj->SetNetworkID(gServerLogic.GetFreeNetId());
-		obj->NetworkLocal = true;
-		// vars
-		obj->m_Item.itemID   = u_GetRandom() >= 0.75f ? 101087 : 101002;
-		obj->m_Item.quantity = 1;
+if(HeroItemID == 20207)
+	{
+		for(int i=0; i<10; i++)
+		{
+			if(spawnObject->lootBoxCfg)
+			{
+				wiInventoryItem wi = RollItem(spawnObject->lootBoxCfg, 0);
+				if(wi.itemID > 0)
+				{
+					// create random position around zombie
+					r3dPoint3D pos = GetPosition();
+					pos.y += 0.4f;
+					pos.x += u_GetRandom(-1, 1);
+					pos.z += u_GetRandom(-1, 1);
+
+					// create network object
+					obj_DroppedItem* obj = (obj_DroppedItem*)srv_CreateGameObject("obj_DroppedItem", "obj_DroppedItem", pos);
+					obj->SetNetworkID(gServerLogic.GetFreeNetId());
+					obj->NetworkLocal = true;
+					// vars
+					obj->m_Item       = wi;
+				}
+			}
+
+		}
 	}
+
 	if(HalloweenZombie && u_GetRandom() < 0.3f) // 30% to drop that helmet
 	{
 
@@ -1366,22 +1448,22 @@ bool obj_Zombie::ApplyDamage(GameObject* fromObj, float damage, int bodyPart, ST
 	if(damageSource != storecat_MELEE && bodyPart == 1 && damageSource != storecat_punch)//Codex Soco // everything except for melee: one shot in head = kill 
 		dmg = 1000; 
 
-	if (HeroItemID == 20204 && damageSource != storecat_MELEE && bodyPart == 1)
+	if (HeroItemID == 20207 && damageSource != storecat_MELEE && bodyPart == 1)
 	{
 		dmg = u_GetRandom(20.0f, 30.0f);
 	}
 
-	if (HeroItemID == 20204 && damageSource == storecat_MELEE && bodyPart == 1)
+	if (HeroItemID == 20207 && damageSource == storecat_MELEE && bodyPart == 1)
 	{
 		dmg = u_GetRandom(20.0f, 25.0f);
 	}
 
-	if (HeroItemID == 20204 && damageSource == storecat_SNP && bodyPart == 1)
+	if (HeroItemID == 20207 && damageSource == storecat_SNP && bodyPart == 1)
 	{
 		dmg = u_GetRandom(20.0f, 45.0f);
 	}
 
-	if (HeroItemID == 20204 && damageSource == storecat_SHTG && bodyPart == 1)
+	if (HeroItemID == 20207 && damageSource == storecat_SHTG && bodyPart == 1)
 	{
 		dmg = u_GetRandom(30.0f, 50.0f);
 	}
@@ -1392,10 +1474,16 @@ bool obj_Zombie::ApplyDamage(GameObject* fromObj, float damage, int bodyPart, ST
 			dmg = 0;
 	}
 
-	if(HeroItemID == 20204 && bodyPart!=1) // only hitting head will lower zombie's health
+	if(HeroItemID == 20207 && bodyPart!=1) // only hitting head will lower zombie's health
 		dmg = 0;
 
-	ZombieHealth -= dmg;
+	//////////////////////////////////////////
+	//Codex Super Zombie
+	if (HeroItemID == 20207)
+	    ZombieHealth -= dmg*15/100;
+	else
+	//////////////////////////////////////////
+	    ZombieHealth -= dmg;
 
 	if(ZombieHealth <= 0.0f)
 	{
