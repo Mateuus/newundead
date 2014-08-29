@@ -126,7 +126,6 @@ static unsigned int WINAPI DrawThread(void* in_data);
 	static unsigned int WINAPI as_LeaderBoardThread(void* in_data);
 	static unsigned int WINAPI as_LearnSkilLThread(void* in_data);
 	static unsigned int WINAPI as_ConvertGDThread(void* in_data);
-	static unsigned int WINAPI as_RentTheServerThread(void* in_data);
 	static unsigned int WINAPI as_BuyPremiumThread(void* in_data);
 	static unsigned int WINAPI RenderThread(void* in_data);
 	static unsigned int WINAPI as_TransactionsThread(void* in_data);
@@ -245,7 +244,6 @@ void FrontendWarZ::eventStorePurchaseGD(r3dScaleformMovie* pMovie, const Scalefo
 	static unsigned int WINAPI as_PlayGameThread(void* in_data);
 	static unsigned int WINAPI as_JoinGameThread(void* in_data);
 	static	unsigned int WINAPI as_RentGamesThread(void* in_data);
-	static	unsigned int WINAPI as_RentGamesStrThread(void* in_data);
 	static unsigned int WINAPI FrontendWarZ::as_RentGameKickThread(void* in_data);
 
 

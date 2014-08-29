@@ -27,7 +27,7 @@ enum gbpktType_e
 
    GBPKT_C2S_RentGameKick,
 
-   GBPKT_C2M_BanPlayer,
+  GBPKT_C2M_BanPlayer,
   GBPKT_C2M_RentGameChangeSet,
   GBPKT_C2M_PlayerListEnd,
   GBPKT_C2M_JoinGameReq,

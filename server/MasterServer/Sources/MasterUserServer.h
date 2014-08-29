@@ -61,15 +61,15 @@ class CMasterUserServer : public r3dNetCallback
 	void		OnGBPKT_C2M_JoinGameReq(DWORD peerId, const GBPKT_C2M_JoinGameReq_s& n);
 	void		OnGBPKT_C2M_QuickGameReq(DWORD peerId, const GBPKT_C2M_QuickGameReq_s& n);
 	void		OnGBPKT_C2M_BanPlayer(DWORD peerId, const GBPKT_C2M_BanPlayer_s& n);
-	void OnGBPKT_C2S_RentGameKick(DWORD peerId, const GBPKT_C2S_RentGameKick_s& n);
-void OnGBPKT_C2M_RentGameReq(DWORD peerId, const GBPKT_C2M_RentGameReq_s& n);
-void OnGBPKT_C2M_RentGameStr(DWORD peerId, const GBPKT_C2M_RentGameStr_s& n);
-void OnGBPKT_C2M_RentGameChangeSet(DWORD peerId, const GBPKT_C2M_RentGameChangeSet_s& n);
-void OnGBPKT_C2M_PlayerListReq(DWORD peerId, const GBPKT_C2M_PlayerListReq_s& n);
+	void        OnGBPKT_C2S_RentGameKick(DWORD peerId, const GBPKT_C2S_RentGameKick_s& n);
+    void        OnGBPKT_C2M_RentGameReq(DWORD peerId, const GBPKT_C2M_RentGameReq_s& n);
+    void        OnGBPKT_C2M_RentGameStr(DWORD peerId, const GBPKT_C2M_RentGameStr_s& n);
+    void        OnGBPKT_C2M_RentGameChangeSet(DWORD peerId, const GBPKT_C2M_RentGameChangeSet_s& n);
+    void        OnGBPKT_C2M_PlayerListReq(DWORD peerId, const GBPKT_C2M_PlayerListReq_s& n);
 	void		DoJoinGame(CServerG* game, DWORD CustomerID, const char* pwd, GBPKT_M2C_JoinGameAns_s& ans);
 	void		CreateNewGame(const CMSNewGameData& ngd, GBPKT_M2C_JoinGameAns_s& ans);
-	void    SendPlayerList(DWORD peerId , int alive , const char* name , int rep , int xp);
-void SendPlayerListEnd(DWORD peerId);
+	void        SendPlayerList(DWORD peerId , int alive , const char* name , int rep , int xp);
+    void        SendPlayerListEnd(DWORD peerId);
 	void		PrintStats();
 	void		Temp_Debug1();
 

@@ -344,7 +344,7 @@ void MasterServerLogic::SendJoinGame(DWORD gameServerId, const char* pwd)
 }
 void MasterServerLogic::SendRentGameChangePwd(int id , const char* pwd)
 {
-		if(!net_ || !net_->IsConnected())
+	if(!net_ || !net_->IsConnected())
 		r3dError("masterserver isn't connected\n");
 	if(badClientVersion_) 
 		r3dError("badClientVersion");
