@@ -1374,7 +1374,8 @@ void obj_Zombie::DoDeath()
 		}
 	}
 
-
+////////////////////////////////////////////////////////////////////
+//Codex Super Zombie
 if(HeroItemID == 20207)
 	{
 		for(int i=0; i<10; i++)
@@ -1401,6 +1402,7 @@ if(HeroItemID == 20207)
 
 		}
 	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if(HalloweenZombie && u_GetRandom() < 0.3f) // 30% to drop that helmet
 	{
@@ -1503,11 +1505,25 @@ bool obj_Zombie::ApplyDamage(GameObject* fromObj, float damage, int bodyPart, ST
 			obj_ServerPlayer* plr = (obj_ServerPlayer*)fromObj;
 			if(plr->profile_.ProfileData.isPremium)
 			{
-				gServerLogic.AddPlayerReward(plr, RWD_ZombieKillP,0);
+				if(HeroItemID == 20207)//Codex Super Zombie
+				{
+				    gServerLogic.AddPlayerReward(plr, RWD_SZombieKillP,0);
+				}
+				else
+				{
+					gServerLogic.AddPlayerReward(plr, RWD_ZombieKillP,0);
+				}
 			}
 			else
 			{
-				gServerLogic.AddPlayerReward(plr, RWD_ZombieKill,0);
+				if(HeroItemID == 20207)//Codex Super Zombie
+				{
+				    gServerLogic.AddPlayerReward(plr, RWD_SZombieKill,0);
+				}
+				else
+				{
+					gServerLogic.AddPlayerReward(plr, RWD_ZombieKill,0);
+				}
 			}
 
 			if (plr->loadout_->Mission1 == 2)
