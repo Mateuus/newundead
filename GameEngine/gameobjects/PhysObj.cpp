@@ -95,7 +95,8 @@ BasePhysicsObject* BasePhysicsObject::CreateCharacterController(const PhysicsObj
 	desc.interactionMode = PxCCTInteractionMode::eUSE_FILTER;
 	desc.material = g_pPhysicsWorld->PhysXSDK->createMaterial(0.5f, 0.5f, 0.1f);
 	desc.userData = (void*)physCallbackObj;
-	desc.nonWalkableMode = PxCCTNonWalkableMode::ePREVENT_CLIMBING;
+	//desc.nonWalkableMode = PxCCTNonWalkableMode::ePREVENT_CLIMBING;
+	desc.nonWalkableMode = PxCCTNonWalkableMode::eFORCE_SLIDING;//Mateuus Fix Sliding
 	desc.groupsBitmask = 1<<params.type;
 
 	PxController* Controller = g_pPhysicsWorld->CharacterManager->createController(*g_pPhysicsWorld->PhysXSDK, g_pPhysicsWorld->PhysXScene, desc);
