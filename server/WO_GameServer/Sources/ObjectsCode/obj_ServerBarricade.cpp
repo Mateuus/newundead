@@ -64,6 +64,31 @@ BOOL obj_ServerBarricade::OnCreate()
 		FileName = "Data\\ObjectsDepot\\Weapons\\item_barricade_Sandbag_built.sco";
 		bsize    = r3dPoint3D(1.513974f, 1.057301f, 1.111396f);
 	}
+	else if(m_ItemID == WeaponConfig::ITEMID_WoodenDoor2M)
+	{
+		FileName = "Data\\ObjectsDepot\\Weapons\\Item_Riot_Shield_01.sco";
+		bsize    = r3dPoint3D(1.726829f, 2.136024f, 0.762201f);
+	}
+	else if(m_ItemID == WeaponConfig::ITEMID_BrickWallBlock)
+	{
+		FileName = "Data\\ObjectsDepot\\Weapons\\Block_Wall_Brick_Tall_01.sco";
+		bsize    = r3dPoint3D(1.726829f, 2.136024f, 0.762201f);
+	}
+	else if(m_ItemID == WeaponConfig::ITEMID_TownBuilding)
+	{
+		FileName = "Data\\ObjectsDepot\\WZ_TownBuildings\\townbuilding_18.sco";
+		bsize    = r3dPoint3D(1.726829f, 2.136024f, 0.762201f);
+	}
+	else if(m_ItemID == WeaponConfig::ITEMID_WallMetalBlock)
+	{
+		FileName = "Data\\ObjectsDepot\\Weapons\\Block_Wall_Metal_2M_01.sco";
+		bsize    = r3dPoint3D(1.726829f, 2.136024f, 0.762201f);
+	}
+    else if(m_ItemID == WeaponConfig::ITEMID_WoodWall2M)
+	{
+		FileName = "Data\\ObjectsDepot\\Weapons\\Item_Riot_Shield_01.sco";
+		bsize    = r3dPoint3D(1.726829f, 2.136024f, 0.762201f);
+	}
 	else
 		r3dError("unknown barricade item\n");
 

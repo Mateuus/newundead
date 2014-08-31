@@ -729,7 +729,12 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateNetObject)
 	if(n.itemID == WeaponConfig::ITEMID_BarbWireBarricade ||
 		n.itemID == WeaponConfig::ITEMID_WoodShieldBarricade ||
 		n.itemID == WeaponConfig::ITEMID_RiotShieldBarricade ||
-		n.itemID == WeaponConfig::ITEMID_SandbagBarricade)
+		n.itemID == WeaponConfig::ITEMID_SandbagBarricade ||
+		n.itemID == WeaponConfig::ITEMID_WoodenDoor2M     ||
+		n.itemID == WeaponConfig::ITEMID_BrickWallBlock    ||
+		n.itemID == WeaponConfig::ITEMID_TownBuilding      ||
+		n.itemID == WeaponConfig::ITEMID_WallMetalBlock    ||
+		n.itemID == WeaponConfig::ITEMID_WoodWall2M)
 	{
 		obj_Barricade* shield= (obj_Barricade*)srv_CreateGameObject("obj_Barricade", "shield", n.pos);
 		shield->m_ItemID	= n.itemID;

@@ -2642,6 +2642,11 @@ void obj_ServerPlayer::UseItem_ApplyEffect(const PKT_C2C_PlayerUseItem_s& n, uin
 	case WeaponConfig::ITEMID_WoodShieldBarricade:
 	case WeaponConfig::ITEMID_RiotShieldBarricade:
 	case WeaponConfig::ITEMID_SandbagBarricade:
+	case WeaponConfig::ITEMID_WoodenDoor2M:
+	case WeaponConfig::ITEMID_BrickWallBlock:
+	case WeaponConfig::ITEMID_TownBuilding:
+	case WeaponConfig::ITEMID_WallMetalBlock:
+	case WeaponConfig::ITEMID_WoodWall2M:
 		UseItem_Barricade(n.pos, n.var1, itemID);
 		break;
 	case WeaponConfig::ITEMID_PersonalLocker:

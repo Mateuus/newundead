@@ -2213,10 +2213,15 @@ if (isInVehicle() || isPassenger())
 				wiInventoryItem wi = wpn->getPlayerItem(); // COPY of item, not reference. because it can be reset in Fire()
 				if(wi.quantity > 0 && wpn->isReadyToFire(true, false) && wi.itemID != 301321) // consumables have rate of fire (cooldown)
 				{
-					if(wpn->getItemID() == WeaponConfig::ITEMID_BarbWireBarricade || 
+					if(wpn->getItemID() == WeaponConfig::ITEMID_BarbWireBarricade    || 
 						wpn->getItemID() == WeaponConfig::ITEMID_WoodShieldBarricade ||
 						wpn->getItemID() == WeaponConfig::ITEMID_RiotShieldBarricade ||
-						wpn->getItemID() == WeaponConfig::ITEMID_SandbagBarricade)
+						wpn->getItemID() == WeaponConfig::ITEMID_SandbagBarricade    ||
+						wpn->getItemID() == WeaponConfig::ITEMID_WoodenDoor2M        ||
+						wpn->getItemID() == WeaponConfig::ITEMID_BrickWallBlock      ||
+						wpn->getItemID() == WeaponConfig::ITEMID_TownBuilding        ||
+						wpn->getItemID() == WeaponConfig::ITEMID_WallMetalBlock      ||
+						wpn->getItemID() == WeaponConfig::ITEMID_WoodWall2M)
 					{
 						if(m_needToDrawBarricadePlacement == 0)
 						{
@@ -2407,7 +2412,12 @@ if (isInVehicle() || isPassenger())
 					if(wi.itemID == WeaponConfig::ITEMID_BarbWireBarricade ||
 						wi.itemID == WeaponConfig::ITEMID_WoodShieldBarricade ||
 						wi.itemID == WeaponConfig::ITEMID_RiotShieldBarricade || 
-						wi.itemID == WeaponConfig::ITEMID_SandbagBarricade)
+						wi.itemID == WeaponConfig::ITEMID_SandbagBarricade    ||
+						wi.itemID == WeaponConfig::ITEMID_WoodenDoor2M        ||
+						wi.itemID == WeaponConfig::ITEMID_BrickWallBlock      ||
+						wi.itemID == WeaponConfig::ITEMID_TownBuilding        ||
+						wi.itemID == WeaponConfig::ITEMID_WallMetalBlock      ||
+						wi.itemID == WeaponConfig::ITEMID_WoodWall2M)
 					{
 						var1 = (m_fPlayerRotation) + R3D_RAD2DEG(bodyAdjust_x) + 180;
 						needCorrectPos = true; 
@@ -7509,6 +7519,37 @@ obj_Player::AppendRenderables( RenderArray ( & render_arrays  )[ rsCount ], cons
 				{
 					if(m_BarricadeMeshPlacement == NULL)
 						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\item_barricade_Sandbag_built.sco", true, false, true, true );
+					riotMesh = m_BarricadeMeshPlacement;
+				}
+				else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_WoodenDoor2M)
+				{
+					if(m_BarricadeMeshPlacement == NULL)
+						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Door_Wood_2M_01.sco", true, false, true, true );
+					riotMesh = m_BarricadeMeshPlacement;
+				}
+				else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_BrickWallBlock)
+				{
+					if(m_BarricadeMeshPlacement == NULL)
+						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Brick_Tall_01.sco", true, false, true, true );
+					riotMesh = m_BarricadeMeshPlacement;
+				}
+				//Casa
+				else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_TownBuilding)
+				{
+					if(m_BarricadeMeshPlacement == NULL)
+						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\WZ_TownBuildings\\townbuilding_18.sco", true, false, true, true );
+					riotMesh = m_BarricadeMeshPlacement;
+				}
+			   else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_WallMetalBlock)
+				{
+					if(m_BarricadeMeshPlacement == NULL)
+						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Metal_2M_01.sco", true, false, true, true );
+					riotMesh = m_BarricadeMeshPlacement;
+				}
+				else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_WoodWall2M)
+				{
+					if(m_BarricadeMeshPlacement == NULL)
+						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Wood_2M_01.sco", true, false, true, true );
 					riotMesh = m_BarricadeMeshPlacement;
 				}
 				else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_PersonalLocker)

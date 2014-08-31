@@ -37,7 +37,15 @@ BOOL obj_Barricade::OnCreate()
 		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\item_barricade_Sandbag_built.sco", true, false, true, true );
 	else if(m_ItemID == WeaponConfig::ITEMID_WoodenDoor2M)
 		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Door_Wood_2M_01.sco", true, false, true, true );
-		else if(m_ItemID == WeaponConfig::ITEMID_PersonalLocker)
+	else if(m_ItemID == WeaponConfig::ITEMID_BrickWallBlock)
+		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Brick_Tall_01.sco", true, false, true, true );
+	else if(m_ItemID == WeaponConfig::ITEMID_TownBuilding)
+		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\WZ_TownBuildings\\townbuilding_18.sco", true, false, true, true );
+	else if(m_ItemID == WeaponConfig::ITEMID_WallMetalBlock)
+		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Metal_2M_01.sco", true, false, true, true );
+	else if(m_ItemID == WeaponConfig::ITEMID_WoodWall2M)
+		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Wood_2M_01.sco", true, false, true, true );
+	else if(m_ItemID == WeaponConfig::ITEMID_PersonalLocker)
 		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01_Crate.sco", true, false, true, true );
 
 	if(m_PrivateModel==NULL)

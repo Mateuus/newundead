@@ -130,8 +130,12 @@ public:
 		ITEMID_WoodShieldBarricade = 101317,
 		ITEMID_RiotShieldBarricade = 101318,
 		ITEMID_SandbagBarricade = 101324,
-		ITEMID_WoodenDoor2M = 101352,
-			ITEMID_PersonalLocker = 101348,
+		ITEMID_WoodenDoor2M = 101371,
+		ITEMID_BrickWallBlock = 101378,
+		ITEMID_TownBuilding = 101387,
+		ITEMID_WallMetalBlock = 101379,
+        ITEMID_WoodWall2M = 101380,
+		ITEMID_PersonalLocker = 101348,
 	};
 
 	char* m_MuzzleParticle;
