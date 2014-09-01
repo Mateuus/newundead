@@ -6,7 +6,6 @@
 
 #include "ObjectsCode/Gameplay/BasePlayerSpawnPoint.h"
 #include "ObjectsCode/Gameplay/obj_Grave.h"
-#include "ObjectsCode/Gameplay/obj_SafeLock.h"
 #include "../multiplayer/clientgamelogic.h"
 #include "../ObjectsCode/ai/AI_Player.H"
 #include "../ObjectsCode/weapons/Weapon.h"
@@ -117,7 +116,6 @@ bool HUDDisplay::Init()
 	gfxHUD.RegisterEventHandler("eventNoteWritePost", MAKE_CALLBACK(eventNoteWritePost));
 	gfxHUD.RegisterEventHandler("eventNoteClosed", MAKE_CALLBACK(eventNoteClosed));
 	gfxHUD.RegisterEventHandler("eventGraveNoteClosed", MAKE_CALLBACK(eventGraveNoteClosed));
-	gfxHUD.RegisterEventHandler("eventSafelockPass", MAKE_CALLBACK(eventSafelockPass));
 	gfxHUD.RegisterEventHandler("eventNoteReportAbuse", MAKE_CALLBACK(eventNoteReportAbuse));
 	gfxHUD.RegisterEventHandler("eventShowPlayerListContextMenu", MAKE_CALLBACK(eventShowPlayerListContextMenu));
 	gfxHUD.RegisterEventHandler("eventPlayerListAction", MAKE_CALLBACK(eventPlayerListAction));
@@ -800,14 +798,6 @@ void HUDDisplay::eventChatMessage(r3dScaleformMovie* pMovie, const Scaleform::GF
 			return;
 
 		}
-		if(strncmp(s_chatMsg, "/sp", 6) == NULL)
-		{
-			obj_Player* plr = gClientLogic().localPlayer_;
-			r3d_assert(plr);
-			obj_SafeLock* obj = (obj_SafeLock*)srv_CreateGameObject("obj_SafeLock", "obj_SafeLock", plr->GetPosition());
-			obj->SetNetworkID(100001);
-			obj->OnCreate();
-		}
 		/*if(strncmp(s_chatMsg, "/accept", 6) == NULL)
 		{
 			char buf[256];
@@ -1413,13 +1403,6 @@ void HUDDisplay::eventNoteWritePost(r3dScaleformMovie* pMovie, const Scaleform::
 	timeoutForNotes = r3dGetTime() + .5f;
 }
 
-void HUDDisplay::eventSafelockPass(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
-{
-	r3dMouse::Hide();
-
-	writeNoteSavedSlotIDFrom = 0; 
-	timeoutForNotes = r3dGetTime() + .5f;
-}
 void HUDDisplay::eventGraveNoteClosed(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
 {
 	r3dMouse::Hide();
@@ -1435,17 +1418,6 @@ void HUDDisplay::eventNoteClosed(r3dScaleformMovie* pMovie, const Scaleform::GFx
 	timeoutForNotes = r3dGetTime() + .5f;
 }
 
-void HUDDisplay::showSL(bool var1,bool var2)
-{
-	if(!Inited) return;
-
-	r3dMouse::Show();
-	writeNoteSavedSlotIDFrom = 1; // temp, to prevent mouse from hiding
-	Scaleform::GFx::Value var[2];
-	var[0].SetBoolean(var1);
-	var[1].SetBoolean(var2);
-	gfxHUD.Invoke("_root.api.showSafelock", var, 2);
-}
 void HUDDisplay::showGraveNote(const char* plr,const char* plr2)
 {
 	if(!Inited) return;

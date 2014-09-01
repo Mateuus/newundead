@@ -170,8 +170,6 @@ virtual	void		OnNetData(DWORD peerId, const r3dNetPacketHeader* packetData, int 
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateNote);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateGrave);
 	 DEFINE_PACKET_FUNC(PKT_S2C_SetGraveData);
-	 DEFINE_PACKET_FUNC(PKT_S2C_SetSafeLockData);
-	 DEFINE_PACKET_FUNC(PKT_S2C_CreateSafeLock);
 	 DEFINE_PACKET_FUNC(PKT_S2C_SetNoteData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
 	 DEFINE_PACKET_FUNC(PKT_S2C_PositionVehicle);//CodexCarros

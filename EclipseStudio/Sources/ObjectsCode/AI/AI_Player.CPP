@@ -46,7 +46,6 @@
 #include "ObjectsCode/Gameplay/obj_Note.h"
 #include "ObjectsCode/Gameplay/obj_Grave.h"
 #include "ObjectsCode/Gameplay/obj_PostBox.h"
-#include "ObjectsCode/Gameplay/obj_SafeLock.h"
 #include "../../GameEngine/gameobjects/obj_Vehicle.h"//Codex Carros
 //A
 #include "../Gameplay/obj_Zombie.h"
@@ -5186,10 +5185,7 @@ void obj_Player::UpdateActionUI()
 						return;
 					}
 				}
-				if(dropObj->Class->Name == "obj_SafeLock")
-				{
-					hudMain->showSL(true,true);
-				}
+				
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Codex Carros
 				if(dropObj->Class->Name == "obj_Vehicle")

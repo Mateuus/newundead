@@ -101,7 +101,6 @@ enum pkttype_e
   PKT_S2C_UpdateSlotsCraft,
   PKT_C2C_PlayerCraftItem,
 
- // PKT_S2C_CreateSafeLock,
   PKT_C2S_PlayerAcceptMission,
   PKT_C2s_PlayerSetMissionStatus,
   PKT_C2S_PlayerSetObStatus,
@@ -124,15 +123,12 @@ enum pkttype_e
   PKT_S2C_CreateNetObject,
   PKT_S2C_DestroyNetObject,
   PKT_C2S_UseNetObject,
-  // PKT_C2S_SafeLockUnLock,
   // special packet for special server objects (we still have NetIds so lets use different packets)
   PKT_S2C_CreateDroppedItem,
 
   PKT_S2C_CreateGrave,
-    PKT_S2C_CreateSafeLock,
   PKT_S2C_SetGraveData,
-    PKT_S2C_SetSafeLockData,
-	PKT_S2C_CreateBuilding,
+  PKT_S2C_CreateBuilding,
 
   //server trade
   PKT_C2S_TradeBackToOp,
@@ -800,11 +796,6 @@ struct PKT_C2S_CreateNote_s : public DefaultPacketMixin<PKT_C2S_CreateNote>
 	char		TextSubj[1024];
 };
 
-struct PKT_S2C_CreateSafeLock_s : public DefaultPacketMixin<PKT_S2C_CreateSafeLock>
-{
-	gp2pnetid_t	spawnID;
-	r3dPoint3D	pos;
-};
 struct PKT_S2C_CreateGrave_s : public DefaultPacketMixin<PKT_S2C_CreateGrave>
 {
 	gp2pnetid_t	spawnID;
@@ -816,10 +807,7 @@ struct PKT_S2C_CreateNote_s : public DefaultPacketMixin<PKT_S2C_CreateNote>
 	gp2pnetid_t	spawnID;
 	r3dPoint3D	pos;
 };
-struct PKT_S2C_SetSafeLockData_s : public DefaultPacketMixin<PKT_S2C_SetSafeLockData>
-{
-	int pass;
-};
+
 struct PKT_S2C_SetGraveData_s : public DefaultPacketMixin<PKT_S2C_SetGraveData>
 {
 	char		plr1[128];
