@@ -11,7 +11,7 @@ typedef WORD	gp2pnetid_t;
 static const gp2pnetid_t invalidP2pNetID = 0xFFFF;
 
 __forceinline gp2pnetid_t toP2pNetId(DWORD id) {
-  r3d_assert(id < 0xFFFF);
+  //r3d_assert(id < 0xFFFF);//Codex Safelock
   return gp2pnetid_t(id);
 }
 

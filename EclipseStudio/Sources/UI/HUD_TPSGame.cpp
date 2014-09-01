@@ -37,6 +37,7 @@
 #include "UI\HUDCraft.h"//Codex Craft
 #include "UI\HUDTrade.h"
 #include "UI\HUDRepair.h"
+#include "UI\HUDSafeLock.h"//Codex Safelock
 
 #include "..\GameEngine\gameobjects\obj_Vehicle.h"//Codex Carros
 
@@ -58,6 +59,7 @@ HUDVault* hudVault = NULL;
 HUDTrade* hudTrade = NULL;
 HUDCraft* hudCraft = NULL;//Codex Craft
 HUDRepair* hudRepair = NULL;
+HUDSafeLock* hudSafeLock = NULL;//Codex Safelock
 
 #define VEHICLE_CINEMATIC_MODE 0 //Codex Carros
 
@@ -362,6 +364,7 @@ void TPSGameHUD_OnStartGame()
 	hudCraft = new HUDCraft();//Codex Craft
 	hudTrade = new HUDTrade();
 	hudRepair = new HUDRepair();
+	hudSafeLock = new HUDSafeLock();//Codex Safelock
 
 	isDi = false;
 	swimt = 0.0f;
@@ -374,6 +377,9 @@ void TPSGameHUD_OnStartGame()
 	hudCraft->Init();//Codex Craft
 	hudTrade->Init();
 	hudRepair->Init();
+	hudSafeLock->Init();//Codex Safelock
+
+
 #ifdef VOIP_ENABLED
 	//InitTs3();
 	//InitTs3Server();
@@ -424,6 +430,7 @@ void TPSGameHUD :: DestroyPure()
 		hudCraft->Unload();//Codex Craft
 		hudTrade->Unload();
 		hudRepair->Unload();
+		hudSafeLock->Unload();//Codex Safelock
 
 		SAFE_DELETE(hudMain);
 		SAFE_DELETE(hudPause);
@@ -434,6 +441,7 @@ void TPSGameHUD :: DestroyPure()
 		SAFE_DELETE(hudTrade);
 		SAFE_DELETE(hudRepair);
 		SAFE_DELETE(hudCraft);//Codex Craft
+		SAFE_DELETE(hudSafeLock);//Codex Safelock
 	}
 }
 
@@ -1018,6 +1026,8 @@ void TPSGameHUD :: SetCameraPure ( r3dCamera &Cam)
 		return;
 	if(hudTrade->isActive())
 		return;
+	if(hudSafeLock->isActive())//Codex Safelock
+		return;
 
 	int mMX=Mouse->m_MouseMoveX, mMY=Mouse->m_MouseMoveY;
 	if(g_vertical_look->GetBool()) // invert mouse
@@ -1149,7 +1159,7 @@ static void DrawMenus()
 	if(!win::bSuspended && !hudMain->isChatInputActive() && !hudMain->isPlayersListVisible()) 
 	{
 		bool showHudPause = Keyboard->WasPressed(kbsEsc) || InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_SWITCH_MINIMAP) || InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_INVENTORY);
-		if(showHudPause && !hudAttm->isActive() && !hudGeneralStore->isActive() && !hudVault->isActive())
+		if(showHudPause && !hudAttm->isActive() && !hudGeneralStore->isActive() && !hudVault->isActive() && !hudSafeLock->isActive() )
 		{
 			if(!hudPause->isActive())
 			{
@@ -1255,6 +1265,14 @@ static void DrawMenus()
 			hudCraft->Deactivate();
 			gClientLogic().localPlayer_->ShowCrosshair=true;
 		}
+		/////////////////////////////////////////////////////////////////////
+		//Codex Safelock
+		if(hudSafeLock->isActive() && Keyboard->WasPressed(kbsEsc))
+		{
+			hudSafeLock->Deactivate();
+			gClientLogic().localPlayer_->ShowCrosshair=true;
+		}
+		/////////////////////////////////////////////////////////////////////
 	}
 
 	if(hudPause->isActive())
@@ -1360,6 +1378,20 @@ static void DrawMenus()
 		hudCraft->Draw();
 
 		R3DPROFILE_END( "hudCraft->" );
+
+		return;
+	}
+
+	if(hudSafeLock->isActive())//Codex Safelock
+	{
+		r3dMouse::Show(); // make sure that mouse is visible
+
+		R3DPROFILE_START( "hudSafeLock->" );
+
+		hudSafeLock->Update();
+		hudSafeLock->Draw();
+
+		R3DPROFILE_END( "hudSafeLock->" );
 
 		return;
 	}

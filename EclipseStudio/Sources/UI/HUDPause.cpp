@@ -198,7 +198,8 @@ void HUDPause::eventBackpackUseItem(int slotID)
 		wi.itemID == WeaponConfig::ITEMID_BrickWallBlock      ||
 		wi.itemID == WeaponConfig::ITEMID_TownBuilding        ||
 		wi.itemID == WeaponConfig::ITEMID_WallMetalBlock      ||
-		wi.itemID == WeaponConfig::ITEMID_WoodWall2M)
+		wi.itemID == WeaponConfig::ITEMID_WoodWall2M          ||
+		wi.itemID == WeaponConfig::ITEMID_PersonalLocker)
 	{
 		Scaleform::GFx::Value var[3];
 		var[0].SetString("Place barricade into quick slot and use it from there");

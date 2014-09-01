@@ -23,6 +23,7 @@
 #include "ObjectsCode/obj_ServerPostBox.h"
 #include "../EclipseStudio/Sources/GameCode/UserProfile.h"
 #include "../EclipseStudio/Sources/ObjectsCode/weapons/WeaponArmory.h"
+#include "../EclipseStudio/Sources/backend/WOBackendAPI.h"//Codex Safelock
 
 #include "ServerWeapons/ServerWeapon.h"
 
@@ -216,6 +217,8 @@ void ServerGameLogic::OnGameStart()
 	CJobGetServerNotes* job = new CJobGetServerNotes();
 	job->GameServerId = ginfo_.gameServerId;
 	g_AsyncApiMgr->AddJob(job);
+
+	ReadDBSafelock(ginfo_.mapId);//Codex Safelock
 }
 
 void ServerGameLogic::CheckClientsSecurity()
@@ -471,6 +474,25 @@ void ServerGameLogic::OnNetPeerDisconnected(DWORD peerId)
 				r3dOutToLog("peer%02d player %s is updating his data\n", peerId, peer.player->userName);
 				ApiPlayerUpdateChar(peer.player);
 			}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Safelock
+///////////////////// -> end sesion of safelock if player have openned and crash client
+	for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) ) // Server Vehicles
+	{
+		if (obj->Class->Name == "obj_ServerBarricade") //safelock
+		{
+			obj_ServerBarricade* shield = (obj_ServerBarricade*)obj;
+			if (shield->m_ItemID == 101348)
+			{
+				if (shield->SesionID == peer.player->GetNetworkID())
+				{
+					shield->SesionID = 0;
+					break;
+				}
+			}
+		}
+	}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Codex Carros
@@ -932,9 +954,16 @@ void ServerGameLogic::ApplyDamage(GameObject* fromObj, GameObject* targetObj, co
 	}
 	else if(targetObj->Class->Name == "obj_ServerBarricade")
 	{
+		//////////////////////////////////////
+		//Codex Safelock
 		obj_ServerBarricade* shield = (obj_ServerBarricade*)targetObj;
+		if (shield->m_ItemID != 101348) // not damage to safelock
 		shield->DoDamage(damage);
 		return;
+		//////////////////////////////////////
+		//obj_ServerBarricade* shield = (obj_ServerBarricade*)targetObj;
+		//shield->DoDamage(damage);
+		//return;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2142,6 +2171,20 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_Temp_Damage)
 		//gServerLogic.AddPlayerReward(fromPlr, RWD_AnimalKill);
 		return;
 	}
+	//Codex Safelock
+	if (target->Class->Name == "obj_ServerBarricade")
+	{
+		obj_ServerBarricade* shield = (obj_ServerBarricade*)target;
+		if (shield->m_ItemID != 101348)
+		{
+			float damage = shield->Health;
+			shield->Health=damage;
+			shield->Health-=n.damagePercentage;
+			if (shield->Health<=0)
+				shield->requestKill = true;
+		}
+		return;
+	}
 
 	/*const WeaponConfig* wc = g_pWeaponArmory->getWeaponConfig(101310);
 
@@ -2915,6 +2958,149 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2s_PlayerSetMissionStatus)
 		}
 	}
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Safelock
+void ServerGameLogic::RemoveDBSafelock(obj_ServerPlayer* plr,int SafeLockID, int ItemID, int Quantity, int Var1, int Var2, int ServerGameID)
+{
+	char* g_ServerApiKey = "bvx425698dg6GsnxwedszF";
+	CWOBackendReq req("api_RemoveSafelockDATA.aspx");
+	req.AddSessionInfo(plr->profile_.CustomerID, plr->profile_.SessionID);
+	req.AddParam("skey1",  g_ServerApiKey);
+	req.AddParam("SafeLockID", SafeLockID);
+	req.AddParam("ItemID", ItemID);
+	req.AddParam("Quantity", Quantity);
+	req.AddParam("Var1", Var1);
+	req.AddParam("Var2", Var2);
+	req.AddParam("GameServerID", ServerGameID);
+	if(!req.Issue())
+	{
+		r3dOutToLog("!!!! SaveSafeLock Remove failed, code: %d\n", req.resultCode_);
+		//return req.resultCode_;
+		return;
+	}
+}
+void ServerGameLogic::ReadDBSafelock(int IDMap)
+{
+	CWOBackendReq req("api_GetSafelockDATA.aspx");
+	req.AddParam("411", "1");
+
+	if(!req.Issue())
+	{
+		r3dOutToLog("ReadDBSafelock FAILED, code: %d\n", req.resultCode_);
+		return;
+	}
+
+	pugi::xml_document xmlFile;
+	req.ParseXML(xmlFile);
+	pugi::xml_node xmlSafelock = xmlFile.child("SafeLock_items");
+
+	while(!xmlSafelock.empty())
+	{
+		r3dPoint3D Position;
+		char Password[512];	
+		uint32_t ItemID = xmlSafelock.attribute("ItemID").as_uint();
+		uint32_t MapID = xmlSafelock.attribute("MapID").as_uint();
+		uint32_t ServerGameID = xmlSafelock.attribute("GameServerID").as_uint();
+
+
+		if (ItemID == 0 && MapID == IDMap && ServerGameID == ginfo_.gameServerId)
+		{
+			uint32_t SafelockID = xmlSafelock.attribute("SafeLockID").as_uint();
+			r3dscpy(Password, xmlSafelock.attribute("Password").value());
+			uint32_t CustomerID = xmlSafelock.attribute("CustomerID").as_uint();
+			uint32_t SesionID = xmlSafelock.attribute("SesionID").as_uint();
+			uint32_t ExpireTime = xmlSafelock.attribute("ExpireTime").as_uint();
+			sscanf(xmlSafelock.attribute("GamePos").value(), "%f %f %f", &Position.x, &Position.y, &Position.z);
+			float rotation = xmlSafelock.attribute("GameRot").as_float();
+			uint32_t Quantity = xmlSafelock.attribute("Quantity").as_uint();
+			//uint32_t Durability = xmlSafelock.attribute("Durability").as_uint();
+
+			__int64 secs1 = _time64(&secs1);
+		
+			if (secs1 < ExpireTime) // expired Safelock
+			{
+				/*r3dOutToLog("######################\n");
+				r3dOutToLog("######## SafeLockID %i\n",SafelockID);
+				r3dOutToLog("######## Password   %s\n",Password);
+				r3dOutToLog("######## ItemID     %i\n",ItemID);
+				r3dOutToLog("######## ExpireTime %i\n",ExpireTime);
+				r3dOutToLog("######## Position X %f - Position Y %f - Position Z %f\n", Position.x, Position.y, Position.z);
+				r3dOutToLog("######## Rotation X %f\n",rotation);
+				r3dOutToLog("######## MapID      %i\n",MapID);
+				r3dOutToLog("######## Quantity   %i\n",Quantity);
+				r3dOutToLog("######## GameServerID   %i\n",ServerGameID);
+				r3dOutToLog("######################\n");*/
+
+				obj_ServerBarricade* shield= (obj_ServerBarricade*)srv_CreateGameObject("obj_ServerBarricade", "barricade", Position);
+				shield->m_ItemID = 101348;
+				strcpy(shield->Password,Password);
+				shield->SafeLockID=SafelockID;
+				shield->ExpireTime=ExpireTime;
+				shield->MapID=MapID;
+				shield->Health = 10000000000;
+				shield->GameServerID=ServerGameID;
+				shield->SetPosition(r3dPoint3D(Position.x, Position.y, Position.z));
+				shield->SetRotationVector(r3dVector(rotation,0,0));
+				shield->SetNetworkID(gServerLogic.GetFreeNetId());
+				shield->NetworkLocal = true;
+			}
+		}
+
+		xmlSafelock = xmlSafelock.next_sibling();
+	}
+}
+bool ServerGameLogic::WriteDBSafelock(int myID, int SafeID, int itemID, int ExpSeconds, const char* Password, r3dPoint3D pos, float rot,int MapID, int Quantity, int Var1, int Var2, int ServerGameID)
+{
+	GameObject* plr = GameWorld().GetNetworkObject(myID);
+	obj_ServerPlayer* fromPlr = (obj_ServerPlayer*)plr;
+
+	if (!fromPlr)
+		return false;
+
+	char* g_ServerApiKey = "bvx425698dg6GsnxwedszF";
+	CWOBackendReq req("api_SrvSafeLock.aspx");
+	req.AddSessionInfo(fromPlr->profile_.CustomerID, fromPlr->profile_.SessionID);
+	req.AddParam("skey1",  g_ServerApiKey);
+	req.AddParam("SafeLockID", SafeID);
+	req.AddParam("Password", Password);
+	req.AddParam("itemID", itemID);
+	req.AddParam("ExpireTime", ExpSeconds);
+
+	char strGamePos[256];
+	sprintf(strGamePos, "%.3f %.3f %.3f", pos.x, pos.y, pos.z);
+	req.AddParam("GamePos", strGamePos);
+	char GameRot[256];
+	sprintf(GameRot, "%.3f",rot);
+	req.AddParam("GameRot", GameRot);
+	req.AddParam("MapID",  MapID);
+	req.AddParam("Quantity",  Quantity);
+	req.AddParam("Var1",  Var1);
+	req.AddParam("Var2",  Var2);
+	const WeaponConfig* wc = g_pWeaponArmory->getWeaponConfig(itemID);
+	if (wc)
+		req.AddParam("Category",  wc->category);
+	else
+		req.AddParam("Category",  0);
+	req.AddParam("GameServerID", ServerGameID);
+	req.AddParam("CustomerID", fromPlr->profile_.CustomerID);
+	//req.AddParam("Durability", 0);
+	
+	// issue
+	if(!req.Issue())
+	{
+		r3dOutToLog("!!!! SaveSafeLock failed, code: %d\n", req.resultCode_);
+		//return req.resultCode_;
+		return false;
+	}
+
+	return true;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_PlayerAcceptMission)
 {
 	obj_ServerPlayer* fromPlr = GetPeer(peerId).player;

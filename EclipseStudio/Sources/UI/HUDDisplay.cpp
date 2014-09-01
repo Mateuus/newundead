@@ -6,6 +6,7 @@
 
 #include "ObjectsCode/Gameplay/BasePlayerSpawnPoint.h"
 #include "ObjectsCode/Gameplay/obj_Grave.h"
+#include "ObjectsCode/Gameplay/obj_SafeLock.h" //Codex Safelock
 #include "../multiplayer/clientgamelogic.h"
 #include "../ObjectsCode/ai/AI_Player.H"
 #include "../ObjectsCode/weapons/Weapon.h"
@@ -116,6 +117,7 @@ bool HUDDisplay::Init()
 	gfxHUD.RegisterEventHandler("eventNoteWritePost", MAKE_CALLBACK(eventNoteWritePost));
 	gfxHUD.RegisterEventHandler("eventNoteClosed", MAKE_CALLBACK(eventNoteClosed));
 	gfxHUD.RegisterEventHandler("eventGraveNoteClosed", MAKE_CALLBACK(eventGraveNoteClosed));
+	gfxHUD.RegisterEventHandler("eventSafelockPass", MAKE_CALLBACK(eventSafelockPass));//Codex Safelock
 	gfxHUD.RegisterEventHandler("eventNoteReportAbuse", MAKE_CALLBACK(eventNoteReportAbuse));
 	gfxHUD.RegisterEventHandler("eventShowPlayerListContextMenu", MAKE_CALLBACK(eventShowPlayerListContextMenu));
 	gfxHUD.RegisterEventHandler("eventPlayerListAction", MAKE_CALLBACK(eventPlayerListAction));
@@ -842,6 +844,18 @@ void HUDDisplay::eventChatMessage(r3dScaleformMovie* pMovie, const Scaleform::GF
 			r3dscpy(n.fromgamertag,plr->CurLoadout.Gamertag);
 			p2pSendToHost(plr, &n, sizeof(n));
 		}*/
+		////////////////////////////////////////////////////////////
+		//Codex Safelock
+		if(strncmp(s_chatMsg, "/sp", 6) == NULL)
+	     {
+		  obj_Player* plr = gClientLogic().localPlayer_;
+	      r3d_assert(plr);
+	      obj_SafeLock* obj = (obj_SafeLock*)srv_CreateGameObject("obj_SafeLock", "obj_SafeLock", plr->GetPosition());
+	      obj->SetNetworkID(100001);
+	      obj->OnCreate();
+	      }
+		///////////////////////////////////////////////////////////
+
 		if(strncmp(s_chatMsg, "/stime", 6) == NULL)
 		{
 			char buf[256];
@@ -1402,6 +1416,109 @@ void HUDDisplay::eventNoteWritePost(r3dScaleformMovie* pMovie, const Scaleform::
 
 	timeoutForNotes = r3dGetTime() + .5f;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Safelock
+int HUDDisplay::GetRandSafeID()
+{
+	int rand = (int)u_GetRandom(0,30000);//rand() % 30000;
+	for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) ) // Server Vehicles
+	{
+		if (obj->Class->Name == "obj_SafeLock") //safelock
+		{
+			obj_SafeLock* Safelock = (obj_SafeLock*)obj;
+				if (Safelock->IDSafe == rand)
+				{
+					GetRandSafeID();
+					break;
+				}
+		}
+	}
+	return rand;
+}
+void HUDDisplay::eventSafelockPass(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
+{
+	r3d_assert(argCount == 1);
+
+	r3dMouse::Hide();
+
+	GameObject* obj = GameWorld().GetNetworkObject(SafeLockID);
+	if (!obj)
+		return;
+
+	obj_SafeLock* Safelock = (obj_SafeLock*)obj;
+
+	const char* Password = args[0].GetString();
+
+	writeNoteSavedSlotIDFrom = 0;
+	timeoutForNotes = r3dGetTime() + .5f;
+
+	if (strcmp(Safelock->Password,"") == 0) // if not exist this note create one new
+	{
+		PKT_C2S_SafelockData_s n;
+		n.Status = 2;
+		n.ExpSeconds = 0;
+		strcpy(n.Password,Password);
+		n.pos		 = Safelock->GetPosition();
+		n.rot		 = Safelock->GetRotationVector().x;
+		n.SafelockID = SafeLockID;
+		n.SafeID	 = GetRandSafeID();
+		n.MapID	 = gClientLogic().m_gameInfo.mapId;
+		Safelock->IDSafe=n.SafeID;
+		n.Quantity = 0;
+		n.Var1 = 0;
+		n.Var2 = 0;
+		n.myID = gClientLogic().localPlayer_->GetNetworkID();
+		n.GameServerID = gClientLogic().m_gameInfo.gameServerId;
+		p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
+		return;
+	}
+
+	if (strcmp(Safelock->Password,Password) == 0)
+	{
+		PKT_C2S_SafelockData_s n;
+		n.Status = 5;
+		n.State = 0;
+		n.StateSesion = 1;
+		n.MapID = gClientLogic().m_gameInfo.mapId;
+		n.GameServerID = gClientLogic().m_gameInfo.gameServerId;
+		n.CustomerID = gClientLogic().localPlayer_->GetNetworkID();
+		n.iDSafeLock = Safelock->IDSafe;
+		strcpy(n.Password,Safelock->Password); 
+		p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
+		//r3dOutToLog("###### A SAFELOCK ID %i PASSWORD %s\n",Safelock->IDSafe,Safelock->Password);
+	}
+	else {
+		showMessage(gLangMngr.getString("WrongPassword"));
+	}
+
+}
+
+void HUDDisplay::showSL(bool var1,bool var2, int ID )
+{
+if(!Inited) return;
+
+	SafeLockID=0;
+	SafeLockID=ID;
+
+	GameObject* obj = GameWorld().GetNetworkObject(ID);
+	if (obj)
+	{
+		obj_SafeLock* Safelock = (obj_SafeLock*)obj;
+		if (strcmp(Safelock->Password,"") != 0)
+			var1 = true;
+	}
+
+	r3dMouse::Show();
+	writeNoteSavedSlotIDFrom = 1; // temp, to prevent mouse from hiding
+	Scaleform::GFx::Value var[2];
+	var[0].SetBoolean(var1);
+    var[1].SetBoolean(var2);
+	gfxHUD.Invoke("_root.api.showSafelock", var, 2);
+	//gfxHUD.Invoke("_root.api.enableSafelockInput",true);
+	
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void HUDDisplay::eventGraveNoteClosed(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
 {

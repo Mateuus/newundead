@@ -722,14 +722,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\ObjectsCode\sobj_SafeLock.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\ObjectsCode\sobj_SafeLock.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Sources\ObjectsCode\sobj_SpawnedItem.cpp"
 					>
 				</File>

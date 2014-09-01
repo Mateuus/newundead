@@ -23,6 +23,7 @@
 #include "ObjectsCode/Gameplay/obj_Note.h"
 #include "ObjectsCode/Gameplay/obj_Grave.h"
 #include "ObjectsCode/Gameplay/obj_Animal.h"//Codex Animal
+#include "ObjectsCode/Gameplay/obj_SafeLock.h"//Codex Safelock
 #include "ObjectsCode/Gameplay/obj_Zombie.h"
 #include "ObjectsCode/weapons/Weapon.h"
 #include "ObjectsCode/weapons/WeaponArmory.h"
@@ -556,6 +557,66 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PositionVehicle) // Server Vehicles
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+//Codex Safelock
+IMPL_PACKET_FUNC(ClientGameLogic, PKT_C2S_SafelockData)
+{
+	switch(n.Status)
+	{
+	case 4:
+		{
+			if (n.GameServerID == gClientLogic().m_gameInfo.gameServerId)
+			{
+				GameObject* obj = GameWorld().GetNetworkObject(n.SafelockID);
+
+				if (!obj)
+					return;
+
+				if (obj->GetNetworkID() != n.SafelockID)
+					return;
+
+				if (obj->Class->Name == "obj_SafeLock")
+				{
+					obj_SafeLock* Safelock = (obj_SafeLock*)obj;
+					strcpy(Safelock->Password,n.Password);
+					Safelock->IDSafe = n.SafeID;
+				}
+			}
+			break;
+		}
+	case 5:
+		{
+			if (n.State==1)
+			{
+				const wchar_t* text=gLangMngr.getString("$SafelockInUse");
+				hudMain->showMessage(text);
+				return;
+			}
+			if (gClientLogic().localPlayer_)
+			{
+				if (gClientLogic().localPlayer_->GetNetworkID() == n.CustomerID)
+				{
+					gClientLogic().localPlayer_->OpenSafelock(n.iDSafeLock,n.Password,n.DateExpire);
+				}
+			}
+			break;
+		}
+	case 7:
+		{
+			GameObject* obj = GameWorld().GetNetworkObject(n.IDNetwork);
+
+			if (!obj)
+				return;
+
+			obj->setActiveFlag(0);
+			break;
+		}
+	}
+
+	//r3dOutToLog("###### SAFELOCK ID %i PASSWORD %s\n",n.SafeID,n.Password);
+}
+/////////////////////////////////////////////////////////////////////////////////////
+
 IMPL_PACKET_FUNC(ClientGameLogic, PKT_C2C_ChatMessage)
 {
 	hudMain->showChat(true);
@@ -743,6 +804,18 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_CreateNetObject)
 		shield->SetRotationVector(r3dPoint3D(n.var1, 0, 0));
 		shield->OnCreate();
 	}
+	///////////////////////////////////////////////////////////////////////////////////////
+	//Codex Safelock
+	if (n.itemID == WeaponConfig::ITEMID_PersonalLocker)
+	{
+	    obj_SafeLock* obj = (obj_SafeLock*)srv_CreateGameObject("obj_SafeLock", "obj_SafeLock", n.pos);
+		obj->SetNetworkID(n.spawnID);
+		obj->SetPosition(n.pos);
+		obj->SetRotationVector(r3dVector(n.var1, 0, 0));
+		obj->OnCreate();
+		//SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/WarZ/PlayerSounds/PLAYER_DROPITEM"), n.pos);
+	} 
+	///////////////////////////////////////////////////////////////////////////////////////
 
 	return;
 }
@@ -1335,6 +1408,7 @@ int ClientGameLogic::ProcessWorldEvent(GameObject* fromObj, DWORD eventId, DWORD
 		DEFINE_PACKET_HANDLER(PKT_S2C_SetNoteData);
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
 		DEFINE_PACKET_HANDLER(PKT_S2C_PositionVehicle);//Codex Carros
+		DEFINE_PACKET_HANDLER(PKT_C2S_SafelockData);//Codex Safelock
 		DEFINE_PACKET_HANDLER(PKT_C2S_DamageCar);//Codex Carros
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateAnimal); //Codex Animal
 		DEFINE_PACKET_HANDLER(PKT_S2C_CreateZombie);

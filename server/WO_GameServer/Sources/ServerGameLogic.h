@@ -186,6 +186,12 @@ int		  Cmd_Kicktome(obj_ServerPlayer* plr, const char* cmd);
 	bool		ApplyDamageToAnimal(GameObject* sourceObj, GameObject* targetAnimal, const r3dPoint3D& dmgPos, float damage, int bodyBone, int bodyPart, bool force_damage, STORE_CATEGORIES damageSource,bool isSpecialBool);//Codex Animal
 	void		DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targetPlr, STORE_CATEGORIES weaponCat, bool forced_by_server=false, bool fromPlayerInAir = false, bool targetPlayerInAir = false);
 	
+	//////////////////////////////////////////////////////////////
+	//Codex Safelock
+	bool		WriteDBSafelock(int myID, int SafeID, int itemID, int ExpSeconds, const char* Password, r3dPoint3D pos, float rot,int MapID, int Quantity, int Var1, int Var2, int ServerGameID);
+	void		RemoveDBSafelock(obj_ServerPlayer* plr, int SafeLockID, int ItemID, int Quantity, int Var1, int Var2, int ServerGameID);
+	void		ReadDBSafelock(int IDMap);
+	//////////////////////////////////////////////////////////////
 	
 
 	void		InformZombiesAboutSound(const obj_ServerPlayer* plr, const ServerWeapon* wpn);

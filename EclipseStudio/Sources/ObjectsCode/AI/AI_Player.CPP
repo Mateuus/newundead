@@ -47,6 +47,7 @@
 #include "ObjectsCode/Gameplay/obj_Grave.h"
 #include "ObjectsCode/Gameplay/obj_PostBox.h"
 #include "../../GameEngine/gameobjects/obj_Vehicle.h"//Codex Carros
+#include "ObjectsCode/Gameplay/obj_SafeLock.h"//Codex Safelock
 //A
 #include "../Gameplay/obj_Zombie.h"
 #include "../Gameplay/obj_ZombieDummy.h"
@@ -76,6 +77,7 @@
 #include "..\..\ui\HUDGeneralStore.h"
 #include "..\..\ui\HUDVault.h"
 #include "..\..\ui\HUDRepair.h"
+#include "..\..\ui\HUDSafeLock.h"//Codex Safelock
 
 #include "../../VoIP/public_definitions.h"
 #include "../../VoIP/public_errors.h"
@@ -91,6 +93,8 @@ extern HUDGeneralStore*	hudGeneralStore;
 extern HUDVault* hudVault;
 extern HUDTrade* hudTrade;
 extern HUDRepair* hudRepair;
+extern HUDSafeLock* hudSafeLock;//Codex Safelock
+
 //HUDTrade* hudTrade = NULL;
 extern 	PlayerStateVars_s CurrentRig;
 //float m_Stamina = m_Stamina1;
@@ -1254,6 +1258,11 @@ BOOL obj_Player::OnCreate()
 	if(bDead) 
 	{
 		r3d_assert(!NetworkLocal);
+		////////////////////////////////
+		//Codex Safelock
+		if (hudSafeLock->isActive())
+			hudSafeLock->Deactivate();
+		////////////////////////////////
 
 	if(NetworkLocal)//Codex Carros
 	{
@@ -2044,6 +2053,17 @@ BYTE obj_Player::getBodyNameFromBoneName(const char* boneName)
 	return 0;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Codex Safelock
+void obj_Player::OpenSafelock(int iDSafeLock, const char* Password,const char* DateExpire)
+{
+	hudSafeLock->AddSafeLock(iDSafeLock,Password);
+	hudSafeLock->AddDate(DateExpire);
+	hudSafeLock->Activate();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void obj_Player::CheckFireWeapon()
 {
 
@@ -2075,6 +2095,8 @@ if (isInVehicle() || isPassenger())
 	if(hudGeneralStore && hudGeneralStore->isActive()) needExit = true;
 	if(hudVault && hudVault->isActive()) needExit = true;
 	//if(hudTrade && hudTrade->isActive()) needExit = true;
+	if(hudSafeLock && hudSafeLock->isActive()) needExit = true;//Codex Safelock //ok
+
 	if(Mouse->GetMouseVisibility()) needExit = true;
 	if(hudMain && hudMain->isChatInputActive()) needExit = true;
 	if(hudMain && hudMain->isPlayersListVisible()) needExit = true;
@@ -2220,7 +2242,8 @@ if (isInVehicle() || isPassenger())
 						wpn->getItemID() == WeaponConfig::ITEMID_BrickWallBlock      ||
 						wpn->getItemID() == WeaponConfig::ITEMID_TownBuilding        ||
 						wpn->getItemID() == WeaponConfig::ITEMID_WallMetalBlock      ||
-						wpn->getItemID() == WeaponConfig::ITEMID_WoodWall2M)
+						wpn->getItemID() == WeaponConfig::ITEMID_WoodWall2M          ||
+						wpn->getItemID() == WeaponConfig::ITEMID_PersonalLocker)
 					{
 						if(m_needToDrawBarricadePlacement == 0)
 						{
@@ -2359,12 +2382,6 @@ if (isInVehicle() || isPassenger())
 					}
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-					if (wpn->getItemID() == WeaponConfig::ITEMID_PersonalLocker)
-					{
-
-					}
 					if((wpn->getItemID() == WeaponConfig::ITEMID_Bandages || wpn->getItemID() == WeaponConfig::ITEMID_Bandages2 || wpn->getItemID() == WeaponConfig::ITEMID_Antibiotics ||
 						wpn->getItemID() == WeaponConfig::ITEMID_Painkillers || wpn->getItemID() == WeaponConfig::ITEMID_Medkit || wpn->getItemID() == WeaponConfig::ITEMID_CraftedBandages/*//Codex Craft*/) 
 						&& CurLoadout.Health > 99 && !CurLoadout.legfall && !CurLoadout.bleeding)
@@ -2416,10 +2433,15 @@ if (isInVehicle() || isPassenger())
 						wi.itemID == WeaponConfig::ITEMID_BrickWallBlock      ||
 						wi.itemID == WeaponConfig::ITEMID_TownBuilding        ||
 						wi.itemID == WeaponConfig::ITEMID_WallMetalBlock      ||
-						wi.itemID == WeaponConfig::ITEMID_WoodWall2M)
+						wi.itemID == WeaponConfig::ITEMID_WoodWall2M          ||
+						wi.itemID == WeaponConfig::ITEMID_PersonalLocker)
 					{
+						if (wi.itemID != WeaponConfig::ITEMID_PersonalLocker)//Codex Safelock
+						var1 = (m_fPlayerRotation) + R3D_RAD2DEG(bodyAdjust_x) + 180;
+						else
 						var1 = (m_fPlayerRotation) + R3D_RAD2DEG(bodyAdjust_x) + 180;
 						needCorrectPos = true; 
+						SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/WarZ/PlayerSounds/PLAYER_DROPITEM"), GetPosition());
 					}
 
 					if(needCorrectPos)
@@ -3128,6 +3150,11 @@ void obj_Player::DoDeath(int networdIDKiller, bool forced_by_server, STORE_CATEG
 
 		if(hudTrade && hudTrade->isActive())
 			hudTrade->Deactivate();	
+		/////////////////////////////////////////////
+		//Codex Safelock
+		if(hudSafeLock && hudSafeLock->isActive())
+			hudSafeLock->Deactivate();
+        /////////////////////////////////////////////
 
 		g_camera_mode->SetInt(0);
 		UpdateLoadoutSlot(CurLoadout); // reload meshes
@@ -4037,6 +4064,31 @@ BOOL obj_Player::Update()
 		m_AuraType = AT_NONE;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Codex Safelock
+	// if found Safelock, ask to server for password and SafelockID of this Safelock
+	// this is for safelock with big distances and short
+	// Asc to server 1 time by safelock found
+	if (NetworkLocal)
+	{
+	  for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
+	  {
+		if (obj->Class->Name == "obj_SafeLock")
+		{
+			obj_SafeLock* Safelock = (obj_SafeLock*)obj;
+			if (strcmp(Safelock->Password,"") == 0)
+			{
+				PKT_C2S_SafelockData_s n;
+				n.Status = 6;
+				n.ID = this->GetNetworkID();
+				n.SafelockID = obj->GetNetworkID();
+				p2pSendToHost(this, &n, sizeof(n));
+			}
+		 }
+	   }
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Codex Carros
 	#if VEHICLES_ENABLED
    if (NetworkLocal) {  // Server Vehicles
@@ -4930,7 +4982,7 @@ void obj_Player::UpdateActionUI()
 #endif
 	r3d_assert(NetworkLocal);
 	if(hudMain==NULL || hudActionUI == NULL || hudPause == NULL ||
-		hudAttm == NULL || hudGeneralStore == NULL || hudVault == NULL || hudTrade == NULL)
+		hudAttm == NULL || hudGeneralStore == NULL || hudVault == NULL || hudTrade == NULL ||  hudSafeLock == NULL)//Codex Safelock
 		return;
 
 	if(hudMain->isChatInputActive())
@@ -4944,6 +4996,8 @@ void obj_Player::UpdateActionUI()
 	if(hudVault->isActive())
 		return;
 	if(hudTrade->isActive())
+		return;
+	if(hudSafeLock->isActive())//Codex Safelock
 		return;
 
 	if(bDead && hudActionUI->isActive())
@@ -5088,6 +5142,7 @@ void obj_Player::UpdateActionUI()
 			r3dProjectToScreen(dropObj->GetBBoxWorld().Center(), &scrPos);
 			hudActionUI->setScreenPos((int)scrPos.x, (int)scrPos.y);
 		}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Codex Carros
 		if(hudActionUI->isActive())
@@ -5185,6 +5240,17 @@ void obj_Player::UpdateActionUI()
 						return;
 					}
 				}
+
+				//////////////////////////////////////////////////////////////////////////////////////
+				//Codex Safelock
+				if(dropObj->Class->Name == "obj_SafeLock")
+				{
+					//hudVault->Activate();
+					//obj_SafeLock* Safelock = (obj_SafeLock*)dropObj;
+					hudMain->showSL(false,true,dropObj->GetNetworkID()); // Bloquear //Max Error
+					//hudMain->showSL(true,true); // Desbloquear
+				}
+				//////////////////////////////////////////////////////////////////////////////////////
 				
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Codex Carros
@@ -7548,11 +7614,10 @@ obj_Player::AppendRenderables( RenderArray ( & render_arrays  )[ rsCount ], cons
 						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Wood_2M_01.sco", true, false, true, true );
 					riotMesh = m_BarricadeMeshPlacement;
 				}
-				else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_PersonalLocker)
-				{
-					if(m_BarricadeMeshPlacement == NULL)
-						m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01_Crate.sco", true, false, true, true );
-					riotMesh = m_BarricadeMeshPlacement;
+			   else if(m_needToDrawBarricadePlacement == WeaponConfig::ITEMID_PersonalLocker)                        {
+                            if(m_BarricadeMeshPlacement == NULL)
+                                m_BarricadeMeshPlacement = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01.sco", true, false, true, false );
+                            riotMesh = m_BarricadeMeshPlacement;
 				}
 				if(riotMesh->IsDrawable())
 				{

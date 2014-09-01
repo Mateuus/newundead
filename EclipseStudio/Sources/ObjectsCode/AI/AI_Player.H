@@ -41,6 +41,13 @@ public:
     void*	SoundPunch;
 	////////////////////////
 	bool ShowCrosshair;//Codex Mira
+	////////////////////////
+	//Codex Safelock
+	int SafeItems[33];
+	int Var1[33];
+	int Var2[33];
+	int Quantity[33];
+	///////////////////////
 
 	enum AuraType
 	{
@@ -446,6 +453,7 @@ public:
 	void		stopFootstepsSound();
 
 	bool		bAllowToUseWeapons;
+	void		OpenSafelock(int iDSafeLock, const char* Password,const char* DateExpire);//Codex Safelock
 	void		CheckFireWeapon();
 	bool		CheckVehicle();//Codex Carros
 	float		GetGrenadeLaunchDelay();

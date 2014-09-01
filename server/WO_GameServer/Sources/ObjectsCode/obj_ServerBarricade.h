@@ -11,6 +11,7 @@ public:
 	int		m_ObstacleId;
 	float		m_Radius;
 	bool		requestKill;
+		float		TimeToOut;//Codex Safelock
 	float		Health;
 	
 	static std::vector<obj_ServerBarricade*> allBarricades;
@@ -18,6 +19,16 @@ public:
 public:
 	obj_ServerBarricade();
 	~obj_ServerBarricade();
+	/////////////////////////////
+	//Codex Safelock
+	char Password[512];
+	int SafeLockID;
+	int MapID;
+	int ExpireTime;
+	int NumItems;
+	int GameServerID;
+	int SesionID;
+	////////////////////////////
 
 	virtual	BOOL		OnCreate();
 	virtual	BOOL		OnDestroy();

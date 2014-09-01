@@ -7,6 +7,7 @@
 
 class GameObject;
 class obj_Player;
+class obj_SafeLock;//Codex Safelock
 
 #include "../../ServerNetPackets/NetPacketsGameInfo.h"
 
@@ -173,6 +174,7 @@ virtual	void		OnNetData(DWORD peerId, const r3dNetPacketHeader* packetData, int 
 	 DEFINE_PACKET_FUNC(PKT_S2C_SetNoteData);
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateVehicle); // Server Vehicles //Codex Carros
 	 DEFINE_PACKET_FUNC(PKT_S2C_PositionVehicle);//CodexCarros
+	 DEFINE_PACKET_FUNC(PKT_C2S_SafelockData);//Codex Safelock
 	 DEFINE_PACKET_FUNC(PKT_C2S_DamageCar);//Codex Carros
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateAnimal);//Codex Animal
 	 DEFINE_PACKET_FUNC(PKT_S2C_CreateZombie);

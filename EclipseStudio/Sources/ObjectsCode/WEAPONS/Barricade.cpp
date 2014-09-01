@@ -46,7 +46,7 @@ BOOL obj_Barricade::OnCreate()
 	else if(m_ItemID == WeaponConfig::ITEMID_WoodWall2M)
 		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Block_Wall_Wood_2M_01.sco", true, false, true, true );
 	else if(m_ItemID == WeaponConfig::ITEMID_PersonalLocker)
-		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01_Crate.sco", true, false, true, true );
+		m_PrivateModel = r3dGOBAddMesh("Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01.sco", true, false, true, true );
 
 	if(m_PrivateModel==NULL)
 		return FALSE;

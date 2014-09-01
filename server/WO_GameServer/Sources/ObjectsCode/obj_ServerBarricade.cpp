@@ -24,6 +24,15 @@ obj_ServerBarricade::obj_ServerBarricade()
 	requestKill = false;
 	Health = 1;
 	m_ObstacleId = -1;
+	//////////////////////////////
+	//Codex Safelock
+    strcpy(Password,"");
+	SafeLockID=0;
+	MapID = 0;
+	ExpireTime=0;
+	SesionID=0;
+	TimeToOut= 0.0f;
+	//////////////////////////////
 }
 
 obj_ServerBarricade::~obj_ServerBarricade()
@@ -89,6 +98,11 @@ BOOL obj_ServerBarricade::OnCreate()
 		FileName = "Data\\ObjectsDepot\\Weapons\\Item_Riot_Shield_01.sco";
 		bsize    = r3dPoint3D(1.726829f, 2.136024f, 0.762201f);
 	}
+    else if(m_ItemID == WeaponConfig::ITEMID_PersonalLocker)
+    {
+        FileName = "Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01.sco";
+        bsize    = r3dPoint3D(1.513974f, 1.057301f, 1.111396f);
+    }
 	else
 		r3dError("unknown barricade item\n");
 
@@ -113,6 +127,17 @@ BOOL obj_ServerBarricade::OnDestroy()
 	{
 		gAutodeskNavMesh.RemoveObstacle(m_ObstacleId);
 	}
+
+	/////////////////////////////////////
+	//Codex Safelock
+	if (SafeLockID!=0)
+	{
+		strcpy(Password,"");
+	    SafeLockID = 0;
+		MapID = 0;
+		ExpireTime = 0;
+	}
+	////////////////////////////////////
 	
 	return parent::OnDestroy();
 }

@@ -1722,6 +1722,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Sources\UI\HUDSafeLock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\UI\HUDSafeLock.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Sources\UI\HUDTrade.cpp"
 					>
 				</File>

@@ -44,7 +44,8 @@ public:
 	r3dScaleformMovie gfxHUD;
 	r3dScaleformMovie gfxBloodStreak;
 	r3dScaleformMovie gfxRangeFinder;
-void removeMissionInfo(int var1);
+    void removeMissionInfo(int var1);
+    int GetRandSafeID();//Codex Safelock
 	void	eventChatMessage(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
 	void HUDDisplay::addplayertogroup(const char* gamertag,bool legend);
 	void addMissionInfo(const char* var1);
@@ -56,6 +57,7 @@ void removeMissionInfo(int var1);
 	void HUDDisplay::removeplayerfromgroup(const char* gamertag,bool legend);
 	void	eventNoteWritePost(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
 	void	eventNoteClosed(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
+	void	eventSafelockPass(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);//Codex Safelock
 	void	eventGraveNoteClosed(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
 	void	eventNoteReportAbuse(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
 	void	eventShowPlayerListContextMenu(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount);
@@ -72,7 +74,15 @@ public:
 	bool 	Init();
 	bool 	Unload();
 
-int	SafeID;
+    ///////////////////////////////////////////
+	//Codex Safelock
+	r3dPoint3D SafeLockPos;
+	r3dVector SafeLockRot;
+	int SafeLockID;
+	int	SafeID;
+	///////////////////////////////////////////
+
+
 
 bool isT;
 anyID clientid;
@@ -133,7 +143,7 @@ int currentslot;
 	void	showWriteNote(int slotIDFrom);
 	void	showReadNote(const char* msg);
 	void	showGraveNote(const char* plr,const char* plr2);
-	void	showSL(bool var1,bool var2);
+	void	showSL(bool var1,bool var2, int ID );//Codex Safelock
    
 	//Codex Carros
 	void	StatusVehicle(const wchar_t* plr,const wchar_t* plr2);  // Server Vehicles

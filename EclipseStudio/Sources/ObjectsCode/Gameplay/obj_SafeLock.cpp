@@ -11,7 +11,9 @@ AUTOREGISTER_CLASS(obj_SafeLock);
 
 obj_SafeLock::obj_SafeLock()
 {
-	//m_GotData = false;
+	m_GotData = false;
+	strcpy(Password,"");
+	IDSafe=0;
 }
 
 obj_SafeLock::~obj_SafeLock()
@@ -20,7 +22,7 @@ obj_SafeLock::~obj_SafeLock()
 
 BOOL obj_SafeLock::Load(const char *fname)
 {
-	const char* cpMeshName = "Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01_Crate.sco";
+	const char* cpMeshName = "Data\\ObjectsDepot\\Weapons\\Item_Lockbox_01.sco";
 	if(!parent::Load(cpMeshName)) 
 		return FALSE;
 
@@ -29,15 +31,15 @@ BOOL obj_SafeLock::Load(const char *fname)
 
 BOOL obj_SafeLock::OnCreate()
 {
-	m_ActionUI_Title = gLangMngr.getString("Personal Locker");
-	m_ActionUI_Msg = gLangMngr.getString("Hold E To Used Safe Lock");
+	m_ActionUI_Title = gLangMngr.getString("$FR_SAFELOCK_TITLE");
+	m_ActionUI_Msg = gLangMngr.getString("HoldEtoAccessSafeLock");
 
 	m_spawnPos = GetPosition();
 
 	if(!DisablePhysX)
 	{
 		ReadPhysicsConfig();
-		PhysicsConfig.group = PHYSCOLL_TINY_GEOMETRY; // skip collision with players
+		PhysicsConfig.group = PHYSCOLL_STATIC_GEOMETRY; // skip collision with players
 		PhysicsConfig.requireNoBounceMaterial = true;
 		PhysicsConfig.isFastMoving = true;
 	}

@@ -371,6 +371,10 @@ GameObject* obj_Zombie::FindBarricade()
 	{
 		obj_ServerBarricade* shield = *it;
 
+		//Codex safelock
+			if (shield->m_ItemID != 101348)
+			continue;
+
 		// fast discard by radius
 		if((GetPosition() - shield->GetPosition()).Length() > shield->m_Radius + _zai_AttackRadius)
 			continue;
@@ -1195,6 +1199,12 @@ BOOL obj_Zombie::Update()
 		{
 			obj_ServerBarricade* shield = (obj_ServerBarricade*)GameWorld().GetObject(hardObjLock);
 			if(!shield)
+			{
+				StopAttack();
+				break;
+			}
+			//Codex Safelock
+			if (shield->m_ItemID == 101348)
 			{
 				StopAttack();
 				break;

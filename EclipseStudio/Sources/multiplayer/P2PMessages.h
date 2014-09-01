@@ -94,6 +94,9 @@ enum pkttype_e
   PKT_C2C_PlayerOnVehicle, // Server Vehicles
   PKT_C2C_CarSeat,
 
+  //Codex SafeLock
+  PKT_C2S_SafelockData,
+
   //Codex Soco
   PKT_C2C_UnarmedCombat,  // Unarmed Combat
 
@@ -470,6 +473,39 @@ struct PKT_C2C_PlayerOnVehicle_s : public DefaultPacketMixin<PKT_C2C_PlayerOnVeh
   int myID;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+//Codex Safelock
+struct PKT_C2S_SafelockData_s : public DefaultPacketMixin<PKT_C2S_SafelockData>
+{
+	int Status;
+	int itemIDorGrid;
+	int Var1;
+	int Var2;
+	WORD		Quantity;	// target quantity, 0 for removing item
+	uint32_t SafelockID;
+	uint32_t ExpireTime;
+	uint32_t MapID;
+	char Password[512];
+	//int Durability;
+	float rot;
+	r3dPoint3D pos;
+	int ExpSeconds;
+	int SafeID;
+	int myID;
+	int State;
+	int StateSesion;
+	int GameServerID;
+	int CustomerID;
+	int iDSafeLock;
+	char DateExpire[512];
+	int ID;
+	gp2pnetid_t	IDNetwork;
+	char NewPassword[512];
+	int IDofSafeLock;
+	int IDPlayer;
+
+};
+/////////////////////////////////////////////////////////////////////////////////////////
 //Codex Soco
 struct PKT_C2C_UnarmedCombat_s : public DefaultPacketMixin<PKT_C2C_UnarmedCombat> // Unarmed Combat
 {

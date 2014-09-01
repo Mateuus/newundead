@@ -149,10 +149,11 @@ class obj_ServerPlayer : public GameObject, INetworkHelper
 
 	bool		isTargetDummy_;
 
-	float lastCurTime;
-    bool firstTime;
-	void DoRemoveAllItems(obj_ServerPlayer* plr);
-	void DoRemoveItems(int slotid);
+	float       lastCurTime;
+    bool        firstTime;
+	void        DoRemoveAllItems(obj_ServerPlayer* plr);
+	void        DoRemoveItems(int slotid);
+	void        DoRemoveSafeLockItems(int slotid, int quantity, int RemQuantity);//Codex Safelock
 	void		UseItem_Barricade(const r3dPoint3D& pos, float rotX, uint32_t itemID);
 	void		UseItem_ApplyEffect(const PKT_C2C_PlayerUseItem_s& n, uint32_t itemID);
 
@@ -219,6 +220,7 @@ public:
 	void		OnNetPacket(const PKT_C2S_InventoryOp_s& n);
 	void		OnNetPacket(const PKT_C2S_DisconnectReq_s& n);
 	void		OnNetPacket(const PKT_C2S_UnloadClipReq_s& n); //Unload Clip
+	void		OnNetPacket(const PKT_C2S_SafelockData_s& n);//Codex Safelock
 	void		OnNetPacket(const PKT_C2S_GroupInvite_s& n);
 	void		OnNetPacket(const PKT_C2S_TradeRequest_s& n);
 	void		OnNetPacket(const PKT_C2S_TradeAccept2_s& n);
