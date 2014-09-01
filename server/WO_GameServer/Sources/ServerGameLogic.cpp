@@ -17,7 +17,6 @@
 #include "ObjectsCode/sobj_DroppedItem.h"
 #include "ObjectsCode/sobj_Note.h"
 #include "ObjectsCode/sobj_Grave.h"
-#include "ObjectsCode/sobj_SafeLock.h"
 #include "ObjectsCode/Zombies/sobj_Zombie.h"
 #include "ObjectsCode/obj_ServerPlayerSpawnPoint.h"
 #include "ObjectsCode/obj_ServerBarricade.h"
@@ -2990,11 +2989,6 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_UseNetObject)
 	}
 	else if(base->Class->Name == "obj_Vehicle")//Codex Carros
 	{
-	}
-	else if(base->Class->Name == "obj_SafeLock")
-	{
-		obj_SafeLock* obj = (obj_SafeLock*)base;
-		obj->NetSendSafeLockData(peerId);
 	}
 	else
 	{

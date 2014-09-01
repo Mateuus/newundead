@@ -18,7 +18,6 @@
 #include "ObjectsCode/sobj_DroppedItem.h"
 #include "ObjectsCode/sobj_Note.h"
 #include "ObjectsCode/sobj_Grave.h"
-#include "ObjectsCode/sobj_SafeLock.h"
 #include "ObjectsCode/obj_ServerBarricade.h"
 #include "AsyncFuncs.h"
 #include "Async_Notes.h"
@@ -2514,18 +2513,6 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2C_PlayerUseItem_s& n)
 
 	RelayPacket(&n, sizeof(n));
 
-	/*if (wi.itemID == WeaponConfig::ITEMID_PersonalLocker)
-	{
-	obj_SafeLock* obj = (obj_SafeLock*)srv_CreateGameObject("obj_SafeLock", "obj_SafeLock", GetPosition());
-	obj->SetNetworkID(gServerLogic.GetFreeNetId());
-	obj->NetworkLocal = true;
-	obj->m_Note.pass = 0;
-	obj->m_Note.SafeLockID = 0;
-	obj->m_Note.in_GamePos = GetPosition();
-	// vars
-	obj->OnCreate();
-	}*/
-
 	const FoodConfig* foodConfig = g_pWeaponArmory->getFoodConfig(usedItemId);
 	if(foodConfig)
 	{
@@ -2648,18 +2635,6 @@ void obj_ServerPlayer::UseItem_ApplyEffect(const PKT_C2C_PlayerUseItem_s& n, uin
 	case WeaponConfig::ITEMID_WallMetalBlock:
 	case WeaponConfig::ITEMID_WoodWall2M:
 		UseItem_Barricade(n.pos, n.var1, itemID);
-		break;
-	case WeaponConfig::ITEMID_PersonalLocker:
-		{
-			obj_SafeLock* obj = (obj_SafeLock*)srv_CreateGameObject("obj_SafeLock", "obj_SafeLock", GetPosition());
-			obj->SetNetworkID(gServerLogic.GetFreeNetId());
-			obj->NetworkLocal = true;
-			obj->m_Note.pass = 0;
-			obj->m_Note.SafeLockID = 0;
-			obj->m_Note.in_GamePos = GetPosition();
-			// vars
-			obj->OnCreate();
-		}
 		break;
 	case WeaponConfig::ITEMID_ZombieRepellent:
 	case 301321: // gas
