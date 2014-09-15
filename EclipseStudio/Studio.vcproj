@@ -297,7 +297,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386 /largeaddressaware RaknetLibStatic.lib&#x0D;&#x0A;"
+				AdditionalOptions="/MACHINE:I386 /largeaddressaware&#x0D;&#x0A;"
 				AdditionalDependencies="winmm.lib ws2_32.lib strsafe.lib d3dx9.lib d3d9.lib dinput8.lib dxguid.lib xinput.lib iphlpapi.lib fmodex_vc.lib fmod_event.lib fmod_event_net.lib libjpeg.lib ChilkatRel.lib dnsapi.lib crypt32.lib Shlwapi.lib odbc32.lib odbccp32.lib wbemuuid.lib FuncGuard.lib"
 				OutputFile="$(SolutionDir)\..\..\bin\MiniA.exe"
 				LinkIncremental="1"

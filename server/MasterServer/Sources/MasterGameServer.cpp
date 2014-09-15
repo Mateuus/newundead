@@ -966,7 +966,7 @@ DWORD __stdcall CMasterGameServer::ItemsDbUpdateThread(LPVOID in)
 
 		CkHttpRequest req;
 		req.UsePost();
-		req.put_Path("/api/php/api_getItemsDB.php");
+		req.put_Path("/conexao/api/php/api_getItemsDB.php");
 		req.AddParam("serverkey", "CfFkqQWjfgksYG56893GDhjfjZ20");
 
 		resp = http.SynchronousRequest(g_api_ip->GetString(), gDomainPort, gDomainUseSSL, req);

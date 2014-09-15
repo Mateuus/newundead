@@ -140,12 +140,12 @@ r3dMesh *r3dGOBAddMesh(const char* fname, bool addToLibrary, bool use_default_ma
 			if( !allow_async && !mesh->IsDrawable() )
 			{
 				//<object className="MeshGameObject" fileName="data/objectsdepot/weapons/item_msgbottle.sco"> //Por Isso Essa Merda Acontece por essa merda MeshGameObject
-				r3dOutToLog( "r3dGOBAddMesh: Lazy mesh '%s' encountered on sync loading request. Waiting for completion\n", mesh->FileName.c_str() ) ;
+				/*r3dOutToLog( "r3dGOBAddMesh: Lazy mesh '%s' encountered on sync loading request. Waiting for completion\n", mesh->FileName.c_str() ) ;
 				for( ; !mesh->IsDrawable() ; )
 				{
 					r3dFinishBackGroundTasks() ;
 					Sleep( 1 ) ;
-				}
+				}*/
 			}
 
 			mesh->RefCount ++ ;
