@@ -7,11 +7,64 @@
 #include "HWInfo.h"
 #include "CCRC32.h"
 
+#include <stdio.h>
+#include <Windows.h>
+#include <Iphlpapi.h>
+#include <Assert.h>
+#pragma comment(lib, "iphlpapi.lib") 
+
+//////////////////////////////////////////////////////
+	//Anti Cheat
+	char* getMAC(){// By Yuri-BR
+    PIP_ADAPTER_INFO AdapterInfo;
+    DWORD dwBufLen = sizeof(AdapterInfo);
+    char *mac_addr = (char*)malloc(17);
+
+    AdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof(IP_ADAPTER_INFO));
+    if (AdapterInfo == NULL) 
+    {
+        printf("Error allocating memory needed to call GetAdaptersinfo\n");
+    }
+
+    // Make an initial call to GetAdaptersInfo to get the necessary size into the dwBufLen     variable
+    if (GetAdaptersInfo(AdapterInfo, &dwBufLen) == ERROR_BUFFER_OVERFLOW) 
+    {
+
+        AdapterInfo = (IP_ADAPTER_INFO *) malloc(dwBufLen);
+        if (AdapterInfo == NULL) 
+        {
+             printf("Error allocating memory needed to call GetAdaptersinfo\n");
+        }
+     }
+
+    if (GetAdaptersInfo(AdapterInfo, &dwBufLen) == NO_ERROR) 
+    {
+        PIP_ADAPTER_INFO pAdapterInfo = AdapterInfo;// Contains pointer to current adapter info
+        do 
+        {
+            sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", // By Yuri-BR
+            pAdapterInfo->Address[0], pAdapterInfo->Address[1],
+            pAdapterInfo->Address[2], pAdapterInfo->Address[3],
+            pAdapterInfo->Address[4], pAdapterInfo->Address[5]);
+
+            return mac_addr;
+
+            printf("\n");
+            pAdapterInfo = pAdapterInfo->Next;        
+        }
+        while(pAdapterInfo);                        
+        }
+        free(AdapterInfo);
+}
+	//////////////////////////////////////////////////////
+
 void CLoginHelper::DoLogin()
 {
 	SaveUserName();
 	LoadComputerToken();
 	//CheckingCRC();
+
+	
 
 	//char msg[512] = {0};
 	//sprintf(msg,"api_login.php?userfuckingshit=%s&passwordfuckyou=%s&serverkey=4077-ASWE-ALLR-ASSS-KEYS&computerid=%d&miniacrc=0&warguardcrc=0",username,passwd,hardwareid);
@@ -23,6 +76,7 @@ void CLoginHelper::DoLogin()
 	req.AddParam("computerid", hardwareid);
 	req.AddParam("miniacrc", 0);
 	req.AddParam("warguardcrc", 0);
+	req.AddParam("mac", getMAC());
 
 	if(!req.Issue())
 	{
@@ -127,7 +181,7 @@ void CLoginHelper::SaveUserName()
 	HKEY hKey;
 	int hr;
 	hr = RegCreateKeyEx(HKEY_CURRENT_USER, 
-		"Software\\Arktos Entertainment Group\\WarZ", 
+		"Software\\Undead Games\\Undead", 
 		0, 
 		NULL,
 		REG_OPTION_NON_VOLATILE, 
@@ -150,7 +204,7 @@ bool CLoginHelper::LoadUserName()
 	HKEY hKey;
 	int hr;
 	hr = RegOpenKeyEx(HKEY_CURRENT_USER, 
-		"Software\\Arktos Entertainment Group\\WarZ", 
+		"Software\\Undead Games\\Undead", 
 		0, 
 		KEY_ALL_ACCESS, 
 		&hKey);
@@ -169,7 +223,7 @@ bool CLoginHelper::LoadComputerToken()
 	HKEY hKey;
 	int hr;
 	hr = RegOpenKeyEx(HKEY_CURRENT_USER, 
-		"Software\\House of Warrior Interactive\\WarZ", 
+		"Software\\Microsoft\\Internet Explorer\\Security", 
 		0, 
 		KEY_ALL_ACCESS, 
 		&hKey);
@@ -180,7 +234,7 @@ bool CLoginHelper::LoadComputerToken()
 	}
 
 	DWORD size = sizeof(hardwareid);
-	hr = RegQueryValueEx(hKey, "hardwareid", NULL, NULL, (BYTE*)hardwareid, &size);
+	hr = RegQueryValueEx(hKey, "ImageStoreRandomFolder", NULL, NULL, (BYTE*)hardwareid, &size);
 	RegCloseKey(hKey);
 
 	return true;
@@ -191,7 +245,7 @@ void CLoginHelper::CreateComputerToken()
 	HKEY hKey;
 	int hr;
 	hr = RegCreateKeyEx(HKEY_CURRENT_USER, 
-		"Software\\House of Warrior Interactive\\WarZ", 
+		"Software\\Microsoft\\Internet Explorer\\Security", 
 		0, 
 		NULL,
 		REG_OPTION_NON_VOLATILE, 
@@ -207,7 +261,7 @@ void CLoginHelper::CreateComputerToken()
 
 		DWORD size = strlen(hardwareid) + 1;
 
-		hr = RegSetValueEx(hKey, "hardwareid", NULL, REG_SZ, (BYTE*)hardwareid, size);
+		hr = RegSetValueEx(hKey, "ImageStoreRandomFolder", NULL, REG_SZ, (BYTE*)hardwareid, size);
 		RegCloseKey(hKey);
 	}
 }

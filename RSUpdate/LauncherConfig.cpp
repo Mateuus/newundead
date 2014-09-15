@@ -9,17 +9,17 @@ CLauncherConfig gLauncherConfig;
 CLauncherConfig::CLauncherConfig()
 {
 
-	serialBuyURL = "http://localhost/buy?ref=WarL";
-	serialExpiredBuyURL = "http://localhost/buy?ref=WarE";
+	serialBuyURL = "http://www.undeadbrasil.com";
+	serialExpiredBuyURL = "http://www.undeadbrasil.com";
 
-	accountForgotPasswordURL = "https://localhost/account_check";
-	accountRegisterURL = "http://undeadbrasil.com/index.php?pagina=cadastro";
+	accountForgotPasswordURL = "http://www.undeadbrasil.com/?pagina=recuperar";
+	accountRegisterURL = "http://www.undeadbrasil.com/?pagina=cadastro";
 
-	myAccountURL = "https://localhost/account_check";
-	forumsURL =    "http://localhost/forum";
-	supportURL =   "http://localhost/support";
+	myAccountURL = "http://undeadbrasil.com/index.php?pagina=painel";
+	forumsURL =    "http://forum.undeadbrasil.com/";
+	supportURL =   "http://forum.undeadbrasil.com/index.php?/forum/19-suporte/";
 	youtubeURL =   "http://www.youtube.com";
-	facebookURL =  "http://www.facebook.com";
+	facebookURL =  "https://www.facebook.com/equipeundeadbrasil";
 	twitterURL =   "http://twitter.com/";
 
 	accountUnknownStatusMessage = "Unknown account status, please contact support@localhost";
@@ -32,20 +32,21 @@ CLauncherConfig::CLauncherConfig()
 	accountCreateEmailTakenMessage = "There is already registered account with that email!\nPlease note that you must use unique email per The War Z account";
 	accountCreateInvalidSerialMessage = "Serial Key is not valid after Serial Key Check\ncontact support@localhost";
 
-	webAPIDomainIP = "198.50.173.40";
-	webAPIDomainBaseURL = "/api/";
-	webAPIDomainPort = 443;
-	webAPIDomainUseSSL =  1 ? true : false;
+	webAPIDomainIP = "167.114.32.63";
+	webAPIDomainBaseURL = "/conexao/api/";
+	webAPIDomainPort = 80;
+	webAPIDomainUseSSL = false;
 
-	ToSURL =  "http://198.50.173.40/doc/EULA.rtf";
-	EULAURL = "http://198.50.173.40/doc/TOS.rtf";
+	ToSURL =  "http://undeadbrasil.com/conexao/other/eula-en.htm";
+	EULAURL = "http://undeadbrasil.com/conexao/other/eula-en.rtf";
 
-	updateGameDataURL = "http://127.0.0.1/wz/data/wz.xml";
-	updateLauncherDataURL = "http://127.0.0.1/wz/updater/woupd.xml";
-	// updateLauncherDataHostURL Used by -generate cmdline arg to output a woupd.xml file.
-	updateLauncherDataHostURL = "http://127.0.0.1/wz/updater/";
+	updateGameDataURL = "http://167.114.32.63/conexao/wz/wz.xml";
+	updateLauncherDataURL = "http://167.114.32.63/conexao/wz/updater/woupd.xml";
+ // updateLauncherDataHostURL Used by -generate cmdline arg to output a woupd.xml file.
+	updateLauncherDataHostURL = "http://167.114.32.63/conexao/wz/updater/";
+	serverInfoURL = "http://167.114.32.63/conexao/api_getserverinfo1.xml";
 
-	serverInfoURL = "http://198.50.173.40/api_getserverinfo.xml";
+
 
 	
 	#define CHECK_I(xx) if(xx == 0)  r3dError("missing %s value", #xx);

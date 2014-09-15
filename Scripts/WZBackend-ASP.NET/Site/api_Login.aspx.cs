@@ -19,6 +19,7 @@ public partial class api_Login : WOApiWebPage
         string computerid = web.Param("computerid");
         string miniacrc = web.Param("miniacrc");
         string warguardcrc = web.Param("warguardcrc");
+        string mac = web.Param("mac");
 
        // GResponse.Write("WO_0");
        // return;
@@ -34,6 +35,7 @@ public partial class api_Login : WOApiWebPage
         sqcmd.Parameters.AddWithValue("@in_HardwareID", computerid);
         sqcmd.Parameters.AddWithValue("@in_MiniACRC", miniacrc);
         sqcmd.Parameters.AddWithValue("@in_WarGuardCRC", warguardcrc);
+        sqcmd.Parameters.AddWithValue("@in_Mac", mac);  
       
       
        

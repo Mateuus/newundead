@@ -308,10 +308,10 @@ repeat_the_menu:
 		r3dGameLevel::SetHomeDir("WZ_Colorado"); 
 		break;
 	case GBGameInfo::MAPID_UB_Cliffside: 
-		r3dGameLevel::SetHomeDir("UB_Cliffside"); 
+		r3dGameLevel::SetHomeDir("WZ_Cliffside"); 
 		break;
 	case GBGameInfo::MAPID_UB_CaliWood: 
-		r3dGameLevel::SetHomeDir("UB_CaliWood"); 
+		r3dGameLevel::SetHomeDir("CaliWood"); 
 		break;
 	case GBGameInfo::MAPID_UB_Valley: 
 		r3dGameLevel::SetHomeDir("UB_Valley"); 

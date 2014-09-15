@@ -6,7 +6,7 @@
 
 #include "WOBackendAPI.h"
 
-const char*	gDomainBaseUrl= "/api/";
+const char*	gDomainBaseUrl= "/conexao/api/";
 int		gDomainPort   = 80; // PAX_BUILD - change to 80 and no SSL
 bool		gDomainUseSSL = false;
 
