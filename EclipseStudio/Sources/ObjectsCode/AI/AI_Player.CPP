@@ -6723,9 +6723,9 @@ void obj_Player::DrawLabel()
 		}
 	}
 #endif
-#ifdef DEV_ENABLED
+//#ifdef DEV_ENABLED
 	// draw player CustomerID/gamertag for admins
-	if(gUserProfile.ProfileData.isDevAccount)
+	if(!NetworkLocal && gUserProfile.ProfileData.isDevAccount && Keyboard->IsPressed(kbsRightControl))
 	{
 		float dist = (gCam - GetPosition()).Length();
 		float distx = (gCam - GetPosition()).x;
@@ -6746,7 +6746,7 @@ void obj_Player::DrawLabel()
 		Font_Editor->PrintF(scrCoord.x, scrCoord.y-36, r3dColor(255,255,255,100), "GroupID=%d",CurLoadout.GroupID);
 
 	}
-#endif
+//#endif
 
 	if (NetworkLocal)
 	{

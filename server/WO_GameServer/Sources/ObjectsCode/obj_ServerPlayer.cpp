@@ -2680,6 +2680,7 @@ void obj_ServerPlayer::UseItem_ApplyEffect(const PKT_C2C_PlayerUseItem_s& n, uin
 		break;
 	case WeaponConfig::ITEMID_ZombieRepellent:
 	case 301321: // gas
+	case 101398: // Toobox
 		//todo
 		break;
 

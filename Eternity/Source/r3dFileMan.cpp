@@ -530,9 +530,9 @@ bool CreateConfigPath(char* dest)
 {
 	if( SUCCEEDED(SHGetFolderPath(NULL, CSIDL_MYDOCUMENTS | CSIDL_FLAG_CREATE, NULL, 0, dest)) ) 
 	{
-		strcat( dest, "\\DaD\\" );
+		strcat( dest, "\\Undead Games\\" );
 		mkdir( dest );
-		strcat( dest, "Days after Dead\\" );
+		strcat( dest, "Undead\\" );
 		mkdir( dest );
 
 		return true;
@@ -545,9 +545,9 @@ bool CreateWorkPath(char* dest)
 {
 	if( SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, dest)) ) 
 	{
-		strcat( dest, "\\DaD Network\\" );
+		strcat( dest, "\\Undead Games\\" );
 		mkdir( dest );
-		strcat( dest, "Days after Dead\\" );
+		strcat( dest, "Undead\\" );
 		mkdir( dest );
 
 		return true;

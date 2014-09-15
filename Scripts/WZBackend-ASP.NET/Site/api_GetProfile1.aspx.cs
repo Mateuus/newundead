@@ -32,6 +32,10 @@ public partial class api_GetProfile1 : WOApiWebPage
             xml.Append(xml_attr("GameMapId", reader["GameMapId"]));
             xml.Append(xml_attr("GameServerId", reader["GameServerId"]));
             xml.Append(xml_attr("GamePos", reader["GamePos"]));
+            xml.Append(xml_attr("GamePos2", reader["GamePos2"]));
+            xml.Append(xml_attr("GamePos3", reader["GamePos3"]));
+            xml.Append(xml_attr("GamePos4", reader["GamePos4"]));
+            xml.Append(xml_attr("GamePos5", reader["GamePos5"]));
             xml.Append(xml_attr("GameFlags", reader["GameFlags"]));
             xml.Append(xml_attr("Health", reader["Health"]));
             xml.Append(xml_attr("Hunger", reader["Food"]));

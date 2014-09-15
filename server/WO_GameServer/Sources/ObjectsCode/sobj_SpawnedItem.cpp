@@ -37,8 +37,10 @@ BOOL obj_SpawnedItem::OnCreate()
 	SetPosition(pos);
 
 	// overwrite object network visibility
-	distToCreateSq = 1024 * 1024;
-	distToDeleteSq = 1200 * 1200;
+	//distToCreateSq = 1024 * 1024;
+	//distToDeleteSq = 1200 * 1200;
+	distToCreateSq = 50 * 50;
+	distToDeleteSq = 30 * 30;
 	
 	gServerLogic.NetRegisterObjectToPeers(this);
 	

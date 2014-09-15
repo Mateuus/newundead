@@ -176,14 +176,14 @@ else {
   }*/
   if (CollisionCar==NULL)
   {
-		//CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
+		CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
 	    CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/vehicles/Drivable_Stryker_Collision.sco", GetPosition () );
 		CollisionCar->SetRotationVector(GetRotationVector() + r3dPoint3D(90,0,0));
 		if (this->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
 			CollisionCar->SetScale(r3dPoint3D(1.46f,0.61f,1.69f));
 		else
-			CollisionCar->SetScale(r3dPoint3D(1.31f,0.49f,1.69f));
-		//CollisionCar->SetObjFlags(OBJFLAG_PlayerCollisionOnly);
+		CollisionCar->SetScale(r3dPoint3D(1.31f,0.49f,1.69f));
+		CollisionCar->SetObjFlags(OBJFLAG_PlayerCollisionOnly);
 		CollisionCar->SetObjFlags(OBJFLAG_SkipDraw);
   }
 }
@@ -896,7 +896,7 @@ BOOL obj_Vehicle::OnCreate()
 		Collobject=false;
 		if ( !g_bEditMode )
 		{
-		CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/vehicles/Drivable_Stryker_Collision.sco", GetPosition () );
+		CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
 		CollisionCar->SetRotationVector(GetRotationVector() + r3dPoint3D(90,0,0));
 		if (this->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
 			CollisionCar->SetScale(r3dPoint3D(1.46f,0.61f,1.69f));

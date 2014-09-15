@@ -2,11 +2,11 @@
 	$db_apikey = "ACOR4823G%sjYU*@476xnDvYaK@!56";
 	function db_connect()
 	{
-		$db_user   = "ub_api_user";
-		$db_pass   = "shulE8TcAgMa26d";
-		$db_dbname = "Undead";
+		$db_user   = "sas";
+		$db_pass   = "DHe4843cMYS";
+		$db_dbname = "Equipe";
 
-		$db_serverName     = "localhost,11157";
+		$db_serverName     = "localhost,1433";
 		$db_connectionInfo = array(
 			"UID" => $db_user,
 			"PWD" => $db_pass,

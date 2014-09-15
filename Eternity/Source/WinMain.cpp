@@ -2133,7 +2133,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	_tcscat(g_szIniPath, _T("MiniAEnv.INI"));		
 
 	AHNHS_EXT_ERRORINFO HsExtError;
-	sprintf( HsExtError.szServer, "%s", "167.114.32.63" );	
+	sprintf( HsExtError.szServer, "%s", "127.0.0.1" );	
 	sprintf( HsExtError.szUserId, "%s", "GameUser" );			
 	sprintf( HsExtError.szGameVersion, "%s", "1.0.0.1" );
 

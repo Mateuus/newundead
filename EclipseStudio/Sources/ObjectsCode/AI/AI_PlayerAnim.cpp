@@ -1985,6 +1985,7 @@ void CUberAnim::UnarmedCombat(bool Network, int PlayerState)   // Unarmed Combat
 
     anim.Stop(HandsCombatID);
 	HandsCombatID = anim.StartAnimation(ID, 0, 0.0f, 1.0f, 0.0f);
+	anim.GetTrack(HandsCombatID)->fSpeed = 1.6f;
     SwitchToState(PlayerState, AnimMoveDir);
 		
 }

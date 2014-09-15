@@ -17,6 +17,7 @@ class obj_Zombie: public GameObject
 	
 private:
 	bool	m_isFemale;
+	bool	m_isSuperZombie;//Mateuus Super Zombie
 
 	// sounds
 	float m_sndMaxDistIdle;
