@@ -32,7 +32,7 @@ public partial class api_SrvCharUpdate : WOApiWebPage
         sqcmd.Parameters.AddWithValue("@in_Reputation", web.Param("s9"));
         sqcmd.Parameters.AddWithValue("@in_GameFlags", web.Param("sA"));
         sqcmd.Parameters.AddWithValue("@in_GameDollars", web.Param("sB"));
-        sqcmd.Parameters.AddWithValue("@in_GamePoints", web.Param("gP"));
+        //sqcmd.Parameters.AddWithValue("@in_GamePoints", web.Param("gP"));
         // generic trackable stats
         sqcmd.Parameters.AddWithValue("@in_Stat00", web.Param("ts00"));
         sqcmd.Parameters.AddWithValue("@in_Stat01", web.Param("ts01"));

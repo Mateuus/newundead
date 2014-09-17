@@ -123,6 +123,8 @@ enum pkttype_e
   PKT_S2C_BackpackAddNew,	// item added to backpack
   PKT_S2C_BackpackModify,	// item quantity changed in backpack
   PKT_C2S_InventoryOp,		// player inventory operation
+  PKT_C2S_VaultBackpackToInv,		// player inventory operation //Codex Vault
+  PKT_C2S_VaultBackpackFromInv, //Codex Vault
   PKT_S2C_CreateNetObject,
   PKT_S2C_DestroyNetObject,
   PKT_C2S_UseNetObject,
@@ -778,6 +780,25 @@ struct PKT_C2S_InventoryOp_s : public DefaultPacketMixin<PKT_C2S_InventoryOp>
 	__int64		InventoryID;
 	int		Quantity;
 };
+
+struct PKT_C2S_VaultBackpackToInv_s : public DefaultPacketMixin<PKT_C2S_VaultBackpackToInv>
+{
+	int Inventory;
+	int m_gridFrom;
+	int var1;
+	int var2;
+	WORD		Quantity;	// target quantity, 0 for removing item
+};
+struct PKT_C2S_VaultBackpackFromInv_s : public DefaultPacketMixin<PKT_C2S_VaultBackpackFromInv>
+{
+	DWORD itemID;
+	int var1;
+	int var2;
+	int m_inventoryID;
+	//int Durability;
+	WORD		Quantity;	// target quantity, 0 for removing item*/
+};
+
 struct PKT_S2C_CreateBuilding_s : public DefaultPacketMixin<PKT_S2C_CreateBuilding>
 {
 	gp2pnetid_t	spawnID;

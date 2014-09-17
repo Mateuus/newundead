@@ -3181,6 +3181,7 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_UseNetObject)
 		LogCheat(peerId, PKT_S2C_CheatWarning_s::CHEAT_Protocol, false, "UesNetObject",
 			"obj %s", base->Class->Name.c_str());
 	}
+	gServerLogic.ApiPlayerUpdateChar(fromPlr); //Codex Vault
 
 	return;
 }

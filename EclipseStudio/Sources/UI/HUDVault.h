@@ -61,24 +61,45 @@ private:
     int        m_gridFrom;
     int        m_Amount;
     int        m_Amount2;
+	int		   ItemID;
+	int		   Var1;
+	int		   Var2;
+	int IDInventory[2048];
+	int ItemsOnInventory[2048];
+	int Var_1[2048];
+	int Var_2[2048];
+	int Quantity[2048];
+	//int Durability[2048];
+	DWORD Session;
+	int LastInventory;
 
+	int ItemsData[2048];
+	int ItemsItem[2048];
+	int ItemsVar1[2048];
+	int ItemsVar2[2048];
+	int ItemsQuantity[2048];
 
+	wiInventoryItem* wi1;
+
+	int SwapGridFrom;
+	int SwapGridTo;
+
+	float BackPackToInv;
+	bool OnBackpackToInventorySuccess;
+
+	float BackPackFromInv;
+	bool OnBackpackFromInventorySuccess;
+
+	float BackPackGridSwap;
+	bool OnBackpackGridSwapSuccess;
+
+	bool	BackPackFULL(int ItemID, int Var1);
+	bool	isverybig(int Quantity, int Item, int grid);
     void    addClientSurvivor(const wiCharDataFull& slot);
     void    addBackpackItems(const wiCharDataFull& slot);
     void    updateInventoryAndSkillItems();
-    void    updateSurvivorTotalWeight(const wiCharDataFull& slot);
+    void    updateSurvivorTotalWeight();
     void    reloadBackpackInfo();
-
-
-    static    unsigned int WINAPI as_BackpackFromInventoryThread(void* in_data);
-    void        OnBackpackFromInventorySuccess();
-    static    unsigned int WINAPI as_BackpackFromInventorySwapThread(void* in_data);
-    void        OnBackpackFromInventorySwapSuccess();
-    static    unsigned int WINAPI as_BackpackToInventoryThread(void* in_data);
-    void        OnBackpackToInventorySuccess();
-    static    unsigned int WINAPI as_BackpackGridSwapThread(void* in_data);
-    void        OnBackpackGridSwapSuccess();
-
 
     UIItemInventory itemInventory_;
 };

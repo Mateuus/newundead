@@ -1,0 +1,1 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="api_GetInventoryData.aspx.cs" Inherits="api_GetInventoryData" %>

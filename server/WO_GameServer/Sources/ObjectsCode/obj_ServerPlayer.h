@@ -218,6 +218,8 @@ public:
 	void		OnNetPacket(const PKT_C2S_BackpackSwap_s& n);
 	void		OnNetPacket(const PKT_C2S_BackpackJoin_s& n);
 	void		OnNetPacket(const PKT_C2S_InventoryOp_s& n);
+	void		OnNetPacket(const PKT_C2S_VaultBackpackToInv_s& n); //Codex Vault
+	void		OnNetPacket(const PKT_C2S_VaultBackpackFromInv_s& n); //Codex Vault
 	void		OnNetPacket(const PKT_C2S_DisconnectReq_s& n);
 	void		OnNetPacket(const PKT_C2S_UnloadClipReq_s& n); //Unload Clip
 	void		OnNetPacket(const PKT_C2S_SafelockData_s& n);//Codex Safelock

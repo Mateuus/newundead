@@ -8,7 +8,7 @@
 
 #include "HUDVault.h"
 
-
+#include "backend/WOBackendAPI.h"
 #include "../ObjectsCode/weapons/WeaponArmory.h"
 #include "../ObjectsCode/ai/AI_Player.h"
 
@@ -32,6 +32,87 @@ HUDVault::~HUDVault()
 {
 }
 
+bool HUDVault::BackPackFULL(int ItemID, int Var1)
+{
+	obj_Player* plr = gClientLogic().localPlayer_;
+	wiCharDataFull& slot = plr->CurLoadout;
+
+	bool Backfull = false;
+
+	extern bool storecat_IsItemStackable(uint32_t ItemID);
+	bool isStackable = storecat_IsItemStackable(ItemID);
+	for(int i=0; i<slot.BackpackSize; i++)
+	{
+		const wiInventoryItem& wi2 = slot.Items[i];
+
+		// can stack only non-modified items
+		if(isStackable && wi2.itemID == ItemID && Var1 < 0 && wi2.Var1 < 0) {
+			Backfull = true;
+			break;
+		}
+
+		if (wi2.itemID == 0 && Backfull == false && i != 0 && i != 1 && i != 6 && i != 7)
+		{
+			Backfull = true;
+			break;
+		}
+
+	}
+	if (!isStackable && slot.Items[wiCharDataFull::CHAR_LOADOUT_WEAPON1].itemID == 0)
+	{
+		const BaseItemConfig* bic = g_pWeaponArmory->getConfig(ItemID);
+		if (bic)
+		if(bic->category == storecat_ASR || bic->category == storecat_SNP || bic->category == storecat_SHTG || bic->category == storecat_MG || bic->category == storecat_SMG)
+			Backfull = true;
+	}
+	if (!isStackable && slot.Items[wiCharDataFull::CHAR_LOADOUT_WEAPON2].itemID == 0)
+	{
+		const BaseItemConfig* bic = g_pWeaponArmory->getConfig(ItemID);
+		if (bic)
+		if(bic->category == storecat_MELEE || bic->category == storecat_HG)
+			Backfull = true;
+	}
+	if (!isStackable && slot.Items[wiCharDataFull::CHAR_LOADOUT_ARMOR].itemID == 0)
+	{
+		const BaseItemConfig* bic = g_pWeaponArmory->getConfig(ItemID);
+		if (bic)
+		if(bic->category == storecat_Armor)
+			Backfull = true;
+	}
+	if (slot.Items[wiCharDataFull::CHAR_LOADOUT_HEADGEAR].itemID == 0)
+	{
+		const BaseItemConfig* bic = g_pWeaponArmory->getConfig(ItemID);
+		if (bic)
+		if(bic->category == storecat_Helmet)
+			Backfull = true;
+	}
+
+	return Backfull;
+}
+
+bool HUDVault::isverybig(int Quantity, int Item, int grid)
+{
+    obj_Player* plr = gClientLogic().localPlayer_;
+	wiCharDataFull& slot = plr->CurLoadout;
+
+	float totalWeight = slot.getTotalWeight();
+
+	const BaseItemConfig* bic = g_pWeaponArmory->getConfig(slot.Items[grid].itemID);
+        if(bic)
+            totalWeight -= bic->m_Weight*slot.Items[grid].quantity;
+
+        bic = g_pWeaponArmory->getConfig(Item);
+        if(bic)
+            totalWeight += bic->m_Weight*Quantity;
+            
+		const BackpackConfig* bc = g_pWeaponArmory->getBackpackConfig(slot.BackpackID);
+        r3d_assert(bc);
+        if(totalWeight > bc->m_maxWeight)
+        {
+            return true;
+        }
+	return false;
+}
 
 void HUDVault::addClientSurvivor(const wiCharDataFull& slot)
 {
@@ -60,26 +141,50 @@ void HUDVault::addClientSurvivor(const wiCharDataFull& slot)
     var[16].SetNumber(slot.Stats.KilledZombies);        // zombies Killed
     var[17].SetNumber(slot.Stats.KilledBandits);        // bandits killed
     var[18].SetNumber(slot.Stats.KilledSurvivors);        // civilians killed
-    var[19].SetString(getReputationString(slot.Stats.Reputation));    // alignment
-    var[20].SetString("COLORADO");    // last Map
-    var[21].SetBoolean(slot.GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox);
-
+    char repu[128];
+	sprintf(repu,"[%s] [%d]",getReputationString(slot.Stats.Reputation),slot.Stats.Reputation);
+	var[19].SetString(repu);	// alignment
+	switch(slot.GameMapId)
+		{
+			case GBGameInfo::MAPID_WZ_Colorado:
+			var[20].SetString("COLORADO PVP");	// last Map
+			break;
+			/*case GBGameInfo::MAPID_WZ_PVE_Colorado:
+			var[20].SetString("COLORADO PVE");	// last Map
+			break;
+			case GBGameInfo::MAPID_WZ_Cliffside:
+			var[20].SetString("CLIFFSIDE PVP");	// last Map
+			break;
+			case GBGameInfo::MAPID_CaliWood:
+			var[20].SetString("CALIWOOD");	// last Map
+			break;*/
+/*			case GBGameInfo::MAPID_Devmap:
+			var[20].SetString("DEVMAP");	// last Map
+			break;
+			default:*/
+			var[20].SetString("UNKNOWN");	// last Map
+			break;
+		}
+    var[21].SetBoolean(true);
 
     gfxMovie.Invoke("_root.api.addClientSurvivor", var, 22);
 
-
-    gfxMovie.Invoke("_root.api.clearBackpack", NULL, 0);
-
+    //gfxMovie.Invoke("_root.api.clearBackpack", NULL, 0);
+    gfxMovie.Invoke("_root.api.clearBackpack", "");
 
     addBackpackItems(slot);
-
-
     
 }
 void HUDVault::addBackpackItems(const wiCharDataFull& slot)
 {
+    // reset backpack
+	{
+		gfxMovie.Invoke("_root.api.clearBackpack", "");
+		gfxMovie.Invoke("_root.api.clearBackpacks", "");
+	}
     Scaleform::GFx::Value var[7];
     r3dOutToLog("AddBackPackItems\n");
+
     for (int a = 0; a < slot.BackpackSize; a++)
     {
         if (slot.Items[a].InventoryID != 0)
@@ -91,7 +196,7 @@ void HUDVault::addBackpackItems(const wiCharDataFull& slot)
             var[4].SetInt(slot.Items[a].Var1);
             var[5].SetInt(slot.Items[a].Var2);
             char tmpStr[128] = {0};
-			getAdditionalDescForItem(slot.Items[a].itemID, slot.Items[a].Var1, slot.Items[a].Var2, tmpStr);
+            getAdditionalDescForItem(slot.Items[a].itemID, slot.Items[a].Var1, slot.Items[a].Var2, tmpStr);
             var[6].SetString(tmpStr);
             gfxMovie.Invoke("_root.api.addBackpackItem", var, 7);
         }
@@ -99,463 +204,287 @@ void HUDVault::addBackpackItems(const wiCharDataFull& slot)
 }
 void HUDVault::updateInventoryAndSkillItems()
 {
+	obj_Player* plr = gClientLogic().localPlayer_;
+	gfxMovie.Invoke("_root.api.clearInventory", "");
+
+	r3dOutToLog("Show Inventory Items\n");
     Scaleform::GFx::Value var[7];
-    // clear inventory DB
-    gfxMovie.Invoke("_root.api.clearInventory", NULL, 0);
-    
-    // add all items
-    for(uint32_t i=0; i<gUserProfile.ProfileData.NumItems; ++i)
-    {
-        var[0].SetUInt(uint32_t(gUserProfile.ProfileData.Inventory[i].InventoryID));
-        var[1].SetUInt(gUserProfile.ProfileData.Inventory[i].itemID);
-        var[2].SetNumber(gUserProfile.ProfileData.Inventory[i].quantity);
-        var[3].SetNumber(gUserProfile.ProfileData.Inventory[i].Var1);
-        var[4].SetNumber(gUserProfile.ProfileData.Inventory[i].Var2);
-        bool isConsumable = false;
-        {
-            const WeaponConfig* wc = g_pWeaponArmory->getWeaponConfig(gUserProfile.ProfileData.Inventory[i].itemID);
-            if(wc && wc->category == storecat_UsableItem && wc->m_isConsumable)
-                isConsumable = true;
-        }
-        var[5].SetBoolean(isConsumable);
-        char tmpStr[128] = {0};
-		getAdditionalDescForItem(gUserProfile.ProfileData.Inventory[i].itemID, gUserProfile.ProfileData.Inventory[i].Var1, gUserProfile.ProfileData.Inventory[i].Var2, tmpStr);
-        var[6].SetString(tmpStr);
-        gfxMovie.Invoke("_root.api.addInventoryItem", var, 7);
-    }
+
+	char* g_ServerApiKey = "a5gfd4u8df1jhjs47ws86F";
+	CWOBackendReq req("api_GetInventoryData.aspx");
+	req.AddSessionInfo(plr->CustomerID, Session);
+	req.AddParam("skey1",  g_ServerApiKey);
+	req.AddParam("Data", 0);
+	req.AddParam("Inventory", 0);
+	req.AddParam("CustomerID", plr->CustomerID);
+	req.AddParam("CharID", 0);
+	req.AddParam("Slot", 0);
+	req.AddParam("ItemID", 0);
+	req.AddParam("Quantity", 0);
+	req.AddParam("Var1", 0);
+	req.AddParam("Var2", 0);
+	req.AddParam("Category",  0);
+	//req.AddParam("Durability",  0);
+
+	if(!req.Issue())
+	{
+		r3dOutToLog("GetInventoryData FAILED, code: %d\n", req.resultCode_);
+		return;
+	}
+
+	for (int i=1;i<2048;i++)
+	{
+			IDInventory[i]=0;
+			ItemsOnInventory[i]=0;
+			Var_1[i]=0;
+			Var_2[i]=0;
+			Quantity[i]=0;
+
+			ItemsData[i]=0;
+			ItemsItem[i]=0;
+			ItemsVar1[i]=0;
+			ItemsVar2[i]=0;
+			ItemsQuantity[i]=0;
+	}
+	int count = 0;
+	int countBackpack = 0;
+	pugi::xml_document xmlFile;
+	req.ParseXML(xmlFile);
+	pugi::xml_node xmlSafelock = xmlFile.child("UsersInventory");
+	LastInventory = 0;
+	while(!xmlSafelock.empty())
+	{
+		
+        __int64 InventoryID = xmlSafelock.attribute("InventoryID").as_int64();
+        int CustomerID = xmlSafelock.attribute("CustomerID").as_int();
+        int CharID = xmlSafelock.attribute("CharID").as_int();
+        int BackpackSlot = xmlSafelock.attribute("BackpackSlot").as_int();
+        int ItemID = xmlSafelock.attribute("ItemID").as_int();
+        int Quantity_1 = xmlSafelock.attribute("Quantity").as_int();
+        int Var1_1 = xmlSafelock.attribute("Var1").as_int();
+        int Var2_1 = xmlSafelock.attribute("Var2").as_int();
+		//int Durability_1 = xmlSafelock.attribute("Durability").as_int();
+
+		if (LastInventory<(int)InventoryID)
+		{
+			LastInventory=(int)InventoryID;
+		}
+
+			IDInventory[count]=(int)InventoryID;
+			ItemsOnInventory[count]=ItemID;
+			Var_1[count]=Var1_1;
+			Var_2[count]=Var2_1;
+			//Durability[count]=Durability_1;
+			Quantity[count]=Quantity_1;
+			count++;
+
+			if (BackpackSlot == -1 || CharID == 0 && BackpackSlot == 0)
+			{
+
+			var[0].SetUInt(uint32_t(InventoryID));
+			var[1].SetUInt(ItemID);
+			var[2].SetNumber(Quantity_1);
+			var[3].SetNumber(Var1_1);
+			var[4].SetNumber(Var2_1);
+			 bool isConsumable = false;
+            {
+                const WeaponConfig* wc = g_pWeaponArmory->getWeaponConfig(ItemID);
+                if(wc && wc->category == storecat_UsableItem && wc->m_isConsumable)
+                   isConsumable = true;
+            }
+            var[5].SetBoolean(isConsumable);
+            char tmpStr[128] = {0};
+            getAdditionalDescForItem(ItemID, Var1_1, Var2_1, tmpStr);
+            var[6].SetString(tmpStr);
+			gfxMovie.Invoke("_root.api.addInventoryItem", var, 7);
+			}
+			else {
+					ItemsData[BackpackSlot]=(int)InventoryID;
+					ItemsItem[BackpackSlot]=ItemID;
+					ItemsVar1[BackpackSlot]=Var1_1;
+					ItemsVar2[BackpackSlot]=Var2_1;
+					ItemsQuantity[BackpackSlot]=Quantity_1;
+			}
+
+
+		xmlSafelock = xmlSafelock.next_sibling();
+	}
 }
-
-
-void HUDVault::updateSurvivorTotalWeight(const wiCharDataFull& slot)
+void HUDVault::updateSurvivorTotalWeight()
 {
-    float totalWeight = slot.getTotalWeight();
+    obj_Player* plr = gClientLogic().localPlayer_;
+    r3d_assert(plr);
 
+    char tmpGamertag[128];
+    if(plr->CurLoadout.ClanID != 0)
+        sprintf(tmpGamertag, "[%s] %s", plr->CurLoadout.ClanTag, plr->CurLoadout.Gamertag);
+    else
+        r3dscpy(tmpGamertag, plr->CurLoadout.Gamertag);
+
+    float totalWeight = plr->CurLoadout.getTotalWeight();
 
     Scaleform::GFx::Value var[2];
-    var[0].SetString(slot.Gamertag);
+    var[0].SetString(tmpGamertag);
     var[1].SetNumber(totalWeight);
     gfxMovie.Invoke("_root.api.updateClientSurvivorWeight", var, 2);
 }
-
 
 void HUDVault::eventReturnToGame(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
 {
     Deactivate();
 }
 
-
 void HUDVault::eventBackpackFromInventory(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
 {
-    const wiCharDataFull& slot = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID];
-    if(!(slot.GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox))
-        return;
+ 	obj_Player* plr = gClientLogic().localPlayer_;
+	r3d_assert(plr);
 
+	BackPackFromInv = r3dGetTime();
+	wiCharDataFull& slot = plr->CurLoadout;
 
     m_inventoryID = args[0].GetUInt();
     m_gridTo = args[1].GetInt();
-    m_Amount = args[2].GetInt();
+    m_gridFrom = args[2].GetInt(); 
 
+    uint32_t itemID = 0;
+	for(uint32_t i=0; i<2048; ++i)
+	{
+		if (IDInventory[i] != 0)
+		{
+			if (IDInventory[i] == (int)m_inventoryID)
+			{
+				if (isverybig(1,ItemsOnInventory[i],m_gridTo) == true)
+				{
+					Scaleform::GFx::Value var[3];
+					var[0].SetStringW(gLangMngr.getString("FR_PAUSE_TOO_MUCH_WEIGHT"));
+					var[1].SetBoolean(true);
+					var[2].SetString("");
+					gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+					return;
+				}
+				if(!BackPackFULL(ItemsOnInventory[i],Var_1[i]))
+				{
+					Scaleform::GFx::Value var[3];
+					var[0].SetStringW(gLangMngr.getString("InfoMsg_NoFreeBackpackSlots"));
+					var[1].SetBoolean(true);
+					var[2].SetString("");
+					gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+					return;
+				}
+				PKT_C2S_VaultBackpackFromInv_s n;
+				n.itemID = ItemsOnInventory[i];
+				n.m_inventoryID = IDInventory[i];
+				n.var1 = Var_1[i];
+				n.var2 = Var_2[i];
+				n.Quantity = 1;
+				//n.Durability = Durability[i];
+				p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n), true);
+				m_Amount = Quantity[i];
 
-    Scaleform::GFx::Value var[2];
+				Scaleform::GFx::Value var[2];
+				var[0].SetStringW(gLangMngr.getString("OneMomentPlease"));
+				var[1].SetBoolean(false);
+				gfxMovie.Invoke("_root.api.showInfoMsg", var, 2);
+				break;
+			}
+		}
+	}
+
+	OnBackpackFromInventorySuccess = true;
+}
+
+void HUDVault::eventBackpackToInventory(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
+{
+
+	obj_Player* plr = gClientLogic().localPlayer_;
+	r3d_assert(plr);
+	BackPackToInv = r3dGetTime();
+
+    m_gridFrom = args[0].GetInt();
+    m_Amount = args[1].GetInt();
+
+	wiInventoryItem& wi = plr->CurLoadout.Items[m_gridFrom];
+
+	bool CheckStatus = false;
+	for(uint32_t i=0; i<2048; ++i)
+	{
+		if (IDInventory[i] != 0)
+		{
+			if (IDInventory[i] == ItemsData[m_gridFrom])
+			{
+				ItemID = ItemsOnInventory[i];
+				m_inventoryID = IDInventory[i];
+				Var1 = wi.Var1;
+				Var2 = wi.Var2;
+				CheckStatus=true;
+				break;
+			}
+		}
+	}
+
+	if (!CheckStatus)
+		return;
+	PKT_C2S_VaultBackpackToInv_s n;
+	n.Inventory = (int)m_inventoryID;
+	n.m_gridFrom = m_gridFrom;
+	n.var1 = Var1;
+	n.var2 = Var2; 
+	n.Quantity = m_Amount;
+
+	p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n), true);
+
+	Scaleform::GFx::Value var[3];
+    var[0].SetStringW(gLangMngr.getString("OneMomentPlease"));
+    var[1].SetBoolean(false);
+    var[2].SetString("");
+    gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
+
+	OnBackpackToInventorySuccess = true;
+}
+
+void HUDVault::eventBackpackGridSwap(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
+{
+	r3d_assert(argCount == 2);
+	SwapGridFrom = args[0].GetInt();
+	SwapGridTo = args[1].GetInt();
+
+	obj_Player* plr = gClientLogic().localPlayer_;
+	r3d_assert(plr);
+	wiCharDataFull& slot = plr->CurLoadout;
+
+	//local logic
+	wiInventoryItem& wi1 = slot.Items[SwapGridFrom];
+	wiInventoryItem& wi2 = slot.Items[SwapGridTo];
+
+	// if we can stack slots - do it
+	extern bool storecat_IsItemStackable(uint32_t ItemID);
+	if(wi1.itemID && wi1.itemID == wi2.itemID && storecat_IsItemStackable(wi1.itemID) && wi1.Var1 < 0 && wi2.Var1 < 0)
+	{
+		wi2.quantity += wi1.quantity;
+		wi1.Reset();
+
+		PKT_C2S_BackpackJoin_s n;
+		n.SlotFrom = SwapGridFrom;
+		n.SlotTo   = SwapGridTo;
+		p2pSendToHost(plr, &n, sizeof(n));
+	}
+	else
+	{
+		R3D_SWAP(wi1, wi2);
+
+		PKT_C2S_BackpackSwap_s n;
+		n.SlotFrom = SwapGridFrom;
+		n.SlotTo   = SwapGridTo;
+		p2pSendToHost(plr, &n, sizeof(n));
+	}
+
+	Scaleform::GFx::Value var[2];
     var[0].SetStringW(gLangMngr.getString("OneMomentPlease"));
     var[1].SetBoolean(false);
     gfxMovie.Invoke("_root.api.showInfoMsg", var, 2);
 
-
-    uint32_t itemID = 0;
-    for(uint32_t i=0; i<gUserProfile.ProfileData.NumItems; ++i)
-    {
-        if(gUserProfile.ProfileData.Inventory[i].InventoryID == m_inventoryID)
-        {
-            itemID = gUserProfile.ProfileData.Inventory[i].itemID;
-            break;
-        }
-    }
-
-
-    // check to see if there is anything in backpack, and if there is, then we need to firstly move that item to inventory
-    if(slot.Items[m_gridTo].itemID != 0 && slot.Items[m_gridTo].itemID!=itemID)
-    {
-        m_gridFrom = m_gridTo;
-        m_Amount2 = slot.Items[m_gridTo].quantity;
-
-
-        // check weight
-        float totalWeight = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID].getTotalWeight();
-
-
-    
-
-
-        const BaseItemConfig* bic = g_pWeaponArmory->getConfig(slot.Items[m_gridTo].itemID);
-        if(bic)
-            totalWeight -= bic->m_Weight*slot.Items[m_gridTo].quantity;
-    
-        bic = g_pWeaponArmory->getConfig(itemID);
-        if(bic)
-            totalWeight += bic->m_Weight*m_Amount;
-        // Skillsystem
-        
-        if(slot.Stats.skillid2 == 1)
-            totalWeight *= 0.9f;
-        
-
-
-        const BackpackConfig* bc = g_pWeaponArmory->getBackpackConfig(gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID].BackpackID);
-        r3d_assert(bc);
-        if(totalWeight > bc->m_maxWeight)
-        {
-            Scaleform::GFx::Value var[2];
-            var[0].SetStringW(gLangMngr.getString("FR_PAUSE_TOO_MUCH_WEIGHT"));
-            var[1].SetBoolean(true);
-            var[2].SetString("");
-            gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
-            return;
-        }
-
-
-        async_.StartAsyncOperation(this, &HUDVault::as_BackpackFromInventorySwapThread, &HUDVault::OnBackpackFromInventorySuccess);
-    }
-    else
-    {
-        // check weight
-        float totalWeight = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID].getTotalWeight();
-
-
-        const BaseItemConfig* bic = g_pWeaponArmory->getConfig(itemID);
-        if(bic)
-            totalWeight += bic->m_Weight*m_Amount;
-        // Skillsystem
-        r3dOutToLog("Player %s TotalWeight is: %f \n", slot.Gamertag, totalWeight);
-        if(slot.Stats.skillid2 == 1)
-            totalWeight *= 0.9f;
-        r3dOutToLog("Player %s adjusted Totalweight is: %f \n", slot.Gamertag, totalWeight);
-
-
-        const BackpackConfig* bc = g_pWeaponArmory->getBackpackConfig(gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID].BackpackID);
-        r3d_assert(bc);
-        if(totalWeight > bc->m_maxWeight)
-        {
-            Scaleform::GFx::Value var[2];
-            var[0].SetStringW(gLangMngr.getString("FR_PAUSE_TOO_MUCH_WEIGHT"));
-            var[1].SetBoolean(true);
-            var[2].SetString("");
-            gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
-            return;
-        }
-
-
-        async_.StartAsyncOperation(this, &HUDVault::as_BackpackFromInventoryThread, &HUDVault::OnBackpackFromInventorySuccess);
-    }
-}
-
-
-unsigned int WINAPI HUDVault::as_BackpackFromInventorySwapThread(void* in_data)
-{
-    r3dThreadAutoInstallCrashHelper crashHelper;
-    HUDVault* This = (HUDVault*)in_data;
-
-
-    This->async_.DelayServerRequest();
-
-
-    // move item in backpack to inventory
-    int apiCode = gUserProfile.ApiBackpackToInventory(This->m_gridFrom, This->m_Amount2);
-    r3dOutToLog("GridFrom: %d, Amount: %d\n", This->m_gridFrom, This->m_Amount);
-    if(apiCode != 0)
-    {
-        if(apiCode==7)
-            This->async_.SetAsyncError(0, gLangMngr.getString("GameSessionHasNotClosedYet"));
-        else
-            This->async_.SetAsyncError(apiCode, gLangMngr.getString("BackpackToInventoryFail"));
-        return 0;
-    }
-
-
-    apiCode = gUserProfile.ApiBackpackFromInventory(This->m_inventoryID, This->m_gridTo, This->m_Amount);
-    r3dOutToLog("InventoryID: %d, GridTo: %d, Amount: %d\n", This->m_inventoryID, This->m_gridTo, This->m_Amount);
-    if(apiCode != 0)
-    {
-        if(apiCode==7)
-            This->async_.SetAsyncError(0, gLangMngr.getString("GameSessionHasNotClosedYet"));
-        else
-            This->async_.SetAsyncError(apiCode, gLangMngr.getString("FailedToFindBackpack"));
-        return 0;
-    }
-
-
-    return 1;
-}
-
-
-void HUDVault::OnBackpackFromInventorySwapSuccess()
-{
-    obj_Player* plr = gClientLogic().localPlayer_;
-
-
-    plr->CurLoadout = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID];
-
-
-    PKT_C2S_InventoryOp_s n;
-    n.op = n.OP_TOINV;
-    n.Slot = m_gridFrom;
-    n.Quantity = m_Amount2;
-    p2pSendToHost(plr, &n, sizeof(n));
-
-
-    n.op = n.OP_FROMINV;
-    n.InventoryID = m_inventoryID;
-    n.Slot = m_gridTo;
-    n.Quantity = m_Amount;
-    p2pSendToHost(plr, &n, sizeof(n));
-
-
-    plr->OnBackpackChanged(m_gridTo);
-
-
-    Scaleform::GFx::Value var[8];
-    gfxMovie.Invoke("_root.api.clearBackpack", NULL, 0);
-    
-
-
-        addBackpackItems(plr->CurLoadout);
-    
-
-
-    updateInventoryAndSkillItems();
-
-
-    updateSurvivorTotalWeight(plr->CurLoadout);
-
-
-    gfxMovie.Invoke("_root.api.hideInfoMsg", NULL, 0);
-    gfxMovie.Invoke("_root.api.backpackFromInventorySuccess", NULL, 0);
-    return;
-}
-
-
-unsigned int WINAPI HUDVault::as_BackpackFromInventoryThread(void* in_data)
-{
-    r3dThreadAutoInstallCrashHelper crashHelper;
-    HUDVault* This = (HUDVault*)in_data;
-
-
-    This->async_.DelayServerRequest();
-    
-    int apiCode = gUserProfile.ApiBackpackFromInventory(This->m_inventoryID, This->m_gridTo, This->m_Amount);
-    if(apiCode != 0)
-    {
-        if(apiCode==7)
-            This->async_.SetAsyncError(0, gLangMngr.getString("GameSessionHasNotClosedYet"));
-        else
-            This->async_.SetAsyncError(apiCode, gLangMngr.getString("BackpackFromInventoryFail"));
-        return 0;
-    }
-
-
-    return 1;
-}
-
-
-void HUDVault::OnBackpackFromInventorySuccess()
-{
-    obj_Player* plr = gClientLogic().localPlayer_;
-
-
-    plr->CurLoadout = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID];
-
-
-    PKT_C2S_InventoryOp_s n;
-    n.op = n.OP_FROMINV;
-    n.InventoryID = m_inventoryID;
-    n.Slot = m_gridTo;
-    n.Quantity = m_Amount;
-    p2pSendToHost(plr, &n, sizeof(n));
-
-
-    plr->OnBackpackChanged(m_gridTo);
-
-
-    Scaleform::GFx::Value var[8];
-    gfxMovie.Invoke("_root.api.clearBackpack", NULL, 0);
-
-
-
-
-        addBackpackItems(plr->CurLoadout);
-    
-
-
-    updateInventoryAndSkillItems();
-
-
-    updateSurvivorTotalWeight(plr->CurLoadout);
-
-
-    gfxMovie.Invoke("_root.api.hideInfoMsg", NULL, 0);
-    gfxMovie.Invoke("_root.api.backpackFromInventorySuccess", NULL, 0);
-    return;
-}
-
-
-void HUDVault::eventBackpackToInventory(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
-{
-    const wiCharDataFull& slot = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID];
-    if(!(slot.GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox))
-        return;
-
-
-    m_gridFrom = args[0].GetInt();
-    m_Amount = args[1].GetInt();
-    r3dOutToLog("GridFrom: %d, Amount: %d\n", m_gridFrom, m_Amount);
-    Scaleform::GFx::Value var[3];
-    var[0].SetStringW(gLangMngr.getString("OneMomentPlease"));
-    var[1].SetBoolean(false);
-    var[2].SetString("");
-    gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
-
-
-    async_.StartAsyncOperation(this, &HUDVault::as_BackpackToInventoryThread, &HUDVault::OnBackpackToInventorySuccess);
-}
-
-
-unsigned int WINAPI HUDVault::as_BackpackToInventoryThread(void* in_data)
-{
-    r3dThreadAutoInstallCrashHelper crashHelper;
-    HUDVault* This = (HUDVault*)in_data;
-
-
-    This->async_.DelayServerRequest();
-    r3dOutToLog("Inventory from: %d, Amount: %d\n", This->m_gridFrom, This->m_Amount);
-    int apiCode = gUserProfile.ApiBackpackToInventory(This->m_gridFrom, This->m_Amount);
-    if(apiCode != 0)
-    {
-        if(apiCode==7)
-            This->async_.SetAsyncError(0, gLangMngr.getString("GameSessionHasNotClosedYet"));
-        else
-            This->async_.SetAsyncError(apiCode, gLangMngr.getString("BackpackToInventoryFail"));
-        return 0;
-    }
-
-
-    return 1;
-}
-
-
-void HUDVault::OnBackpackToInventorySuccess()
-{
-    obj_Player* plr = gClientLogic().localPlayer_;
-
-
-    plr->CurLoadout = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID];
-
-
-    PKT_C2S_InventoryOp_s n;
-    n.op = n.OP_TOINV;
-    n.Slot = m_gridFrom;
-    n.Quantity = m_Amount;
-    p2pSendToHost(plr, &n, sizeof(n));
-
-
-    plr->OnBackpackChanged(m_gridFrom);
-
-
-    Scaleform::GFx::Value var[8];
-    gfxMovie.Invoke("_root.api.clearBackpack", NULL, 0);
-
-
-    
-        addBackpackItems(plr->CurLoadout);
-    
-
-
-    updateInventoryAndSkillItems ();
-
-
-    updateSurvivorTotalWeight(plr->CurLoadout);
-
-
-    gfxMovie.Invoke("_root.api.hideInfoMsg", NULL, 0);
-    gfxMovie.Invoke("_root.api.backpackToInventorySuccess", NULL, 0);
-
-
-    return;
-}
-
-
-void HUDVault::eventBackpackGridSwap(r3dScaleformMovie* pMovie, const Scaleform::GFx::Value* args, unsigned argCount)
-{
-    m_gridFrom = args[0].GetInt();
-    m_gridTo = args[1].GetInt();
-
-
-    Scaleform::GFx::Value var[3];
-    var[0].SetStringW(gLangMngr.getString("OneMomentPlease"));
-    var[1].SetBoolean(false);
-    var[2].SetString("");
-    gfxMovie.Invoke("_root.api.showInfoMsg", var, 3);
-
-
-    async_.StartAsyncOperation(this, &HUDVault::as_BackpackGridSwapThread, &HUDVault::OnBackpackGridSwapSuccess);
-}
-
-
-unsigned int WINAPI HUDVault::as_BackpackGridSwapThread(void* in_data)
-{
-    r3dThreadAutoInstallCrashHelper crashHelper;
-    HUDVault* This = (HUDVault*)in_data;
-
-
-    This->async_.DelayServerRequest();
-    
-    int apiCode = gUserProfile.ApiBackpackGridSwap(This->m_gridFrom, This->m_gridTo);
-    if(apiCode != 0)
-    {
-        if(apiCode==7)
-            This->async_.SetAsyncError(0, gLangMngr.getString("GameSessionHasNotClosedYet"));
-        else
-            This->async_.SetAsyncError(apiCode, gLangMngr.getString("SwitchBackpackSameBackpacks"));
-        return 0;
-    }
-
-
-    return 1;
-}
-
-
-void HUDVault::OnBackpackGridSwapSuccess()
-{
-    obj_Player* plr = gClientLogic().localPlayer_;
-
-
-    plr->CurLoadout = gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID];
-
-
-    PKT_C2S_BackpackSwap_s n;
-    n.SlotFrom = m_gridFrom;
-    n.SlotTo   = m_gridTo;
-    p2pSendToHost(plr, &n, sizeof(n));
-
-
-    plr->OnBackpackChanged(m_gridFrom);
-    plr->OnBackpackChanged(m_gridTo);
-
-
-    Scaleform::GFx::Value var[8];
-    gfxMovie.Invoke("_root.api.clearBackpack", NULL, 0);
-
-
-    
-        addBackpackItems(plr->CurLoadout);
-    
-
-
-    updateSurvivorTotalWeight(plr->CurLoadout);
-
-
-    gfxMovie.Invoke("_root.api.hideInfoMsg", NULL, 0);
-    gfxMovie.Invoke("_root.api.backpackGridSwapSuccess", NULL, 0);
-    return;
+	OnBackpackGridSwapSuccess = true;
+	
 }
 
 
@@ -578,6 +507,13 @@ bool HUDVault::Init()
     itemInventory_.initialize(&gfxMovie);
     isActive_ = false;
     isInit_ = true;
+	BackPackToInv = 0.0f;
+	BackPackFromInv = 0.0f;
+	OnBackpackToInventorySuccess = false;
+	OnBackpackFromInventorySuccess = false;
+
+	BackPackGridSwap = 0.0f;
+	OnBackpackGridSwapSuccess = false;
     return true;
 }
 
@@ -587,13 +523,113 @@ bool HUDVault::Unload()
      gfxMovie.Unload();
     isActive_ = false;
     isInit_ = false;
+	BackPackToInv = 0.0f;
+	BackPackFromInv = 0.0f;
     return true;
 }
 
 
 void HUDVault::Update()
 {
-    async_.ProcessAsyncOperation(this, gfxMovie);
+  if(OnBackpackToInventorySuccess)
+  {
+    if ((r3dGetTime() - BackPackToInv) > 1.5)
+	{
+        obj_Player* plr = gClientLogic().localPlayer_;
+	    r3d_assert(plr);
+		/*char* g_ServerApiKey = "a5gfd4u8df1jhjs47ws86F";
+		CWOBackendReq req("api_GetInventoryData.aspx");
+		req.AddSessionInfo(plr->CustomerID, Session);
+		req.AddParam("skey1",  g_ServerApiKey);
+		req.AddParam("Data", 2);
+		req.AddParam("Inventory", LastInventory+1);//(int)m_inventoryID);
+		req.AddParam("CustomerID", plr->CustomerID);
+		req.AddParam("CharID", 0);
+		req.AddParam("Slot", -1);
+		req.AddParam("ItemID", ItemID);
+		req.AddParam("Quantity", m_Amount);
+		req.AddParam("Var1", Var1);
+		req.AddParam("Var2", Var2);
+		const WeaponConfig* wc = g_pWeaponArmory->getWeaponConfig(ItemID);
+		if (wc)
+		req.AddParam("Category",  wc->category);
+		else
+		req.AddParam("Category",  0);
+
+		if(!req.Issue())
+		{
+			r3dOutToLog("GetInventoryData FAILED, code: %d\n", req.resultCode_);
+			return;
+		}*/
+		addBackpackItems(plr->CurLoadout);
+	    updateSurvivorTotalWeight();
+	    plr->OnBackpackChanged(m_gridFrom);
+	    reloadBackpackInfo();
+	    updateInventoryAndSkillItems();
+		gfxMovie.Invoke("_root.api.hideInfoMsg", "");
+		gfxMovie.Invoke("_root.api.backpackToInventorySuccess", "");
+		OnBackpackToInventorySuccess = false;
+		BackPackToInv = 0;
+	}
+  }
+  if(OnBackpackFromInventorySuccess)
+  {
+    if ((r3dGetTime() - BackPackFromInv) > 1.5)
+	{
+        obj_Player* plr = gClientLogic().localPlayer_;
+	    r3d_assert(plr);
+		char* g_ServerApiKey = "a5gfd4u8df1jhjs47ws86F";
+		CWOBackendReq req("api_GetInventoryData.aspx");
+		req.AddSessionInfo(plr->CustomerID, Session);
+		req.AddParam("skey1",  g_ServerApiKey);
+		req.AddParam("Data", 1);
+		req.AddParam("Inventory", (int)m_inventoryID);
+		req.AddParam("CustomerID", plr->CustomerID);
+		req.AddParam("CharID", 0);
+		req.AddParam("Slot", m_gridTo);
+		req.AddParam("ItemID", 0);
+		req.AddParam("Quantity", m_Amount);
+		req.AddParam("Var1", 0);
+		req.AddParam("Var2", 0);
+		req.AddParam("Category",  0);
+		//req.AddParam("Durability",  0);
+
+		if(!req.Issue())
+		{
+			r3dOutToLog("GetInventoryData FAILED, code: %d\n", req.resultCode_);
+			return;
+		}	
+		addBackpackItems(plr->CurLoadout);
+	    updateSurvivorTotalWeight();
+	    plr->OnBackpackChanged(m_gridTo);
+	    reloadBackpackInfo();
+	    updateInventoryAndSkillItems();
+		gfxMovie.Invoke("_root.api.hideInfoMsg", "");
+        gfxMovie.Invoke("_root.api.backpackFromInventorySuccess", "");
+		OnBackpackFromInventorySuccess = false;
+		BackPackFromInv = 0;
+		
+	}
+  }
+  if(OnBackpackGridSwapSuccess)
+  {
+    if ((r3dGetTime() - BackPackGridSwap) > 1.1)
+	{
+        obj_Player* plr = gClientLogic().localPlayer_;
+	    r3d_assert(plr);
+		plr->OnBackpackChanged(SwapGridFrom);
+	    plr->OnBackpackChanged(SwapGridTo);
+		addBackpackItems(plr->CurLoadout);
+	    updateSurvivorTotalWeight();
+	   
+	    reloadBackpackInfo();
+	    updateInventoryAndSkillItems();
+		gfxMovie.Invoke("_root.api.hideInfoMsg", "");
+        gfxMovie.Invoke("_root.api.backpackGridSwapSuccess", "");
+		OnBackpackGridSwapSuccess = false;
+		BackPackGridSwap = 0;
+	}
+  }
 }
 
 
@@ -609,26 +645,20 @@ void HUDVault::Deactivate()
     {
         return;
     }
-
-
+	
     Scaleform::GFx::Value var[1];
     var[0].SetString("menu_close");
     gfxMovie.OnCommandCallback("eventSoundPlay", var, 1);
-
 
     if(prevKeyboardCaptureMovie)
     {
         prevKeyboardCaptureMovie->SetKeyboardCapture();
         prevKeyboardCaptureMovie = NULL;
     }
-
-
     if(!g_cursor_mode->GetInt())
     {
         r3dMouse::Hide();
     }
-
-
     isActive_ = false;
 }
 
@@ -636,20 +666,17 @@ void HUDVault::Deactivate()
 void HUDVault::Activate()
 {
     prevKeyboardCaptureMovie = gfxMovie.SetKeyboardCapture(); // for mouse scroll events
-    
+    Session = gUserProfile.SessionID;
     r3d_assert(!isActive_);
     r3dMouse::Show();
     isActive_ = true;
-    addClientSurvivor(gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID]);
+	BackPackToInv = 0.0f;
+	OnBackpackToInventorySuccess = false;
+    addClientSurvivor(gClientLogic().localPlayer_->CurLoadout);
     updateInventoryAndSkillItems();
-    updateSurvivorTotalWeight(gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID]);
-
-
+    updateSurvivorTotalWeight();
     reloadBackpackInfo();
-    //updateSurvivorTotalWeight(gUserProfile.ProfileData.ArmorySlots[gUserProfile.SelectedCharID]);
-    
-    gfxMovie.Invoke("_root.api.showInventoryScreen", NULL, 0);
-
+    gfxMovie.Invoke("_root.api.showInventoryScreen", "");
 
     Scaleform::GFx::Value var[1];
     var[0].SetString("menu_open");
@@ -668,10 +695,9 @@ void HUDVault::reloadBackpackInfo()
     int backpackSlotIDInc = 0;
     // add backpack content info
     {
-        obj_Player* plr = gClientLogic().localPlayer_;
+		obj_Player* plr = gClientLogic().localPlayer_;
         r3d_assert(plr);
         wiCharDataFull& slot = plr->CurLoadout;
-
 
         Scaleform::GFx::Value var[7];
         for (int a = 0; a < slot.BackpackSize; a++)
@@ -712,6 +738,3 @@ void HUDVault::reloadBackpackInfo()
 
     gfxMovie.Invoke("_root.api.Main.Inventory.showBackpack", "");
 }
-
-
-#pragma endregion VAULT_IS_WORKING
