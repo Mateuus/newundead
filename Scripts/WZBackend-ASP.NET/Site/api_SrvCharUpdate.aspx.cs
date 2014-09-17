@@ -20,6 +20,7 @@ public partial class api_SrvCharUpdate : WOApiWebPage
         sqcmd.CommandText = "WZ_Char_SRV_SetStatus";
         sqcmd.Parameters.AddWithValue("@in_CustomerID", CustomerID);
         sqcmd.Parameters.AddWithValue("@in_CharID", CharID);
+        sqcmd.Parameters.AddWithValue("@in_MapID", web.Param("map"));
         sqcmd.Parameters.AddWithValue("@in_Alive", web.Param("s1"));
         sqcmd.Parameters.AddWithValue("@in_GamePos", web.Param("s2"));
         sqcmd.Parameters.AddWithValue("@in_Health", web.Param("s3"));
@@ -31,6 +32,7 @@ public partial class api_SrvCharUpdate : WOApiWebPage
         sqcmd.Parameters.AddWithValue("@in_Reputation", web.Param("s9"));
         sqcmd.Parameters.AddWithValue("@in_GameFlags", web.Param("sA"));
         sqcmd.Parameters.AddWithValue("@in_GameDollars", web.Param("sB"));
+        sqcmd.Parameters.AddWithValue("@in_GamePoints", web.Param("gP"));
         // generic trackable stats
         sqcmd.Parameters.AddWithValue("@in_Stat00", web.Param("ts00"));
         sqcmd.Parameters.AddWithValue("@in_Stat01", web.Param("ts01"));

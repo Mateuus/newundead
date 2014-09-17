@@ -176,7 +176,7 @@ else {
   }*/
   if (CollisionCar==NULL)
   {
-		CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
+		//CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
 	    CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/vehicles/Drivable_Stryker_Collision.sco", GetPosition () );
 		CollisionCar->SetRotationVector(GetRotationVector() + r3dPoint3D(90,0,0));
 		if (this->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")

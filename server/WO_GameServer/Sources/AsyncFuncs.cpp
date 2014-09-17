@@ -612,6 +612,7 @@ int CJobUpdateChar::Exec()
   
 	CWOBackendReq req("api_SrvCharUpdate.aspx");
 	req.AddSessionInfo(CustomerID, SessionID);
+	req.AddParam("map",    slot.GameMapId);
 	req.AddParam("skey1",  g_ServerApiKey);
 	req.AddParam("CharID", slot.LoadoutID);
 

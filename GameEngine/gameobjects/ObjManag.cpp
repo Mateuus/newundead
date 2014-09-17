@@ -794,25 +794,23 @@ void ObjectManager::Update()
 
 	// update & move objects
 	R3DPROFILE_START("Update&Move");
-	for(int i=0, iEnd = vObjs.size(); i<iEnd; ++i) 
+    for(int i=0, iEnd = vObjs.size(); i<iEnd; ++i) 
 	{
 		GameObject *obj = vObjs[i];
 
-		//if(/*!(obj->ObjTypeFlags <= OBJTYPE_Terrain)*/ 1)
-		//{
-			//TemporaryObjects.PushBack( obj );
+		if( obj->ObjTypeFlags & OBJTYPE_Particle )
+		{
+			TemporaryObjects.PushBack( obj );
+		}
+		else
+		{
+			// call update object function, if it's return FALSE, object becomes unactive
 			if(!obj->Update())
 			{
 				obj->setActiveFlag(0);
 			}
-		//}
-		//else
-		//{
-		//	TemporaryObjects.PushBack( obj );
-		//}
-
+		}
 	}
-
 	R3DPROFILE_END("Update&Move");
 
 	//r3dOutToLog("%d\n",vObjs.size());

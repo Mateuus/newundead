@@ -42,7 +42,7 @@ BOOL obj_DroppedItem::OnCreate()
 	// overwrite object network visibility
 	//distToCreateSq = 256 * 256;
 	//distToDeleteSq = 256 * 256;
-	distToCreateSq = 50 * 50;
+	distToCreateSq = 20 * 20;
 	distToDeleteSq = 30 * 30;
 
 	gServerLogic.NetRegisterObjectToPeers(this);

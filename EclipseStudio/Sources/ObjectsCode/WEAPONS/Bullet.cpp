@@ -69,7 +69,7 @@ BOOL obj_Bullet::OnCreate()
 	PhysicsConfig.group = PHYSCOLL_PROJECTILES;
 
 	// perform our own movement to sync over network properly
-	PhysicsConfig.isKinematic = false; 
+	PhysicsConfig.isKinematic = true; //Codex Craft
 	PhysicsConfig.isDynamic = true;
 
 	r3d_assert(m_Ammo);
