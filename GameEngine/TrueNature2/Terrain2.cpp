@@ -1602,7 +1602,40 @@ r3dTerrain2::LoadLayerFromScript1( Script_c *script, r3dTerrainLayer* layer, int
 		}
 		else if( ! strcmp( buffer, "mat_type:"  ) )
 		{
-			char buff[ 512 ];
+			//Codex Craft
+            char buff[ 512 ];
+
+			buff[ sizeof buff - 1 ] = 0;
+
+			script->GetLine( buff, sizeof buff - 1 );
+
+			if(strstr(strupr(buff), "CONCRETE"))
+				strcpy(buff,"Concrete");
+			else if(strstr(strupr(buff), "DIRT"))
+				strcpy(buff,"Dirt");
+			else if(strstr(strupr(buff), "SAND"))
+				strcpy(buff,"Sand");
+			else if(strstr(strupr(buff), "SNOW"))
+				strcpy(buff,"Snow");
+			else if(strstr(strupr(buff), "GRASS"))
+				strcpy(buff,"Grass");
+			else if(strstr(strupr(buff), "FOREST"))
+				strcpy(buff,"Forest");
+			else if(strstr(strupr(buff), "WOOD"))
+				strcpy(buff,"Wood");
+			else if(strstr(strupr(buff), "METAL_RESOURCES"))
+				strcpy(buff,"Metal_Resources");
+			else if(strstr(strupr(buff), "WOOD_RESOURCES"))
+				strcpy(buff,"Wood_Resources");
+			else if(strstr(strupr(buff), "WATER"))
+				strcpy(buff,"Water");		
+			else if(strstr(strupr(buff), "METAL"))
+				strcpy(buff,"Metal");				
+				
+
+			layer->MaterialTypeName = buff;
+
+			/*char buff[ 512 ];
 
 			buff[ sizeof buff - 1 ] = 0;
 
@@ -1614,7 +1647,7 @@ r3dTerrain2::LoadLayerFromScript1( Script_c *script, r3dTerrainLayer* layer, int
 
 			sscanf( buff, "%31s", name );
 
-			layer->MaterialTypeName = name;
+			layer->MaterialTypeName = name;*/
 		}
 	}
 
@@ -2105,7 +2138,7 @@ r3dTerrain2::Save( const char* targetDir )
 		RemoveTextureReloadListener( TerraTextureReloadListener );
 	}
 
-	//r3d_assert( m_PhysicsHeightField );
+	r3d_assert( m_PhysicsHeightField );//Codex Craft Erro
 
 	r3d_assert(_CrtCheckMemory());
 
@@ -3310,8 +3343,7 @@ r3dTerrain2::Resize( int newVertexCountX, int newVertexCountZ )
 	r3d_assert( newVertexCountX >= 256 && newVertexCountX <= 4096 );
 	r3d_assert( newVertexCountZ >= 256 && newVertexCountZ <= 4096 );
 
-	//r3d_assert( m_PhysicsHeightField );
-
+	r3d_assert( m_PhysicsHeightField );//Codex Craft Erro
 	r3d_assert(_CrtCheckMemory());
 
 	r3dTL::TArray< PxI16 > hfShrinkedSamples( m_VertexCountX * m_VertexCountZ );
@@ -3531,7 +3563,7 @@ r3dTerrain2::SwitchVFetchMode()
 float
 r3dTerrain2::GetHeight( const r3dPoint3D& pos )	/*OVERRIDE*/
 {
-	//r3d_assert( m_PhysicsHeightField );
+	r3d_assert( m_PhysicsHeightField );//Codex Craft Erro
 
 	float rx = pos.x / m_CellSize;
 	float rz = pos.z / m_CellSize;
@@ -3620,7 +3652,9 @@ const MaterialType*
 r3dTerrain2::GetMaterialType( const r3dPoint3D& pnt ) /*OVERRIDE*/
 {
 	if( !m_DominantLayerData.Count() )
-		return g_pMaterialTypes->GetDefaultMaterial();
+	{
+		return g_pMaterialTypes->GetDefaultMaterial(); //Codex Craft
+	}
 
 	int domLayerDataWidth = m_DominantLayerData.Width();
 	int domLayerDataHeight = m_DominantLayerData.Height();
@@ -5321,6 +5355,33 @@ r3dTerrain2::LoadLayerFromScript( Script_c *script, r3dTerrainLayer *layer )
 			buff[ sizeof buff - 1 ] = 0;
 
 			script->GetLine( buff, sizeof buff - 1 );
+
+			/////////////////////////////////////////////////////////////////////
+			//Codex Craft
+
+			if(strstr(strupr(buff), "CONCRETE"))
+				strcpy(buff,"Concrete");
+			else if(strstr(strupr(buff), "DIRT"))
+				strcpy(buff,"Dirt");
+			else if(strstr(strupr(buff), "SAND"))
+				strcpy(buff,"Sand");
+			else if(strstr(strupr(buff), "SNOW"))
+				strcpy(buff,"Snow");
+			else if(strstr(strupr(buff), "GRASS"))
+				strcpy(buff,"Grass");
+			else if(strstr(strupr(buff), "FOREST"))
+				strcpy(buff,"Forest");
+			else if(strstr(strupr(buff), "WOOD"))
+				strcpy(buff,"Wood");
+			else if(strstr(strupr(buff), "METAL_RESOURCES"))
+				strcpy(buff,"Metal_Resources");
+			else if(strstr(strupr(buff), "WOOD_RESOURCES"))
+				strcpy(buff,"Wood_Resources");
+			else if(strstr(strupr(buff), "WATER"))
+				strcpy(buff,"Water");		
+			else if(strstr(strupr(buff), "METAL"))
+				strcpy(buff,"Metal");	
+			/////////////////////////////////////////////////////////
 
 			layer->MaterialTypeName = buff;
 		}

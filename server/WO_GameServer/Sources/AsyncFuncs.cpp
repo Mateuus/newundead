@@ -642,12 +642,12 @@ int CJobUpdateChar::Exec()
 	req.AddParam("ts04",        0);
 	req.AddParam("ts05",        0);
 
-		req.AddParam("GroupID",        slot.GroupID);
-		req.AddParam("Mission1",        slot.Mission1);
-		req.AddParam("legfall",        slot.legfall);
-		req.AddParam("bleeding",        slot.bleeding);
+	req.AddParam("GroupID",        slot.GroupID);
+	req.AddParam("Mission1",        slot.Mission1);
+	req.AddParam("legfall",        slot.legfall);
+	req.AddParam("bleeding",        slot.bleeding);
 
-	req.AddParam("SkillID0",	slot.Stats.skillid0);
+	/*req.AddParam("SkillID0",	slot.Stats.skillid0);
 	req.AddParam("SkillID1",	slot.Stats.skillid1);
 	req.AddParam("SkillID2",	slot.Stats.skillid2);
 	req.AddParam("SkillID3",	slot.Stats.skillid3);
@@ -680,7 +680,7 @@ int CJobUpdateChar::Exec()
 	req.AddParam("SkillID30",	slot.Stats.skillid30);
 	req.AddParam("SkillID31",	slot.Stats.skillid31);
 	req.AddParam("SkillID32",	slot.Stats.skillid32);
-	req.AddParam("SkillID33",	slot.Stats.skillid33);
+	req.AddParam("SkillID33",	slot.Stats.skillid33);*/
 
 	//Codex Craft
 	req.AddParam("Wood",	slot.Wood);

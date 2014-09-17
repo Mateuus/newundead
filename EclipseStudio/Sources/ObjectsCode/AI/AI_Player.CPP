@@ -9076,6 +9076,7 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 				 //Codex Aninal //Codex Carros
 				 	char NameOfMaterial[128];
 					sprintf(NameOfMaterial,"%s",shootMaterial->TypeName);
+					r3dOutToLog("#### MATERIAL %s\n",shootMaterial->TypeName);
 				 ///////////////////////////////////////////////////////////////////////////////////////
 				 //Codex Animal
 						if (strstr(strupr(NameOfMaterial), "ANIMAL_DEER"))

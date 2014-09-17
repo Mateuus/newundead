@@ -50,6 +50,7 @@ const MaterialType* MaterialTypes::Get( uint32_t hashName ) const
 
 const MaterialType* MaterialTypes::GetByIdx( uint32_t idx ) const
 {
+	r3dOutToLog("######## idx %i, footStepsSound: %i \n",idx,mEntries[ idx ].type.footStepsSound);//Codex Sound
 	if( idx < mEntries.Count() )
 	{
 		return &mEntries[ idx ].type;
