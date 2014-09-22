@@ -124,7 +124,7 @@
 	#define VEHICLES_ENABLED 1
 #else 
 #ifndef WO_SERVER
-    #define VEHICLES_ENABLED 1 // temp disabled due to new PhysX API changes
+	#define VEHICLES_ENABLED 1 // temp disabled due to new PhysX API changes
 #else
 	#define VEHICLES_ENABLED 1
 #endif

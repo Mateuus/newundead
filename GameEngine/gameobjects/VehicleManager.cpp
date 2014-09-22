@@ -376,6 +376,7 @@ namespace
 		//Extract the wheel radius and width from the wheel convex meshes.
 		PxF32 wheelWidths[MAX_WHEELS_COUNT];
 		PxF32 wheelRadii[MAX_WHEELS_COUNT];
+
 		ComputeWheelWidthsAndRadii(wheelMeshes, wheelWidths, wheelRadii, vd.numWheels);
 
 		//Now compute the wheel masses and inertias components around the axle's axis.
@@ -565,7 +566,6 @@ void VehicleManager::Update(float timeStep)
 			}
 		}
 
-
 	for (uint32_t i = 0, i_end = physxVehs.Count(); i < i_end; ++i)
 	{
 		if (vehicles[i]->owner)
@@ -575,7 +575,7 @@ void VehicleManager::Update(float timeStep)
 				obj_Player* plr = gClientLogic().localPlayer_;
 			  if (gClientLogic().localPlayer_)
 			  {
-				if (plr->ActualVehicle == vehicles[i]->owner)
+				  if (plr->ActualVehicle == vehicles[i]->owner && plr->isInVehicle())
 				{
 					PxVehicleSuspensionRaycasts(batchSuspensionRaycasts, vehicles.Count(), &physxVehs.GetFirst(), batchQueryResults.Count(), &batchQueryResults.GetFirst());
 					PxVec3 gravity = g_pPhysicsWorld->PhysXScene->getGravity();
@@ -603,12 +603,16 @@ void VehicleManager::DoUserCarControl(float timeStep,bool enable, PxVehicleDrive
 		{
 			obj_Vehicle* VehicleID= static_cast< obj_Vehicle* > ( from );
 			PxVehicleDrive4W &VehiD = *VehicleID->vd->vehicle;
-			
+			//r3dOutToLog("######## timeStep %f\n",timeStep);
 			if (OthercontrolData.getDigitalAccel())
+			{
 				VehiD.mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+			}
 			else if (OthercontrolData.getDigitalBrake())
+			{
 				VehiD.mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-
+			}
+			
 			PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData,  gSteerVsForwardSpeedTable, OthercontrolData, timeStep, VehiD);
 			return;
 		}
@@ -641,7 +645,7 @@ if (plr->ActualVehicle == NULL)
         clearInputData = true;
 	    return;
  }
- if (plr->ActualVehicle->DamageCar<=0) // Server Vehicles
+ if (plr->ActualVehicle->DamageCar<=0.99) // Server Vehicles
  {
         carControlData.setDigitalAccel(false);
         carControlData.setDigitalBrake(false);
@@ -909,25 +913,15 @@ VehicleDescriptor * VehicleManager::CreateVehicle(const r3dMesh *m)
 
 	vd->vehicle = PxVehicleDrive4W::allocate(vd->numWheels);
 
-	if (m->FileName == "data/objectsdepot/vehicles/drivable_stryker.sco") {
-	    vd->vehicle->setup(g_pPhysicsWorld->PhysXSDK, vehActor, *wheelsData, driveData, std::max<int>(vd->numWheels, 0));
-	    vd->vehicle->setWheelShapeMapping(0, 0);
-	    vd->vehicle->setWheelShapeMapping(1, 1);
-	    vd->vehicle->setWheelShapeMapping(2, 2);
-	    vd->vehicle->setWheelShapeMapping(3, 3);
-	    vd->vehicle->setWheelShapeMapping(4, 4);
-	    vd->vehicle->setWheelShapeMapping(5, 5);
-	    vd->vehicle->setWheelShapeMapping(6, 6);
-	    vd->vehicle->setWheelShapeMapping(7, 7);
-
-    }
-    else {
+	if ((int)vd->numWheels>4)
+		vd->vehicle->setup(g_pPhysicsWorld->PhysXSDK, vehActor, *wheelsData, driveData, std::max<int>(vd->numWheels, 0));
+	else
 		vd->vehicle->setup(g_pPhysicsWorld->PhysXSDK, vehActor, *wheelsData, driveData, std::max<int>(vd->numWheels-4, 0));
-	    vd->vehicle->setWheelShapeMapping(0, 0);
-	    vd->vehicle->setWheelShapeMapping(1, 1);
-	    vd->vehicle->setWheelShapeMapping(2, 2);
-	    vd->vehicle->setWheelShapeMapping(3, 3);
-    }
+
+	for(int i=0;i<(int)vd->numWheels;i++)
+	{
+		vd->vehicle->setWheelShapeMapping(i, i);
+	}
 
 	//Don't forget to add the actor to the scene.
 	g_pPhysicsWorld->PhysXScene->addActor(*vehActor);

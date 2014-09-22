@@ -145,16 +145,18 @@ virtual	void		OnNetData(DWORD peerId, const r3dNetPacketHeader* packetData, int 
 	  
 	
 	 
-	  DEFINE_PACKET_FUNC(PKT_S2C_CheatMsg);
+	 DEFINE_PACKET_FUNC(PKT_S2C_CheatMsg);
 	 DEFINE_PACKET_FUNC(PKT_C2S_DataUpdateReq);
 	 DEFINE_PACKET_FUNC(PKT_C2S_SecurityRep);
 	 DEFINE_PACKET_FUNC(PKT_C2S_UseNetObject);
-	  DEFINE_PACKET_FUNC(PKT_C2s_PlayerSetMissionStatus);
+	 DEFINE_PACKET_FUNC(PKT_C2s_PlayerSetMissionStatus);
 	 DEFINE_PACKET_FUNC(PKT_C2S_CreateNote);
-	  DEFINE_PACKET_FUNC(PKT_C2S_PlayerAcceptMission);
+	 DEFINE_PACKET_FUNC(PKT_C2S_PlayerAcceptMission);
 	 DEFINE_PACKET_FUNC(PKT_C2S_Admin_PlayerKick);
 	 DEFINE_PACKET_FUNC(PKT_C2S_Admin_GiveItem);
 	 DEFINE_PACKET_FUNC(PKT_S2C_UpdateSlotsCraft);//Codex Craft
+	 DEFINE_PACKET_FUNC(PKT_C2S_VehicleSet);//Codex Carros
+	 DEFINE_PACKET_FUNC(PKT_C2S_StatusPlayerVehicle);//Codex Carros
 	 void		OnPKT_C2S_ScreenshotData(DWORD peerId, const int size, const char* data);
 	 
 	void		ValidateMove(GameObject* fromObj, const void* packetData, int packetSize);

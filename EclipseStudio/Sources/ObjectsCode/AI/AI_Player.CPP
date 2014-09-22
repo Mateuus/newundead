@@ -1113,6 +1113,7 @@ BOOL obj_Player::OnCreate()
 	R3D_LOG_TIMESPAN_START(Ai_Player_OnCreate);
 
 	parent::OnCreate();
+	strcpy(StatePlayerVehicle,"");//Codex Carros
 	punchtime=0;//Codex Soco
 	ShowCrosshair=true;//Codex Mira
 
@@ -1123,7 +1124,6 @@ BOOL obj_Player::OnCreate()
 	GearsSounds=1.0f;
 	ActualVehicle=NULL;
 	VehicleID=0;
-	ImOwnerCar=false;
 #endif
 
 	r3d_assert(PhysXObstacleIndex == -1);
@@ -4072,6 +4072,27 @@ BOOL obj_Player::Update()
 	{
 	  for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
 	  {
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	  //Codex Carros
+	  if (obj->isObjType(OBJTYPE_Human))
+		{
+			if (hudMain && gClientLogic().localPlayer_)
+			{
+				obj_Player* Player = (obj_Player*)obj;
+				if (strcmp(Player->StatePlayerVehicle,"") == 0)
+				{
+					if ( Player->GetNetworkID() != gClientLogic().localPlayer_->GetNetworkID() )
+					{
+						PKT_C2S_StatusPlayerVehicle_s n;
+						n.MyID = gClientLogic().localPlayer_->GetNetworkID();
+						n.PlayerID=Player->GetNetworkID();
+						p2pSendToHost(this, &n, sizeof(n));
+					}
+				}
+			}
+		}
+	   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		if (obj->Class->Name == "obj_SafeLock")
 		{
 			obj_SafeLock* Safelock = (obj_SafeLock*)obj;
@@ -4099,50 +4120,21 @@ BOOL obj_Player::Update()
 			{
 				this->SetPosition(ActualVehicle->GetPosition()+r3dPoint3D(0,8,0));
 				this->SetRotationVector(ActualVehicle->GetRotationVector());
-				PKT_C2C_PlayerOnVehicle_s n;
-				n.PlayerOnVehicle=true;
-				n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
-				n.myID=gClientLogic().localPlayer_->GetNetworkID();
-				if (isInVehicle())
-					ImOwnerCar=true;
-				else
-					ImOwnerCar=false;
-				n.ImOwnerCar=ImOwnerCar;
-				gClientLogic().localPlayer_->VehicleID=n.VehicleID;
-				p2pSendToHost(this, &n, sizeof(n));
 
 				float waterDepth = getWaterDepthAtPos(ActualVehicle->GetPosition());
 				if(waterDepth > 1.3f) // too deep
 				{
 					if (isPassenger())
 					{
-						//ActualVehicle->DamageCar=0.21f;
 						ActualVehicle->DestroyOnWater=true;
-						//this->exitVehicleHowPassenger();
 					}
 				}
 			}
 			 
 		}
-		else {
-			if (gClientLogic().localPlayer_)
-			{
-				PKT_C2C_PlayerOnVehicle_s n;
-				n.PlayerOnVehicle=false;
- 				n.VehicleID=gClientLogic().localPlayer_->VehicleID;
-				n.myID=gClientLogic().localPlayer_->GetNetworkID();
- 				if (isInVehicle())
-					ImOwnerCar=true;
-				else
-					ImOwnerCar=false;
-				n.ImOwnerCar=ImOwnerCar;
-				p2pSendToHost(this, &n, sizeof(n));
-			}
-		}
 	}
 #endif
-
-   if (!NetworkLocal )
+	if (!NetworkLocal )
 	{
 		if (bDead)
 			this->IsOnVehicle=false;
@@ -4373,8 +4365,8 @@ BOOL obj_Player::Update()
 	if(!NetworkLocal && hudMain && CGL.localPlayer_)
 	{
 		bool showName1 = (this->GetSafeID() == m_LocalPlayer_CurrentAimAt)?true:false;
-		bool isShowGroup = (GetPosition() - CGL.localPlayer_->GetPosition()).Length() <= 512;
-		if((m_CharIcon.IsUndefined() && CGL.localPlayer_ && showName1 || ClanID == CGL.localPlayer_->ClanID && ClanID != 0 && m_CharIcon.IsUndefined() || m_CharIcon.IsUndefined() && CurLoadout.GroupID == gClientLogic().localPlayer_->CurLoadout.GroupID && CurLoadout.GroupID != 0) /*&& isShowGroup*/)
+		bool isShowGroup = (GetPosition() - CGL.localPlayer_->GetPosition()).Length() <= 512;//Error Tag && IsOnVehicle==false
+		if((m_CharIcon.IsUndefined() && CGL.localPlayer_ && showName1 && IsOnVehicle==false || ClanID == CGL.localPlayer_->ClanID && ClanID != 0 && m_CharIcon.IsUndefined() || m_CharIcon.IsUndefined() && CurLoadout.GroupID == gClientLogic().localPlayer_->CurLoadout.GroupID && CurLoadout.GroupID != 0) /*&& isShowGroup*/)
 		{
 			char plrUserName[256]; GetUserNameAndClanTag(plrUserName);
 
@@ -4732,11 +4724,13 @@ BOOL obj_Player::Update()
 
 
 	// even if dead, still need to send pos, otherwise if died in the air - you will still be in the air.
-	if(NetworkLocal) 
+	if(NetworkLocal) // Server Vehicles
 	{
 		CNetCellMover::moveData_s md;
+
 		md.pos       = GetPosition();
 		md.turnAngle = m_fPlayerRotationTarget;
+
 		md.bendAngle = bodyAdjust_y[1];
 		md.state     = (PlayerState&0xF) | ((PlayerMoveDir&0xF) << 4);
 
@@ -5254,56 +5248,15 @@ void obj_Player::UpdateActionUI()
 				
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Codex Carros
+
 				if(dropObj->Class->Name == "obj_Vehicle")
 				{
-					     if (!isInVehicle() || !isPassenger())
-						 {
-					        obj_Vehicle* target_Vehicle = canEnterVehicle();
-                            if ( target_Vehicle  ) // now we're going to try to use vehicles (otherwise UAV characters can't use vehicles).
-                            {
-								if (target_Vehicle->DamageCar<=0)
-								{
-									hudActionUI->Deactivate();
-									hudMain->VehicleDamaged();
-									return;
-								}
-								if (target_Vehicle->GasolineCar<=0)
-								{
-									hudActionUI->Deactivate();
-									hudMain->VehicleWithoutGasoline();
-									return;
-								}
-								if (target_Vehicle->Occupants<1)
-								{
-									enterVehicle( target_Vehicle );
-									//r3dOutToLog("######## %i\n",target_Vehicle->Occupants);
-									hudActionUI->showEBlock(false,false);
-									g_pPhysicsWorld->m_VehicleManager->DriveCar(target_Vehicle->vd);
-								}
-								else {
-									int MaxPassengers=2;
-									if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
-										MaxPassengers=3;
-									else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/zombie_killer_car.sco")
-										MaxPassengers=2;
-									else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
-										MaxPassengers=8;
-
-									if (target_Vehicle->Occupants>=MaxPassengers)
-									{
-										char Letters[128];
-										sprintf(Letters,"%i/%i",MaxPassengers,MaxPassengers);
-										hudMain->showCarFull(Letters);
-									}
-									else
-									{
-										EnterVehicleHowPassenger( target_Vehicle );
-										hudActionUI->showEBlock(false,false);
-									}
-								}
-				            }
-						 }
+					PKT_C2S_VehicleSet_s n;
+					n.VehicleID = dropObj->GetNetworkID();
+					n.PlayerSet = gClientLogic().localPlayer_->GetNetworkID();
+					p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
 				}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -5839,18 +5792,60 @@ void obj_Player::OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n) // Server Vehic
 #if VEHICLES_ENABLED
 	    IsOnVehicle = n.PlayerOnVehicle;
 		VehicleID=n.VehicleID;
-		ImOwnerCar=n.ImOwnerCar;
+		strcpy(StatePlayerVehicle,"1");
 #endif
 }
 
-void obj_Player::OnNetPacket(const PKT_C2C_CarSeat_s& n) // Server Vehicles
+void obj_Player::OnNetPacket(const PKT_C2S_VehicleSet_s& n)
 {
-	//r3dOutToLog("######## Tu posicion en el vehiculo es %i\n",n.Seat);
-	if (n.Seat>1)
+	if (!isInVehicle() || !isPassenger())
 	{
-		vehicleViewActive_ = VehicleView_Passenger;
-		d_drive_vehicles->SetBool( true );
-		ActualVehicle->NetworkLocal = false;
+		obj_Vehicle* target_Vehicle = canEnterVehicle();
+		if ( target_Vehicle  ) // now we're going to try to use vehicles (otherwise UAV characters can't use vehicles).
+		{
+			if (target_Vehicle->DamageCar<=0)
+			{
+				hudActionUI->Deactivate();
+				hudMain->VehicleDamaged();
+				return;
+			}
+			/*if (target_Vehicle->GasolineCar<=0)
+			{
+				hudActionUI->Deactivate();
+				hudMain->VehicleWithoutGasoline();
+				return;
+			}*/
+			if (n.PlayerSet == gClientLogic().localPlayer_->GetNetworkID())
+			{
+				enterVehicle( target_Vehicle );
+				hudActionUI->showEBlock(false,false);
+				g_pPhysicsWorld->m_VehicleManager->DriveCar(target_Vehicle->vd);
+
+			}
+			else if (n.PlayerSet != 0)
+			{
+				int MaxPassengers=2;
+				if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+					MaxPassengers=3;
+				else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/zombie_killer_car.sco")
+					MaxPassengers=2;
+				else if (target_Vehicle->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+					MaxPassengers=8;
+
+				if (target_Vehicle->Occupants>=MaxPassengers)
+				{
+					char Letters[128];
+					printf(Letters,"%i/%i",MaxPassengers,MaxPassengers);
+					hudMain->showCarFull(Letters);
+				}
+				else
+				{
+					EnterVehicleHowPassenger( target_Vehicle );
+					hudActionUI->showEBlock(false,false);
+
+				}
+			}
+		}
 	}
 }
 
@@ -6197,7 +6192,7 @@ case xxx: { \
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_BackpackModify);
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerReputation);
 	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerOnVehicle); // Server Vehicles //Codex Carros
-	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_CarSeat); // Server Vehicles //Codex Carros
+		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_VehicleSet);//Codex Carros
 		//DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_SetVelocity);
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Codex Soco
@@ -8228,6 +8223,12 @@ void obj_Player::EnterVehicleHowPassenger( obj_Vehicle* target_Vehicle )
 	TogglePhysicsSimulation(false);
 	d_drive_vehicles->SetBool( true );
 
+	PKT_C2C_PlayerOnVehicle_s n;
+	n.PlayerOnVehicle=true;
+	n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
+	p2pSendToHost(this, &n, sizeof(n));
+	VehicleID=n.VehicleID;
+
 }
 
 void obj_Player::exitVehicleHowPassenger()
@@ -8263,6 +8264,13 @@ void obj_Player::exitVehicleHowPassenger()
 		pos2=4.0f;
 		break;
 	}
+
+	PKT_C2C_PlayerOnVehicle_s n;
+	n.PlayerOnVehicle=false;
+	n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
+	p2pSendToHost(this, &n, sizeof(n));
+	VehicleID=n.VehicleID;
+
 	r3dVector targetPosition = ActualVehicle->GetPosition() + r3dPoint3D( pos1, 3, pos2); // Server Vehicles
 	TeleportPlayer( targetPosition, "Exiting vehicle");
 
@@ -8275,12 +8283,15 @@ void obj_Player::exitVehicleHowPassenger()
 void obj_Player::enterVehicle( obj_Vehicle* target_Vehicle ) // Server Vehicles
 {
     switchToEmptyHands();
-	if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+	if (target_Vehicle->GasolineCar>0)
 	{
-         SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"), GetPosition());
-	}
-	else {
-		 SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Start"), GetPosition());
+		if (target_Vehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+		{
+			SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"), GetPosition());
+		}
+		else {
+			SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Start"), GetPosition());
+		}
 	}
 	SetPosition(GetPosition()+r3dPoint3D(0,8,0));
 	vehicleViewActive_ = VehicleView_Driver;
@@ -8289,11 +8300,17 @@ void obj_Player::enterVehicle( obj_Vehicle* target_Vehicle ) // Server Vehicles
 	d_drive_vehicles->SetBool( true );
 	ActualVehicle->NetworkLocal = true;
 	ActualVehicle->Occupants=1;
+
+	PKT_C2C_PlayerOnVehicle_s n;
+	n.PlayerOnVehicle=true;
+	n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
+	p2pSendToHost(this, &n, sizeof(n));
+	VehicleID=n.VehicleID;
 }
 
 void obj_Player::exitVehicle()  // Server Vehicles
 {
-     hudMain->setCarInfo(0,0,0,0,0,0,false);
+    hudMain->setCarInfo(0,0,0,0,0,0,false);
 	if (ActualVehicle->DamageCar>0 && ActualVehicle->GasolineCar>=1)
 	{
 		if (ActualVehicle->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
@@ -8330,6 +8347,13 @@ void obj_Player::exitVehicle()  // Server Vehicles
 		pos2=4.0f;
 		break;
 	}
+
+	PKT_C2C_PlayerOnVehicle_s n;
+	n.PlayerOnVehicle=false;
+	n.VehicleID=toP2pNetId(ActualVehicle->GetNetworkID());
+	p2pSendToHost(this, &n, sizeof(n));
+	VehicleID=n.VehicleID;
+
 	r3dVector targetPosition = ActualVehicle->GetPosition() + r3dPoint3D( pos1, 3, pos2); // Server Vehicles
 	TeleportPlayer( targetPosition, "Exiting vehicle");
 	ActualVehicle->Occupants=0;

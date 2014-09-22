@@ -5,7 +5,7 @@
 
 #pragma once
 
-//#include "GameObj.h"
+#include "GameObj.h"
 #include "multiplayer/NetCellMover.h"
 #include "NetworkHelper.h"
 #include "obj_ServerVehicleSpawn.h"
@@ -36,6 +36,7 @@ class obj_Vehicle: public MeshGameObject, INetworkHelper // Server Vehicles
 	float curTime;
 		obj_ServerVehicleSpawn* spawner;
 	int PlayersOnVehicle[8];
+	int HaveDriver;
 
 public:
 	obj_Vehicle();

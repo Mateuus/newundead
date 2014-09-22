@@ -32,9 +32,10 @@ public:
 	float GearsSounds;
 	bool IsOnVehicle; // Server Vehicles
 	int VehicleID;
-	bool ImOwnerCar;
 #endif
-
+    ////////////////////////
+	//Codex Carros
+	char StatePlayerVehicle[256];
 	////////////////////////
 	//Codex Soco
 	float punchtime;
@@ -422,9 +423,9 @@ public:
 	void OnNetPacket(const PKT_C2S_TradeAccept2_s& n);
 	void			 OnNetPacket(const PKT_S2C_AddScore_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerVitals_s& n);
-	void OnNetPacket(const PKT_S2C_SetPlayerGroupID_s& n);
-	void OnNetPacket(const PKT_C2S_TradeCancel_s& n);
-	void OnNetPacket(const PKT_C2S_TradeBacktoOp_s& n);
+	void             OnNetPacket(const PKT_S2C_SetPlayerGroupID_s& n);
+	void             OnNetPacket(const PKT_C2S_TradeCancel_s& n);
+	void             OnNetPacket(const PKT_C2S_TradeBacktoOp_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerLoadout_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerAttachments_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerWorldFlags_s& n);
@@ -437,7 +438,7 @@ public:
 	void			 OnNetPacket(const PKT_C2C_PlayerHitStatic_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerHitStaticPierced_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerHitDynamic_s& n);
-	void OnNetPacket(const PKT_C2S_TradeAccept_s& n);
+	void             OnNetPacket(const PKT_C2S_TradeAccept_s& n);
 	//void OnNetPacket(const PKT_C2S_SetVelocity_s& n);
 	void			 OnNetPacket(const PKT_S2C_SpawnExplosion_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerUseItem_s& n);
@@ -446,7 +447,7 @@ public:
 	void			 OnNetPacket(const PKT_S2C_BackpackModify_s& n);
 	void			 OnNetPacket(const PKT_S2C_SetPlayerReputation_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n);  // Server Vehicles //Codex Carros
-	void			 OnNetPacket(const PKT_C2C_CarSeat_s& n);  // Server Vehicles //Codex Carros
+	void			 OnNetPacket(const PKT_C2S_VehicleSet_s& n);//Codex Carros
 
 	virtual void		UpdateTransform();
 

@@ -508,6 +508,9 @@ void ServerGameLogic::OnNetPeerDisconnected(DWORD peerId)
 					{
 						if (VehicleFOUND->PlayersOnVehicle[i]==peer.player->GetNetworkID())
 						{
+							if (VehicleFOUND->HaveDriver==peer.player->GetNetworkID())
+								VehicleFOUND->HaveDriver=0;
+
 							VehicleFOUND->PlayersOnVehicle[i]=0;
 							VehicleFOUND->OccupantsVehicle--;
 
@@ -678,6 +681,10 @@ void ServerGameLogic::DoKillPlayer(GameObject* sourceObj, obj_ServerPlayer* targ
 		obj_ServerPlayer * killedByPlr = ((obj_ServerPlayer*)sourceObj);
 		if (targetPlr->profile_.CustomerID == killedByPlr->profile_.CustomerID)
 		{
+			//Codex Carros
+			if (targetPlr->dieForExplosion== true)
+			sprintf(plr2msg, "$EXPLOSIONBYCAR");
+			else
 			sprintf(plr2msg, "Commit Suicide");
 		}
 		else
@@ -2298,6 +2305,12 @@ int ServerGameLogic::Cmd_Teleport(obj_ServerPlayer* plr, const char* cmd)
 	if(3 != sscanf(cmd, "%s %f %f", buf, &x, &z))
 		return 2;
 
+	if (plr->PlayerOnVehicle) // Server Vehicles
+	{
+		r3dOutToLog("unable to teleport - Player on vehicle\n");
+		return 9;
+	}
+
 	// cast ray down and find where we should place mine. should be in front of character, facing away from him
 	PxRaycastHit hit;
 	PxSceneQueryFilterData filter(PxFilterData(COLLIDABLE_STATIC_MASK, 0, 0, 0), PxSceneQueryFilterFlag::eSTATIC);
@@ -2484,7 +2497,7 @@ int ServerGameLogic::Cmd_crtveh(obj_ServerPlayer* plr, const char* cmd) // ARREG
 	   }
 	   else if (strcmp(cmd,"/crtveh buggy") == 0)
 	   {
-		    /*static PKT_S2C_CreateVehicle_s n;
+		    static PKT_S2C_CreateVehicle_s n;
 			n.spawnID      = toP2pNetId(gServerLogic.net_lastFreeId++);//GetFreeNetId());
 			n.spawnPos     = plr->GetPosition() + r3dPoint3D(4,0,0);
 			n.spawnDir     = plr->GetRotationVector();
@@ -2505,7 +2518,7 @@ int ServerGameLogic::Cmd_crtveh(obj_ServerPlayer* plr, const char* cmd) // ARREG
 			obj->OccupantsVehicle=n.Ocuppants;
 			obj->DamageCar=n.DamageCar;
 			obj->FirstRotationVector=n.spawnPos;
-			obj->FirstPosition=n.spawnDir;*/
+			obj->FirstPosition=n.spawnDir;
 
 		return 3;
 	   }
@@ -2795,6 +2808,109 @@ IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2C_ChatMessage)
 
 	}
 }
+//////////////////////////////////////////////////////////////////////////////////
+//Codex Carros
+IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_VehicleSet)
+{
+ 	for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) ) // Server Vehicles
+	{
+		if (obj->Class->Name == "obj_Vehicle") //safelock
+		{
+			if (obj->GetNetworkID() == n.VehicleID)
+			{
+				GameObject* targetObj = GameWorld().GetNetworkObject(n.PlayerSet);
+
+				obj_Vehicle* Vehicle = (obj_Vehicle*)obj;
+
+				bool found=false;
+				for (int i=0;i<=8;i++)
+				{
+					if (Vehicle->PlayersOnVehicle[i]==n.PlayerSet)
+					{
+						found=true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					for (int i=0;i<=8;i++)
+					{
+						if (Vehicle->PlayersOnVehicle[i]==0)
+						{
+							Vehicle->PlayersOnVehicle[i]=n.PlayerSet;
+							Vehicle->OccupantsVehicle++;
+							r3dOutToLog("######## VehicleID: %i Have %i Passengers\n",n.VehicleID,Vehicle->OccupantsVehicle);
+							break;
+						}
+					}
+				}
+				
+				if (Vehicle->HaveDriver == 0)
+				{
+					if (targetObj)
+					{
+						Vehicle->HaveDriver=n.PlayerSet;
+						if (targetObj->Class->Name == "obj_ServerPlayer")
+						{
+							if (Vehicle->DamageCar<=0)
+								Vehicle->HaveDriver=0;
+							//if (Vehicle->Gasolinecar<=0)
+							//	Vehicle->HaveDriver=0;
+
+							obj_ServerPlayer* plr = (obj_ServerPlayer*)targetObj;
+
+							PKT_C2S_VehicleSet_s n;
+							n.VehicleID = obj->GetNetworkID();
+							n.PlayerSet = Vehicle->HaveDriver;
+							p2pSendToPeer(plr->peerId_, plr, &n, sizeof(n));
+						}
+					}
+				}
+				else {
+					if (targetObj)
+					{
+						if (targetObj->Class->Name == "obj_ServerPlayer")
+						{
+							if (Vehicle->DamageCar<=0)
+								Vehicle->HaveDriver=0;
+							//if (Vehicle->Gasolinecar<=0)
+							//	Vehicle->HaveDriver=0;
+
+							obj_ServerPlayer* plr = (obj_ServerPlayer*)targetObj;
+
+							PKT_C2S_VehicleSet_s n;
+							n.VehicleID = obj->GetNetworkID();
+							n.PlayerSet = Vehicle->HaveDriver;
+							p2pSendToPeer(plr->peerId_, plr, &n, sizeof(n));
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+IMPL_PACKET_FUNC(ServerGameLogic, PKT_C2S_StatusPlayerVehicle)
+{
+	GameObject* from = GameWorld().GetNetworkObject(n.MyID);
+	GameObject* to = GameWorld().GetNetworkObject(n.PlayerID);
+
+	if (!to || !from)
+		return;
+
+	if (n.MyID == n.PlayerID)
+		return;
+
+	obj_ServerPlayer* tplr = (obj_ServerPlayer*)to;
+	obj_ServerPlayer* plr = (obj_ServerPlayer*)from;
+	
+	//r3dOutToLog("######## Enviando %s Nick %s\n",(tplr->PlayerOnVehicle==true)?"true":"false",tplr->loadout_->Gamertag);
+	PKT_C2C_PlayerOnVehicle_s n2;
+	n2.PlayerOnVehicle=tplr->PlayerOnVehicle;
+	n2.VehicleID=tplr->IDOFMyVehicle;
+	p2pSendToPeer(plr->peerId_, tplr, &n2, sizeof(n2));
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 //Codex Craft
 IMPL_PACKET_FUNC(ServerGameLogic, PKT_S2C_UpdateSlotsCraft)
@@ -3303,6 +3419,11 @@ int ServerGameLogic::ProcessWorldEvent(GameObject* fromObj, DWORD eventId, DWORD
 		DEFINE_PACKET_HANDLER(PKT_C2S_Admin_GiveItem);
 		DEFINE_PACKET_HANDLER(PKT_C2S_UseNetObject);
 		DEFINE_PACKET_HANDLER(PKT_C2S_CreateNote);
+		///////////////////////////////////////////
+		//Codex Carros
+		DEFINE_PACKET_HANDLER(PKT_C2S_VehicleSet);
+		DEFINE_PACKET_HANDLER(PKT_C2S_StatusPlayerVehicle);
+		///////////////////////////////////////////
 
 
 

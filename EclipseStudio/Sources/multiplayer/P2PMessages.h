@@ -92,7 +92,8 @@ enum pkttype_e
 
   //Codex Carros
   PKT_C2C_PlayerOnVehicle, // Server Vehicles
-  PKT_C2C_CarSeat,
+  PKT_C2S_VehicleSet,
+  PKT_C2S_StatusPlayerVehicle,
 
   //Codex SafeLock
   PKT_C2S_SafelockData,
@@ -462,17 +463,22 @@ struct PKT_C2C_PlayerHitStatic_s : public DefaultPacketMixin<PKT_C2C_PlayerHitSt
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Codex Carros
-struct PKT_C2C_CarSeat_s : public DefaultPacketMixin<PKT_C2C_CarSeat> // Server Vehicles
-{
-	int Seat;
-};
-
 struct PKT_C2C_PlayerOnVehicle_s : public DefaultPacketMixin<PKT_C2C_PlayerOnVehicle> // Server Vehicles
 {
-  bool PlayerOnVehicle;
-  gp2pnetid_t	VehicleID;
-  bool ImOwnerCar;
-  int myID;
+	bool PlayerOnVehicle;
+	int VehicleID;
+};
+
+struct PKT_C2S_VehicleSet_s : public DefaultPacketMixin<PKT_C2S_VehicleSet> // Server Vehicles
+{
+	int VehicleID;
+	int PlayerSet;
+};
+
+struct PKT_C2S_StatusPlayerVehicle_s : public DefaultPacketMixin<PKT_C2S_StatusPlayerVehicle> // Server Vehicles
+{
+	int MyID;
+	int PlayerID;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
@@ -889,9 +895,8 @@ struct PKT_S2C_CreateVehicle_s : public DefaultPacketMixin<PKT_S2C_CreateVehicle
 	int			Ocuppants;
 	float	    Gasolinecar;
 	float		DamageCar;
-	r3dVector FirstRotationVector;
-	r3dPoint3D FirstPosition;
-
+	r3dVector	FirstRotationVector;
+	r3dPoint3D	FirstPosition;
 };
 
 struct PKT_S2C_PositionVehicle_s : public DefaultPacketMixin<PKT_S2C_PositionVehicle> // Server Vehicles
@@ -1133,6 +1138,7 @@ struct PKT_C2S_CarKill_s : public DefaultPacketMixin<PKT_C2S_CarKill> // Server 
 	DWORD targetId;
 	bool DieForExplosion;
 	int weaponID;
+	BYTE extra_info;
 };
 
 //Codex Animal

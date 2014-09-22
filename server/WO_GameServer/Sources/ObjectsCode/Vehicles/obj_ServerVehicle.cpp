@@ -2,8 +2,8 @@
 #include "r3dPCH.h"
 
 #include "r3d.h"
-//#include "PhysXWorld.h"
-//#include "ObjManag.h"
+#include "PhysXWorld.h"
+#include "ObjManag.h"
 #include "GameCommon.h"
 
 #include "multiplayer/P2PMessages.h"
@@ -30,6 +30,11 @@ obj_Vehicle::obj_Vehicle() :
  FirstGasolinecar = Gasolinecar;
  FirstDamageCar = DamageCar;
  curTime=0;
+ HaveDriver = 0;
+	for (int i=0;i<=8;i++)
+	{
+		PlayersOnVehicle[i]=0;
+	}
  return;
 }
 
@@ -40,10 +45,7 @@ obj_Vehicle::~obj_Vehicle()
 
 BOOL obj_Vehicle::OnCreate()
 {
-	for (int i=0;i<=8;i++)
-	{
-		PlayersOnVehicle[i]=0;
-	}
+
 	return parent::OnCreate();
 }
 

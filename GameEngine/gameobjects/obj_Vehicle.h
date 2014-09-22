@@ -46,8 +46,6 @@ class obj_Vehicle: public SharedUsableItem
 	float BombTime;
 	bool othershavesound;
 	float	m_sndBreathBaseVolume;
-	bool SoundEnabled;
-	int SoundIDCar;
 	bool Collobject;
 
 	CNetCellMover	netMover;
@@ -64,9 +62,10 @@ public:
 	virtual void SetPosition(const r3dPoint3D& pos);
 	virtual	void SetRotationVector(const r3dVector& Angles);
 	virtual void OnPreRender() { SetBoneMatrices(); }
+	void ExternalSounds();
+	void LocalSounds();
 	void ApplyDamage(int vehicleID, int weaponID);
 	void ExplosionBlast(r3dPoint3D pos);
-	void ExternalSounds();
 	void LightOnOff();
 	bool bOn;
 	class obj_ParticleSystem* m_ParticleTracer;
@@ -75,7 +74,9 @@ public:
 	class obj_ParticleSystem* m_SmallFire;
 	class obj_LightHelper* Light;
 	void*   m_sndVehicleFire;
-	void*	VehicleSnd;
+	void*	m_VehicleSnd;
+	float	rpm;
+	bool HaveDriver;
 
 	void SwitchToDrivable(bool doDrive);
 	const VehicleDescriptor* getVehicleDescriptor() { return vd; }

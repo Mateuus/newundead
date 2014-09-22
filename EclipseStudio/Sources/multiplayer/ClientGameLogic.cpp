@@ -491,6 +491,7 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PositionVehicle) // Server Vehicles
 	GameObject* from = GameWorld().GetNetworkObject(n.spawnID);
 	if(from)
 	{
+		const float fTimePassed = r3dGetFrameTime();
 		obj_Vehicle* ResPawnCar = (obj_Vehicle*)from;
 		if (n.RespawnCar==true)
 		{
@@ -529,7 +530,7 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PositionVehicle) // Server Vehicles
 			{
 			   if (!ResPawnCar->NetworkLocal)
 			   {
-				const float fTimePassed = r3dGetFrameTime();
+				
 				if (ResPawnCar->CollisionCar != NULL)
 				{
 					if (n.DamageCar>0)
@@ -549,7 +550,7 @@ IMPL_PACKET_FUNC(ClientGameLogic, PKT_S2C_PositionVehicle) // Server Vehicles
 				ResPawnCar->RPMPlayer=n.RPMPlayer;
 				ResPawnCar->RotationSpeed=n.RotationSpeed;
 				ResPawnCar->bOn=n.bOn;
-
+				//r3dOutToLog("VehicleID: %i is have %i passengers\n",n.FromID,n.OccupantsVehicle);
 				g_pPhysicsWorld->m_VehicleManager->DoUserCarControl(n.timeStep,true,n.controlData,n.spawnID);
 			   }
 			}

@@ -19,7 +19,6 @@
 #include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_Zombie.h"
 #include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_ZombieDummy.h"
 #include "../../EclipseStudio/Sources/multiplayer/ClientGameLogic.h"
-#include "../../EclipseStudio/Sources/ObjectsCode/Gameplay/obj_Animal.h" //Codex Animal
 
 #include "ObjectsCode/AI/AI_Player.h"
 
@@ -100,17 +99,14 @@ obj_Vehicle::obj_Vehicle()
 obj_Vehicle::~obj_Vehicle()
 {
 	g_pPhysicsWorld->m_VehicleManager->DeleteCar(vd);
-	if( spawner )
-	{
-		spawner->clearVehicle();
-		spawner = NULL;
-	}
+	m_VehicleSnd = NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 void obj_Vehicle::UpdatePositionFromPhysx()
 {
+	R3DPROFILE_FUNCTION("obj_Vehicle::UpdatePositionFromPhysx");
 	if (!vd)
 		return;
 
@@ -134,218 +130,12 @@ void obj_Vehicle::UpdatePositionFromPhysx()
 
 BOOL obj_Vehicle::Update() 
 {
+
+	R3DPROFILE_FUNCTION("obj_Vehicle::Update");
+
 if (!gClientLogic().localPlayer_)
 	return TRUE;
 
-if ( !g_bEditMode )
-{
-	if (this->DamageCar<1)
-	{
-		if (gClientLogic().localPlayer_->ActualVehicle != NULL)
-		{
-			if (gClientLogic().localPlayer_->ActualVehicle == this && this->DamageCar<=0.21)
-			{
-				if (gClientLogic().localPlayer_->isPassenger())
-				{
-					gClientLogic().localPlayer_->exitVehicleHowPassenger();
-				}
-				else if (gClientLogic().localPlayer_->isInVehicle())
-				{
-					gClientLogic().localPlayer_->exitVehicle();
-				}
-			}
-		}
-		this->DamageCar-=0.003f;
-	}
-if (NetworkLocal)
-{
-	if (CollisionCar!=NULL)
-	{
-		if (this->Occupants>0)
-		{
-			GameWorld().DeleteObject( CollisionCar );
-			CollisionCar=NULL;
-		}
-	}
-}
-else {
-  /*if (CollisionCar!=NULL)
-  {
-	  CollisionCar->SetPosition(GetPosition());
-	  CollisionCar->SetRotationVector(GetRotationVector() + r3dPoint3D(90,0,0));
-  }*/
-  if (CollisionCar==NULL)
-  {
-		//CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
-	    CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/vehicles/Drivable_Stryker_Collision.sco", GetPosition () );
-		CollisionCar->SetRotationVector(GetRotationVector() + r3dPoint3D(90,0,0));
-		if (this->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
-			CollisionCar->SetScale(r3dPoint3D(1.46f,0.61f,1.69f));
-		else
-		CollisionCar->SetScale(r3dPoint3D(1.31f,0.49f,1.69f));
-		CollisionCar->SetObjFlags(OBJFLAG_PlayerCollisionOnly);
-		CollisionCar->SetObjFlags(OBJFLAG_SkipDraw);
-  }
-}
-
-if ( !g_bEditMode )
-{
-	if (Occupants<=0)
-		enablesound=false;
-
-if(NetworkLocal)
-{
-	if (vd->vehicle->isInAir())
-		falltime = r3dGetTime() + 1.0f;
-
-	if (oldInAir && !vd->vehicle->isInAir() && Occupants>0 && falltime > 3.0f)
-	{	    
-		    if (enablesound)
-			{
-		    SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Rock"),GetPosition());
-			DamageCar=DamageCar-0.05f;
-		    falltime = 0.0f;
-			}
-			enablesound=true;
-	}
-
-	oldInAir = vd->vehicle->isInAir();
-	float Speed = vd->vehicle->computeForwardSpeed()*2;
-
-
-	if (oldSpeed > 10)
-	{
-		//r3dOutToLog("#### OldSpeed %f Speed %f\n",oldSpeed,Speed);
-		//if (abs(Speed)<=5)
-		if (abs(Speed)<(oldSpeed/2))
-		{
-			SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Metal"),GetPosition());
-			DamageCar=DamageCar-0.01f;
-			Collobject=true; 
-		}
-	}
-	oldSpeed=abs(Speed);
-	oldInAir = vd->vehicle->isInAir();
-	for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
-	{
-		if(obj->isObjType(OBJTYPE_Zombie))
-		{
-			obj_Zombie* zombie = (obj_Zombie*)obj;
-
-			if (!zombie->bDead)
-			{
-				r3dPoint3D FrontKillCar=GetPosition();
-				r3dPoint3D ReverseKillCar=GetPosition();
-				FrontKillCar += r3dPoint3D( 0, ( 1 ), 0 );
-				ReverseKillCar += r3dPoint3D( 0, ( 1 ), 0 );
-				D3DXMATRIX mr2;
-				D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(GetRotationVector().x), R3D_DEG2RAD(GetRotationVector().y), 0);
-				r3dVector KillCarVector = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
-
-				FrontKillCar += KillCarVector*3;
-				ReverseKillCar += -KillCarVector*3;
-
-				float dist = (FrontKillCar - obj->GetPosition()).Length();
-				float dist2 = (ReverseKillCar - obj->GetPosition()).Length();
-
-				if(abs(dist) < 2 && abs(Speed) > 15 || abs(dist2) < 2 && abs(Speed) > 15)
-				{
-					SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Zombie"),GetPosition());
-					zombie->DoDeath();
-					obj_Player* plr = gClientLogic().localPlayer_;
-					PKT_C2S_CarKill_s n;
-					n.weaponID = 6;
-					n.DieForExplosion = false;
-					n.targetId = obj->GetNetworkID();
-					p2pSendToHost(plr, &n, sizeof(n));
-					DamageCar=DamageCar-0.01f;
-				}
-			}
-		}
-		else if(obj->isObjType(OBJTYPE_Animal))
-		{
-			obj_Animal* animal = (obj_Animal*)obj;
-
-			if (!animal->bDead)
-			{
-				r3dPoint3D FrontKillCar=GetPosition();
-				r3dPoint3D ReverseKillCar=GetPosition();
-				FrontKillCar += r3dPoint3D( 0, ( 1 ), 0 );
-				ReverseKillCar += r3dPoint3D( 0, ( 1 ), 0 );
-				D3DXMATRIX mr2;
-				D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(GetRotationVector().x), R3D_DEG2RAD(GetRotationVector().y), 0);
-				r3dVector KillCarVector = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
-
-				FrontKillCar += KillCarVector*3;
-				ReverseKillCar += -KillCarVector*3;
-
-				float dist = (FrontKillCar - obj->GetPosition()).Length();
-				float dist2 = (ReverseKillCar - obj->GetPosition()).Length();
-
-				if(abs(dist) < 2 && abs(Speed) > 15 || abs(dist2) < 2 && abs(Speed) > 15)
-				{
-					SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Zombie"),GetPosition());
-					animal->DoDeath();
-					obj_Player* plr = gClientLogic().localPlayer_;
-					PKT_C2S_CarKill_s n;
-					n.weaponID = 6;
-					n.DieForExplosion = false;
-					n.targetId = obj->GetNetworkID();
-					p2pSendToHost(plr, &n, sizeof(n));
-					DamageCar=DamageCar-0.01f;
-				}
-			}
-		}
-		else if( obj->isObjType(OBJTYPE_Human) )
-		{
-			obj_Player* Player= static_cast< obj_Player* > ( obj );
-
-			if (!Player->bDead && Player->IsOnVehicle == false )
-			{
-								    r3dPoint3D FrontKillCar=GetPosition();
-									r3dPoint3D ReverseKillCar=GetPosition();
-									FrontKillCar += r3dPoint3D( 0, ( 1 ), 0 );
-									ReverseKillCar += r3dPoint3D( 0, ( 1 ), 0 );
-									D3DXMATRIX mr2;
-									D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(GetRotationVector().x), R3D_DEG2RAD(GetRotationVector().y), 0);
-									r3dVector KillCarVector = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
-
-									FrontKillCar += KillCarVector*3;
-									ReverseKillCar += -KillCarVector*3;
-
-								    float dist = (FrontKillCar - Player->GetPosition()).Length();
-									float dist2 = (ReverseKillCar - Player->GetPosition()).Length();
-
-									if(abs(dist) < 2 && abs(Speed) > 15 || abs(dist2) < 2 && abs(Speed) > 15)
-									{
-										    SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/BulletHits/Hit_Death"),GetPosition());    
-											PKT_C2S_CarKill_s n;
-											n.weaponID = 0;
-											n.DieForExplosion = false;
-											n.targetId = Player->GetNetworkID();
-											p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
-											DamageCar=DamageCar-0.01f;
-									}
-			}
-		}
-		else if (obj->Class->Name == "obj_Barricade")
-		{
-			float dist = (this->GetPosition() - obj->GetPosition()).Length();
-			if (dist<4 && Collobject == true)
-			{
-				Collobject=false;
-				PKT_C2S_Temp_Damage_s n;
-				n.targetId = toP2pNetId(obj->GetNetworkID());
-				n.wpnIdx = 0;
-				n.damagePercentage = 200;
-				n.explosion_pos = this->GetPosition();
-				p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
-			}
-		}
-	}
-}
-Collobject=false;
-}
 #ifndef FINAL_BUILD
 
 	if ( g_bEditMode )
@@ -360,63 +150,17 @@ Collobject=false;
 	}
 #endif
 
+if ( !g_bEditMode )
+{
+	LocalSounds();
+	ExternalSounds();
+
 	Light->SetRotationVector(GetRotationVector());
 	Light->SetPosition(GetBBoxWorld().Center()+r3dPoint3D(0,2,0));
-	if (this->Occupants<=0)
+	if (Occupants<=0)
 		bOn=false;
 	LightOnOff();
 
-	if (NetworkLocal)
-	{
-		if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_TOGGLE_FLASHLIGHT))
-		{
-			bOn = !bOn;
-			SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/NewWeapons/Melee/flashlight"), GetPosition());
-		}
-	}
-
-	if (this->Occupants>0 && gClientLogic().localPlayer_->ActualVehicle == this)
-	{
-		if(!hudActionUI->isActive() )
-			hudActionUI->Activate();
-
-		if(hudActionUI->isActive())
-		{
-				int DataDamage = 0;
-				if (DamageCar>=4.5f)
-					DataDamage=100;
-				else if (DamageCar>=3.5f && DamageCar<4.5f)
-					DataDamage=80;
-				else if (DamageCar>=2.5f && DamageCar<3.5f)
-					DataDamage=60;
-				else if (DamageCar>=1.5f && DamageCar<2.5f)
-					DataDamage=40;
-				else if (DamageCar>0.0f && DamageCar<1.5f)
-					DataDamage=20;
-				else if (DamageCar<=0.0f )
-					DataDamage=0;
-
-				int ActualCar = 0;
-				if (strcmp(this->FileName.c_str(),"data/objectsdepot/vehicles/drivable_buggy_02.sco") == 0)
-				{
-					ActualCar=1;
-				}
-				else if (strcmp(this->FileName.c_str(),"data/objectsdepot/vehicles/zombie_killer_car.sco") == 0)
-				{
-					ActualCar=2;
-				}
-				else
-				{
-					ActualCar=3;
-				}
-				if (gClientLogic().localPlayer_->isInVehicle())
-					hudMain->setCarInfo(DataDamage,(int)abs(vd->vehicle->computeForwardSpeed()*2.8),(int)abs(vd->vehicle->computeForwardSpeed()*3.3),(int)GasolineCar,(int)abs(vd->vehicle->mDriveDynData.getEngineRotationSpeed()/10),ActualCar,true);
-				else
-					hudMain->setCarInfo(DataDamage,(int)abs(this->RPMPlayer*2.8),(int)abs(this->RPMPlayer*3.3),(int)GasolineCar,(int)abs(RotationSpeed/10),ActualCar,true);
-			    hudActionUI->Deactivate();
-		}
-
-	}
 		if (this->DamageCar>1 && m_SmallFire != NULL)
 		{
 			this->m_SmallFire->bKill=true;
@@ -462,28 +206,8 @@ Collobject=false;
 
 			m_ParticleTracer = (obj_ParticleSystem*)srv_CreateGameObject("obj_ParticleSystem", "Fire_Large_01", GetPosition() );
 			m_ParticleTracer->RenderScale=1.5f;
-
-            //if (gClientLogic().localPlayer_->ActualVehicle == this)
-			//{
-				/*if (!SoundSys.IsHandleValid(this->m_sndVehicleFire))
-				{
-					if (this->m_sndVehicleFire)
-						SoundSys.Release(this->m_sndVehicleFire);
-						this->m_sndVehicleFire = NULL;
-						this->m_sndVehicleFire = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Ambient/WO_Crossroads16/FireLarge1"), GetPosition());
-						SoundSys.Stop(this->m_sndVehicleFire);
-				}
-				if (!SoundSys.isPlaying(this->m_sndVehicleFire))
-				{
-					SoundSys.Start(this->m_sndVehicleFire);
-					SoundSys.SetSoundPos(this->m_sndVehicleFire,GetPosition());
-				}*/
-				/*if (SoundSys.isPlaying(this->m_sndVehicleFire))
-					SoundSys.SetSoundPos(this->m_sndVehicleFire,GetPosition());*/
-			//}
-		  //}
 		}
-		if (!m_Particlebomb && this->DamageCar>=0.1 && this->DamageCar<=0.2)// && this->Occupants>0)
+		if (!m_Particlebomb && DamageCar>=0.001 && DamageCar<=0.2)// && this->Occupants>0)
 		{
 			m_Particlebomb = (obj_ParticleSystem*)srv_CreateGameObject("obj_ParticleSystem", "explosion_artillerybarrage_01", GetPosition() );
 			SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Effects/Explosions/Bomb01"),GetPosition());
@@ -503,7 +227,6 @@ Collobject=false;
 		{
 			SetRotationVector(r3dPoint3D(GetRotationVector().x,168,GetRotationVector().z));
 			BombTime=0;
-			//ExitVehicle=true;
 			SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Rock"),GetPosition());
 		}
 	}
@@ -524,129 +247,378 @@ Collobject=false;
 		m_Particlebomb->SetPosition(GetPosition());
 	}
 
-	if( NetworkLocal || this->ExitVehicle )
+		if (this->DamageCar<1)
+		{
+			if (gClientLogic().localPlayer_->ActualVehicle != NULL)
+			{
+				if (gClientLogic().localPlayer_->ActualVehicle == this && this->DamageCar<=0.50)
+				{
+					if (gClientLogic().localPlayer_->isPassenger())
+						gClientLogic().localPlayer_->exitVehicleHowPassenger();
+					else if (gClientLogic().localPlayer_->isInVehicle())
+						gClientLogic().localPlayer_->exitVehicle();
+				}
+			}
+			this->DamageCar-=0.003f;
+		}
+
+	if (NetworkLocal) //Start of NetworkLocal
 	{
-		if (this->Occupants>0)
+		if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_TOGGLE_FLASHLIGHT))
 		{
-			if (gClientLogic().localPlayer_->ActualVehicle == this && gClientLogic().localPlayer_->isInVehicle())
-			{
-				if (!this->SoundEnabled)
-				{
-					this->VehicleSnd = SoundSys.Play(SoundIDCar, this->GetPosition(),true);
-					this->SoundEnabled=true;
-					SoundSys.Start(this->VehicleSnd);
-				}
-			}
-
+			bOn = !bOn;
+			SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/NewWeapons/Melee/flashlight"), GetPosition());
 		}
 
-		if (GasolineCar<=0.9 || DamageCar<=0)
-			      bOn = false;
-		if (this->DamageCar>0 || this->ExitVehicle)
+		if (CollisionCar!=NULL)
 		{
-			float waterDepth = getWaterDepthAtPos(GetPosition());
-			if(waterDepth > 1.3f) // too deep
+			if (this->Occupants>0)
 			{
-				this->DamageCar=0.21f;
-				DestroyOnWater=true;
+				GameWorld().DeleteObject( CollisionCar );
+				CollisionCar=NULL;
 			}
-			if (!ExitVehicle)
+		}
+
+		if (Occupants<=0)
+			enablesound=false;
+
+		if (vd->vehicle->isInAir())
+			falltime = r3dGetTime() + 1.0f;
+
+		if (oldInAir && !vd->vehicle->isInAir() && Occupants>0 && falltime > 3.0f)
+		{	    
+		    if (enablesound)
 			{
-				if (SoundEnabled)
+		    SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Rock"),GetPosition());
+			DamageCar=DamageCar-0.05f;
+		    falltime = 0.0f;
+			}
+			enablesound=true;
+		}
+
+		oldInAir = vd->vehicle->isInAir();
+		float Speed = vd->vehicle->computeForwardSpeed()*2;
+
+		if (oldSpeed > 10)
+		{
+			if (abs(Speed)<(oldSpeed/2))
+			{
+				SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Metal"),GetPosition());
+				DamageCar=DamageCar-0.01f;
+				Collobject=true; 
+			}
+		}
+		oldSpeed=abs(Speed);
+		oldInAir = vd->vehicle->isInAir();
+
+		for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
+		{
+			if(obj->isObjType(OBJTYPE_Zombie))
+			{
+				obj_Zombie* zombie = (obj_Zombie*)obj;
+
+				if (!zombie->bDead)
 				{
-					if (this->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+					r3dPoint3D FrontKillCar=GetPosition();
+					r3dPoint3D ReverseKillCar=GetPosition();
+					FrontKillCar += r3dPoint3D( 0, ( 1 ), 0 );
+					ReverseKillCar += r3dPoint3D( 0, ( 1 ), 0 );
+					D3DXMATRIX mr2;
+					D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(GetRotationVector().x), R3D_DEG2RAD(GetRotationVector().y), 0);
+					r3dVector KillCarVector = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
+
+					FrontKillCar += KillCarVector*3;
+					ReverseKillCar += -KillCarVector*3;
+
+					float dist = (FrontKillCar - obj->GetPosition()).Length();
+					float dist2 = (ReverseKillCar - obj->GetPosition()).Length();
+
+					if(abs(dist) < 2 && abs(Speed) > 15 || abs(dist2) < 2 && abs(Speed) > 15)
 					{
-						float rpm = R3D_MIN(abs(vd->vehicle->computeForwardSpeed()*170) , 9000.0f);
-						SoundSys.SetParamValue(VehicleSnd,"rpm",rpm);
-					}
-					else {
-						float rpm = R3D_MIN(abs(vd->vehicle->computeForwardSpeed()*250) , 9000.0f);
-						SoundSys.SetParamValue(VehicleSnd,"rpm",rpm);
+						SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Zombie"),GetPosition());
+						zombie->DoDeath();
+						obj_Player* plr = gClientLogic().localPlayer_;
+						PKT_C2S_CarKill_s n;
+						n.weaponID = 6;
+						n.DieForExplosion = false;
+						n.targetId = obj->GetNetworkID();
+						p2pSendToHost(plr, &n, sizeof(n));
+						DamageCar=DamageCar-0.01f;
 					}
 				}
-			if (Occupants>0)
+			}
+			else if( obj->isObjType(OBJTYPE_Human) )
 			{
-				if(GasolineCar>=0.9)
-					GasolineCar=GasolineCar-0.005f;
+				obj_Player* Player= static_cast< obj_Player* > ( obj );
+
+				if (!Player->bDead && Player->IsOnVehicle == false )
+				{
+					r3dPoint3D FrontKillCar=GetPosition();
+					r3dPoint3D ReverseKillCar=GetPosition();
+					FrontKillCar += r3dPoint3D( 0, ( 1 ), 0 );
+					ReverseKillCar += r3dPoint3D( 0, ( 1 ), 0 );
+					D3DXMATRIX mr2;
+					D3DXMatrixRotationYawPitchRoll(&mr2, R3D_DEG2RAD(GetRotationVector().x), R3D_DEG2RAD(GetRotationVector().y), 0);
+					r3dVector KillCarVector = r3dVector(mr2 ._31, mr2 ._32, mr2 ._33);
+
+					FrontKillCar += KillCarVector*3;
+					ReverseKillCar += -KillCarVector*3;
+
+					float dist = (FrontKillCar - Player->GetPosition()).Length();
+					float dist2 = (ReverseKillCar - Player->GetPosition()).Length();
+
+					if(abs(dist) < 2 && abs(Speed) > 15 || abs(dist2) < 2 && abs(Speed) > 15)
+					{
+						SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/BulletHits/Hit_Death"),GetPosition());    
+						PKT_C2S_CarKill_s n;
+						n.weaponID = 0;
+						n.DieForExplosion = false;
+						n.targetId = Player->GetNetworkID();
+						p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
+						DamageCar=DamageCar-0.01f;
+					}
+				}
+			}
+			else if (obj->Class->Name == "obj_Barricade")
+			{
+				float dist = (this->GetPosition() - obj->GetPosition()).Length();
+				if (dist<4 && Collobject == true)
+				{
+				Collobject=false;
+				PKT_C2S_Temp_Damage_s n;
+				n.targetId = toP2pNetId(obj->GetNetworkID());
+				n.wpnIdx = 0;
+				n.damagePercentage = 200;
+				n.explosion_pos = this->GetPosition();
+				p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
+				}
+			}
+		}
+		Collobject=false;
+
+		if (this->Occupants>0 && gClientLogic().localPlayer_->ActualVehicle == this)
+		{
+			if(!hudActionUI->isActive() )
+				hudActionUI->Activate();
+
+			if(hudActionUI->isActive())
+			{
+				int DataDamage = 0;
+				if (DamageCar>=4.5f)
+					DataDamage=100;
+				else if (DamageCar>=3.5f && DamageCar<4.5f)
+					DataDamage=80;
+				else if (DamageCar>=2.5f && DamageCar<3.5f)
+					DataDamage=60;
+				else if (DamageCar>=1.5f && DamageCar<2.5f)
+					DataDamage=40;
+				else if (DamageCar>0.0f && DamageCar<1.5f)
+					DataDamage=20;
+				else if (DamageCar<=0.0f )
+					DataDamage=0;
+
+				int ActualCar = 0;
+				if (strcmp(this->FileName.c_str(),"data/objectsdepot/vehicles/drivable_buggy_02.sco") == 0)
+				{
+					ActualCar=1;
+				}
+				else if (strcmp(this->FileName.c_str(),"data/objectsdepot/vehicles/zombie_killer_car.sco") == 0)
+				{
+					ActualCar=2;
+				}
 				else
-					GasolineCar=0;
-				}
-			}
-			PKT_S2C_PositionVehicle_s n; // Server Vehicles
-			if (gClientLogic().localPlayer_->ActualVehicle!=NULL)
-			{
-				n.spawnID = gClientLogic().localPlayer_->ActualVehicle->GetNetworkID();
-				n.spawnPos= gClientLogic().localPlayer_->ActualVehicle->GetPosition();
-				n.RotationPos = gClientLogic().localPlayer_->ActualVehicle->GetRotationVector();
-			}
-			else {
-				n.spawnID = this->GetNetworkID();
-				n.spawnPos= this->GetPosition();
-				n.RotationPos = this->GetRotationVector();
-			}
-		    n.OccupantsVehicle=Occupants;
-			n.GasolineCar=GasolineCar;
-			n.DamageCar=DamageCar;
-			n.RespawnCar=false;
-			n.bOn=bOn;
-			n.controlData=g_pPhysicsWorld->m_VehicleManager->carControlData;
-			n.timeStep=g_pPhysicsWorld->m_VehicleManager->timeStepGet;
-			if (gClientLogic().localPlayer_->isInVehicle())
-			{
-				n.RPMPlayer=g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed();
-				n.RotationSpeed=g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->mDriveDynData.getEngineRotationSpeed();
-			}
-			else {
-				n.RPMPlayer=0;
-				n.RotationSpeed=0;
-			}
-			p2pSendToHost(this, &n, sizeof(n));
-			this->ExitVehicle=false;
-		}
-
-		if(this->GasolineCar<=0.9 && (vd->vehicle->computeForwardSpeed()*2<1) )
-		{
-				if (SoundEnabled)
 				{
-					SoundSys.Stop(this->VehicleSnd); 
-					this->SoundEnabled=false;
+					ActualCar=3;
 				}
+				if (gClientLogic().localPlayer_->isInVehicle())
+					hudMain->setCarInfo(DataDamage,(int)abs(vd->vehicle->computeForwardSpeed()*2.8),(int)abs(vd->vehicle->computeForwardSpeed()*3.3),(int)GasolineCar,(int)abs(vd->vehicle->mDriveDynData.getEngineRotationSpeed()/10),ActualCar,true);
+				else
+					hudMain->setCarInfo(DataDamage,(int)abs(this->RPMPlayer*2.8),(int)abs(this->RPMPlayer*3.3),(int)GasolineCar,(int)abs(RotationSpeed/10),ActualCar,true);
+			    hudActionUI->Deactivate();
+			}
 		}
+		if( NetworkLocal || this->ExitVehicle )
+		{
+			if (GasolineCar<=0.9 || DamageCar<=0)
+			      bOn = false;
+			if (this->DamageCar>0 || this->ExitVehicle)
+			{
+				float waterDepth = getWaterDepthAtPos(GetPosition());
+				if(waterDepth > 1.3f) // too deep
+				{
+					DamageCar=0.9f;
+					DestroyOnWater=true;
+				}
+				if (!ExitVehicle)
+				{
+					if (Occupants>0)
+					{
+						if(GasolineCar>=0.9)
+							GasolineCar=GasolineCar-0.005f;
+						else
+							GasolineCar=0;
+					}
+				}
+				PKT_S2C_PositionVehicle_s n;
+				if (gClientLogic().localPlayer_->ActualVehicle!=NULL)
+				{
+					n.spawnID = gClientLogic().localPlayer_->ActualVehicle->GetNetworkID();
+					n.spawnPos= gClientLogic().localPlayer_->ActualVehicle->GetPosition();
+					n.RotationPos = gClientLogic().localPlayer_->ActualVehicle->GetRotationVector();
+				}
+				else {
+					n.spawnID = this->GetNetworkID();
+					n.spawnPos= this->GetPosition();
+					n.RotationPos = this->GetRotationVector();
+				}
+				n.OccupantsVehicle=Occupants;
+				n.GasolineCar=GasolineCar;
+				n.DamageCar=DamageCar;
+				n.RespawnCar=false;
+				n.bOn=bOn;
+				n.controlData=g_pPhysicsWorld->m_VehicleManager->carControlData;
+				n.timeStep=g_pPhysicsWorld->m_VehicleManager->timeStepGet;
+				if (gClientLogic().localPlayer_->isInVehicle())
+				{
+					n.RPMPlayer=g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->computeForwardSpeed();
+					n.RotationSpeed=g_pPhysicsWorld->m_VehicleManager->getRealDrivenVehicle()->vd->vehicle->mDriveDynData.getEngineRotationSpeed();
+				}
+				else {
+					n.RPMPlayer=0;
+					n.RotationSpeed=0;
+				}
+				p2pSendToHost(this, &n, sizeof(n));
+				this->ExitVehicle=false;
+			}
+		
+			if(this->GasolineCar<=0.9 && (vd->vehicle->computeForwardSpeed()*2<1) )
+			{
+				if(SoundSys.isPlaying(m_VehicleSnd))
+				{
+					SoundSys.Stop(m_VehicleSnd);
+				}
+			}
+		}
+	} // End of NetworkLocal
+	else { //Start of !NetworkLocal
+
+			if (CollisionCar==NULL)
+			{
+				CollisionCar = (obj_Building*)srv_CreateGameObject("obj_Building", "data/objectsdepot/env_collision/CollisionCar.sco", GetPosition () );
+				CollisionCar->SetRotationVector(GetRotationVector() + r3dPoint3D(90,0,0));
+				if (this->FileName == "data/objectsdepot/vehicles/Drivable_Stryker.sco")
+					CollisionCar->SetScale(r3dPoint3D(1.46f,0.61f,1.69f));
+				else
+					CollisionCar->SetScale(r3dPoint3D(1.31f,0.49f,1.69f));
+					CollisionCar->SetObjFlags(OBJFLAG_SkipDraw);
+			}
+
+	}//End of !NetworkLocal
+
+	if(Occupants<=0 && SoundSys.isPlaying(m_VehicleSnd))
+	{
+		if (HaveDriver)
+		{
+			HaveDriver=false;
+			if (DamageCar>0 && GasolineCar>=1)
+			{
+				if (FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+					SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Stop"), GetPosition());
+				else
+					SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Stop"), GetPosition());		
+			}
+		}
+		SoundSys.Stop(m_VehicleSnd);
+		m_VehicleSnd = 0;
 	}
-	else {
-
-		if (this->DamageCar<=0)
-		{
-				if (SoundEnabled)
-				{
-					SoundSys.Stop(this->VehicleSnd); 
-					this->SoundEnabled=false;
-				}
-		}
-	    if (this->Occupants<=0)
-		{
-				if (SoundEnabled)
-				{
-					SoundSys.Stop(this->VehicleSnd); 
-					this->SoundEnabled=false;
-				}
-		}
-		if(this->GasolineCar<=0.9 && (RPMPlayer*2<1) )
-		{
-			if (SoundEnabled)
-			{
-				SoundSys.Stop(this->VehicleSnd); 
-				this->SoundEnabled=false;
-			}
-		}
-			//ExternalSounds();
-	}
-
 }
 	return TRUE;
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+void obj_Vehicle::ExternalSounds()
+{
+	R3DPROFILE_FUNCTION("ExternalSounds");
+	if (NetworkLocal) return;
+	if (Occupants<1) return;
+
+	if (Occupants>0 && HaveDriver==false)
+	{
+		if (GasolineCar>0)
+		{
+			if (FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+			{
+				SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngine_Start"), GetPosition());
+			}
+			else {
+				SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngine_Start"), GetPosition());
+			}
+		}
+		HaveDriver=true;
+	}
+
+	float Speed = RPMPlayer*2;
+
+	if (oldSpeed > 10)
+	{
+		if (abs(Speed)<(oldSpeed/2))
+		{
+			SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Metal"),GetPosition());
+		}
+	}
+	oldSpeed=abs(Speed);
+
+	if (!m_VehicleSnd)
+	{
+		if (FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+			m_VehicleSnd = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngineLoop"), GetPosition());
+		else 
+			m_VehicleSnd = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngineLoop"), GetPosition());
+	}
+
+	if (FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+	{
+		SoundSys.SetSoundPos(m_VehicleSnd, GetPosition());
+		rpm = R3D_MIN(abs(RPMPlayer*170) , 9000.0f);
+		SoundSys.SetParamValue(m_VehicleSnd, "rpm", rpm);
+	}
+	else {
+		SoundSys.SetSoundPos(m_VehicleSnd, GetPosition());
+		rpm = R3D_MIN(abs(RPMPlayer*250) , 9000.0f);
+		SoundSys.SetParamValue(m_VehicleSnd, "rpm", rpm);
+	}
+}
+
+void obj_Vehicle::LocalSounds()
+{
+	R3DPROFILE_FUNCTION("LocalSounds");
+
+	if (!NetworkLocal) return;
+	if (Occupants<1) return;
+	if (!gClientLogic().localPlayer_) return;
+	if (!gClientLogic().localPlayer_->isInVehicle()) return;
+
+	if (!m_VehicleSnd)
+	{
+		if (FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+			m_VehicleSnd = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngineLoop"), GetPosition());
+		else 
+			m_VehicleSnd = SoundSys.Play(SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngineLoop"), GetPosition());
+	}
+
+	if (FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
+	{
+		SoundSys.SetSoundPos(m_VehicleSnd, GetPosition());
+		rpm = R3D_MIN(abs(vd->vehicle->computeForwardSpeed()*170) , 9000.0f);
+		SoundSys.SetParamValue(m_VehicleSnd,"rpm",rpm);
+	}
+	else {
+		SoundSys.SetSoundPos(m_VehicleSnd, GetPosition());
+		rpm = R3D_MIN(abs(vd->vehicle->computeForwardSpeed()*250) , 9000.0f);
+		SoundSys.SetParamValue(m_VehicleSnd,"rpm",rpm);
+	}
+}
 
 void obj_Vehicle::ApplyDamage(int vehicleID, int weaponID)
 {
@@ -655,7 +627,7 @@ void obj_Vehicle::ApplyDamage(int vehicleID, int weaponID)
 	{
 		bool exitboon = false;
 		obj_Vehicle* Vehicle = (obj_Vehicle*)from;
-		if (Vehicle->DamageCar<=0.21)
+		if (Vehicle->DamageCar<1)
 			return;
 
 	if (gClientLogic().localPlayer_)
@@ -674,14 +646,14 @@ void obj_Vehicle::ApplyDamage(int vehicleID, int weaponID)
 				}
 				else
 				{
-					gClientLogic().localPlayer_->ActualVehicle->DamageCar=0.21f;
+					gClientLogic().localPlayer_->ActualVehicle->DamageCar=0.99f;
 					Vehicle->DamageCar=gClientLogic().localPlayer_->ActualVehicle->DamageCar;
 					Vehicle->ExitVehicle=true;
 					exitboon=true;
-					if (gClientLogic().localPlayer_->isPassenger())
+					/*if (gClientLogic().localPlayer_->isPassenger())
 						gClientLogic().localPlayer_->exitVehicleHowPassenger();
 					else if (gClientLogic().localPlayer_->isInVehicle())
-						gClientLogic().localPlayer_->exitVehicle();
+						gClientLogic().localPlayer_->exitVehicle();*/
 				}
 			}
 			else
@@ -691,15 +663,15 @@ void obj_Vehicle::ApplyDamage(int vehicleID, int weaponID)
 				else
 					gClientLogic().localPlayer_->ActualVehicle->DamageCar-=0.1f;
 				
-				if (gClientLogic().localPlayer_->ActualVehicle->DamageCar<=0.21)
+				if (gClientLogic().localPlayer_->ActualVehicle->DamageCar<=0.50)
 				{
 					Vehicle->DamageCar=gClientLogic().localPlayer_->ActualVehicle->DamageCar;
 					Vehicle->ExitVehicle=true;
 					exitboon=true;
-					if (gClientLogic().localPlayer_->isPassenger())
+					/*if (gClientLogic().localPlayer_->isPassenger())
 						gClientLogic().localPlayer_->exitVehicleHowPassenger();
 					else if (gClientLogic().localPlayer_->isInVehicle())
-						gClientLogic().localPlayer_->exitVehicle();
+						gClientLogic().localPlayer_->exitVehicle();*/
 				}
 				else {
 					return;
@@ -715,7 +687,7 @@ void obj_Vehicle::ApplyDamage(int vehicleID, int weaponID)
 			if (Vehicle->DamageCar>2.6)
 				Vehicle->DamageCar=2.5f;
 			else
-				Vehicle->DamageCar=0.21f;
+				Vehicle->DamageCar=0.99f;
 		}
 		else
 		Vehicle->DamageCar-=0.1f;
@@ -743,7 +715,6 @@ void obj_Vehicle::ExplosionBlast(r3dPoint3D pos)
 				float dist = (pos - zombie->GetPosition()).Length();
 				if(dist < 9)
 				{
-					//r3dOutToLog("####### MUEREN ELLOS\n");
 					SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Zombie"),pos);
 					obj_Player* plr = gClientLogic().localPlayer_;
 					PKT_C2S_CarKill_s n;
@@ -753,28 +724,7 @@ void obj_Vehicle::ExplosionBlast(r3dPoint3D pos)
 					p2pSendToHost(plr, &n, sizeof(n));
 				}
 			}
-		}
-		if(obj->isObjType(OBJTYPE_Animal))
-		{
-			obj_Animal* animal = (obj_Animal*)obj;
-
-			if (!animal->bDead)
-			{
-				float dist = (pos - animal->GetPosition()).Length();
-				if(dist < 9)
-				{
-					SoundSys.PlayAndForget(SoundSys.GetEventIDByPath("Sounds/Vehicles/Crashes/Crash_Zombie"),GetPosition());
-					animal->DoDeath();
-					obj_Player* plr = gClientLogic().localPlayer_;
-					PKT_C2S_CarKill_s n;
-					n.weaponID = 0;
-					n.DieForExplosion = false;
-					n.targetId = obj->GetNetworkID();
-					p2pSendToHost(plr, &n, sizeof(n));
-				}
-			}
-		}
-		
+		}		
 	}
 
 		float dist = (pos - gClientLogic().localPlayer_->GetPosition()).Length();
@@ -791,61 +741,10 @@ void obj_Vehicle::ExplosionBlast(r3dPoint3D pos)
 			n.weaponID = 0;
 			n.targetId = gClientLogic().localPlayer_->GetNetworkID();
 			p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
-			//r3dOutToLog("####### MUERO YO\n");
 		}
 
 }
-void obj_Vehicle::ExternalSounds()
-{
-			if (this == NULL)
-				return;
-			if (this->Occupants>0)
-			{
-				bool haveSound = true;
-				float volume;
-				if (gClientLogic().localPlayer_)
-				{
-					float dist = (this->GetPosition() - gClientLogic().localPlayer_->GetPosition()).Length();
-					if (dist>101)
-						haveSound=false;
-					volume = 1.0f-(dist/100);
-					if (volume<0)
-						volume=0.0f;
-					r3dOutToLog("Distance of player %f - Volumen %f\n",dist,volume);
-				}
 
-				if (!SoundEnabled)
-				{
-					SoundEnabled=true;
-					this->VehicleSnd = SoundSys.Play(SoundIDCar, this->GetPosition(),true);
-				}
-				if (haveSound)
-				{
-					SoundSys.SetProperty(this->VehicleSnd, FMOD_EVENTPROPERTY_VOLUME, &volume);
-					SoundSys.Start(this->VehicleSnd);
-				}
-				else if (haveSound==false)
-				{
-					SoundSys.Stop(this->VehicleSnd);
-				}				
-				if (SoundEnabled)
-				{
-				  if (haveSound)
-				  {
-					if (this->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
-					{
-						float rpm = R3D_MIN(abs(RPMPlayer*170) , 9000.0f);
-						SoundSys.SetParamValue(this->VehicleSnd,"rpm",rpm);
-					}
-					else {
-						float rpm = R3D_MIN(abs(RPMPlayer*250) , 9000.0f);
-						SoundSys.SetParamValue(this->VehicleSnd,"rpm",rpm);
-					}
-				  }
-				}
-			}
-
-}
 void obj_Vehicle::LightOnOff()
 {
 if ( !g_bEditMode )
@@ -867,6 +766,7 @@ if ( !g_bEditMode )
 
 BOOL obj_Vehicle::OnCreate()
 {
+	R3DPROFILE_FUNCTION("obj_Vehicle::OnCreate");
 
 	m_ActionUI_Title = gLangMngr.getString("$Vehicle");
 	m_ActionUI_Msg = gLangMngr.getString("$EnterVehicle");
@@ -875,6 +775,9 @@ BOOL obj_Vehicle::OnCreate()
 		return FALSE;
 
 	r3dMesh *m = MeshLOD[0];
+	m_VehicleSnd = 0;
+	HaveDriver = false;
+
 	if (!m)
 		return FALSE;
 
@@ -891,7 +794,6 @@ BOOL obj_Vehicle::OnCreate()
 		vd->owner = this;
 		othershavesound=false;
 		enablesound=false;
-		SoundEnabled=false;
 		ExitVehicle=false;
 		Collobject=false;
 		if ( !g_bEditMode )
@@ -919,10 +821,7 @@ BOOL obj_Vehicle::OnCreate()
 		Light->innerRadius = 0.0f;
 		Light->outerRadius = 0.0f;
 		Light->bKilled = false;
-		if (this->FileName == "data/objectsdepot/vehicles/drivable_buggy_02.sco")
-			SoundIDCar = SoundSys.GetEventIDByPath("Sounds/Vehicles/DuneBuggyEngineLoop");
-		else 
-			SoundIDCar = SoundSys.GetEventIDByPath("Sounds/Vehicles/StrykerEngineLoop");
+
 		}
 	}
 
@@ -948,7 +847,7 @@ if ( !g_bEditMode )
 		Light = NULL;
 	}
 }
-    if(VehicleSnd) { SoundSys.Release(VehicleSnd); VehicleSnd = NULL;}
+    m_VehicleSnd = NULL;
 
 	if (vd)
 		vd->owner = 0;
@@ -1172,40 +1071,6 @@ const bool obj_Vehicle::getExitSpace( r3dVector& outVector, int exitIndex )
 BOOL obj_Vehicle::OnNetReceive(DWORD EventID, const void* packetData, int packetSize)
 {
 	r3d_assert(!(ObjFlags & OBJFLAG_JustCreated)); // make sure that object was actually created before processing net commands
-
-	switch(EventID)
-	{
-	default: return FALSE;
-
-	case PKT_S2C_PositionVehicle:
-		{
-				const PKT_S2C_PositionVehicle_s& n = *(PKT_S2C_PositionVehicle_s*)packetData;
-				r3d_assert(packetSize == sizeof(n));
-				if (!NetworkLocal)
-				{
-						/*GameObject* from = GameWorld().GetNetworkObject(n.spawnID);
-						if(from)
-						{
-								if (n.spawnID == this->GetNetworkID())
-								{
-									    const float fTimePassed = r3dGetFrameTime();
-										this->SetRotationVector(n.RotationPos);
-										this->SetPosition(n.spawnPos + fTimePassed);
-										this->Occupants=n.OccupantsVehicle;
-									    this->GasolineCar=n.GasolineCar;
-										this->DamageCar=n.DamageCar;
-										this->RPMPlayer=n.RPMPlayer;
-										this->RotationSpeed=n.RotationSpeed;
-
-										g_pPhysicsWorld->m_VehicleManager->DoUserCarControl(n.timeStep,true,n.controlData,n.spawnID);
-
-				        //r3dOutToLog("######## EL OTRO COCHE SE MUEVE:\n %s\n Posicion X: %f\n Posicion Y: %f\n Posicion Z: %f\n",from->FileName,n.spawnPos.x,n.spawnPos.y,n.spawnPos.z);
-								}
-						}*/
-				}
-			break;
-		}
-	}
 
 	return TRUE;
 }
