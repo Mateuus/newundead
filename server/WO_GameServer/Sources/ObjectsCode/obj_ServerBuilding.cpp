@@ -62,8 +62,12 @@ BOOL obj_ServerBuilding::OnDestroy()
 BOOL obj_ServerBuilding::OnCreate()
 {
 	//ObjFlags |= OBJFLAG_SkipCastRay;
-	distToCreateSq = 512 * 512;
-	distToDeleteSq = 600 * 600;
+	/*distToCreateSq = 512 * 512;
+	distToDeleteSq = 600 * 600;*/
+
+	distToCreateSq = 1800 * 1800;
+	distToDeleteSq = 1500 * 1500;
+
 	//SetNetworkID(gServerLogic.GetFreeNetId());
 	parent::OnCreate();
 	NetworkLocal = true;
