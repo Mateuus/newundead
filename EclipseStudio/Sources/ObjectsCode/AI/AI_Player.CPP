@@ -1115,7 +1115,9 @@ BOOL obj_Player::OnCreate()
 	parent::OnCreate();
 	strcpy(StatePlayerVehicle,"");//Codex Carros
 	punchtime=0;//Codex Soco
+	SoundPunch=NULL;//Codex Soco
 	ShowCrosshair=true;//Codex Mira
+
 
 #if VEHICLES_ENABLED//Codex Carros
 	vehicleViewActive_ = VehicleView_None;
@@ -2111,9 +2113,9 @@ if (isInVehicle() || isPassenger())
 		//Codex Soco
 		if (!needExit)
 		{
-			if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_PRIMARY_FIRE) && bAllowToUseWeapons && !bProne)  // Unarmed Combat
+			if (InputMappingMngr->wasPressed(r3dInputMappingMngr::KS_PRIMARY_FIRE) || InputMappingMngr->isPressed(r3dInputMappingMngr::KS_PRIMARY_FIRE) && bAllowToUseWeapons && !bProne)  // Unarmed Combat
 			{
-					if ((r3dGetTime() - punchtime) > 1)
+					if ((r3dGetTime() - punchtime) > 0.4 && NetworkLocal)
 					{
 						if (hudMain)
 						{
@@ -2891,14 +2893,14 @@ void obj_Player::executeWeaponFireLocalPlayer(const r3dPoint3D& from, float reco
 	//Codex Soco
 	if(forcedEmptyHands)
 	{
-		wpn = m_Weapons[7];
-		if (wpn == NULL)
-		{
+		//wpn = m_Weapons[7];
+		//if (wpn == NULL)
+		//{
 			bool isFirstPerson = g_camera_mode->GetInt()==2 && NetworkLocal;
 			const WeaponConfig* wcfg2 = g_pWeaponArmory->getWeaponConfig(101399); // Temporal
 			m_Weapons[7] = new Weapon(this, 7, wcfg2, isFirstPerson, true, NULL); // Temporal
 			wpn = m_Weapons[7];
-		}
+		//}
 	}
 	//r3d_assert(wpn);
 	//r3d_assert(!wpn->isUsableItem());
@@ -4050,11 +4052,17 @@ BOOL obj_Player::Update()
 	///////////////////////////////////////////
 	//Codex Soco
 	
-	if ((r3dGetTime() - punchtime) > 0.5)
-	{
-		if (hudMain)
-		SoundSys.Stop(SoundPunch);
-	}
+	if (NetworkLocal)
+    {
+		if ((r3dGetTime() - punchtime) > 0.5)
+		{
+			if (hudMain && SoundPunch != NULL)
+			{
+				if (SoundSys.isPlaying(SoundPunch))
+						SoundSys.Stop(SoundPunch);
+			}
+		}
+   }
 
 	///////////////////////////////////////////
 
@@ -5850,6 +5858,13 @@ void obj_Player::OnNetPacket(const PKT_C2S_VehicleSet_s& n)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
+//Codex Soco
+void obj_Player::OnNetPacket(const PKT_C2C_UnarmedCombat_s& n)
+{
+	if (!NetworkLocal)
+			uberAnim_->UnarmedCombat(true,n.UnarmedCombat);
+}
+/////////////////////////////////////////////////////////////////////////////////////////
 
 void obj_Player::OnNetPacket(const PKT_C2C_PlayerHitStatic_s& n)
 {
@@ -6193,10 +6208,11 @@ case xxx: { \
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_S2C_SetPlayerReputation);
 	    DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_PlayerOnVehicle); // Server Vehicles //Codex Carros
 		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_VehicleSet);//Codex Carros
+		DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2C_UnarmedCombat);//Codex Soco
 		//DEFINE_GAMEOBJ_PACKET_HANDLER(PKT_C2S_SetVelocity);
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Codex Soco
-		case PKT_C2C_UnarmedCombat: // Unarmed Combat
+		/*case PKT_C2C_UnarmedCombat: // Unarmed Combat
 		{
  	        if(!NetworkLocal)
 	        {
@@ -6208,7 +6224,7 @@ case xxx: { \
 				//}
 			}
 			break;
-		}
+		}*/
 	   ////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
@@ -8869,59 +8885,23 @@ bool ProcessBulletHit( int &damageFromPiercable, GameObject* owner, const r3dPoi
 	else if (weaponInfo->m_itemID == 101399)//Codex Soco
 	{
 		if(ownerPlayer && shootTarget != NULL)
-		{
+		{	
 			char bloodpunch[512];
-			if (shootTarget->isObjType(OBJTYPE_Human) || shootTarget->isObjType(OBJTYPE_Zombie) || shootTarget->isObjType(OBJTYPE_Animal))
+			if (shootTarget->isObjType(OBJTYPE_Human) || shootTarget->isObjType(OBJTYPE_Zombie))
 			{
 				PKT_C2S_CarKill_s n;
 				n.weaponID = 101399;
 				n.DieForExplosion = false;
 				n.targetId = shootTarget->GetNetworkID();
+				n.extra_info = strcmp("Bip01_Head", hitActorName) == 0 ? 1 : 0;
 				p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
+
 				strcpy(bloodpunch,"player");
+				ownerPlayer->AddBloodOnGround(hitPoint);
 			}
 			else
 				strcpy(bloodpunch,"Thirst");
-
-				char NameOfMaterial[128];
-				if (shootMaterial)
-				{
-					sprintf(NameOfMaterial,"%s",shootMaterial->TypeName);
-					if (strstr(strupr(NameOfMaterial), "ANIMAL_DEER"))//Codex Animal
-					{
-						for( GameObject* obj = GameWorld().GetFirstObject(); obj; obj = GameWorld().GetNextObject(obj) )
-						{
-							       ///////////////////////////////////////////////////////////////////
-							       //Codex Animal
-									if(obj->isObjType(OBJTYPE_Animal))
-									{
-										obj_Animal* animal = (obj_Animal*)obj;
-										int AnimalHit = animal->GetNetworkID();
-							            int weaponID = weaponInfo->m_itemID;
-										if (animal)
-										{
-											float dist = (shootTarget->GetPosition() - animal->GetPosition()).Length();
-
-											if (dist <= 0.2f)
-											{	
-												if (weaponInfo->m_itemID != NULL)
-												{	
-							                        PKT_C2S_AnimalKill_s n;
-		                                            n.targetId = AnimalHit;
-		                                            n.weaponID = weaponID;
-		                                            p2pSendToHost(gClientLogic().localPlayer_, &n, sizeof(n));
-													strcpy(bloodpunch,"player");
-													break;
-												}
-										}
-									}
-								  ///////////////////////////////////////////////////////////////////////
-							    }
-							}
-					  }
-				}
-				ownerPlayer->AddBloodOnGround(hitPoint);
-				SpawnImpactParticle(r3dHash::MakeHash(bloodpunch),r3dHash::MakeHash(weaponInfo->m_PrimaryAmmo->getDecalSource()), hitPoint, hitNormal);
+			SpawnImpactParticle(r3dHash::MakeHash(bloodpunch),r3dHash::MakeHash(weaponInfo->m_PrimaryAmmo->getDecalSource()), hitPoint, hitNormal);
 		}
 	}
 	else if(shootTarget && shootTarget->isObjType(OBJTYPE_Human)) // hit other player

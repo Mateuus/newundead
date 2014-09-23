@@ -448,6 +448,7 @@ public:
 	void			 OnNetPacket(const PKT_S2C_SetPlayerReputation_s& n);
 	void			 OnNetPacket(const PKT_C2C_PlayerOnVehicle_s& n);  // Server Vehicles //Codex Carros
 	void			 OnNetPacket(const PKT_C2S_VehicleSet_s& n);//Codex Carros
+	void			 OnNetPacket(const PKT_C2C_UnarmedCombat_s& n);//Codex Soco
 
 	virtual void		UpdateTransform();
 

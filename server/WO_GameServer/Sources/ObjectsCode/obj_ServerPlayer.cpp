@@ -4966,17 +4966,20 @@ void obj_ServerPlayer::OnNetPacket(const PKT_C2S_CarKill_s& n) // Server Vehicle
 
 	if (n.weaponID==101399)//Codex Soco
 	{
+		int isHead = (n.extra_info == 1);
 		if (target->isObjType(OBJTYPE_Zombie))
-			gServerLogic.ApplyDamageToZombie(this,target,GetPosition()+r3dPoint3D(0,1,0),10, 1, 1, false, storecat_punch, isSpecial); //Codex Soco
+			gServerLogic.ApplyDamageToZombie(this,target,GetPosition()+r3dPoint3D(0,1,0),16, isHead, isHead, false, storecat_punch, isSpecial);
 		else if (target->isObjType(OBJTYPE_Human))
 		{
 			obj_ServerPlayer* targetPlr = IsServerPlayer(target);
 			if (/* targetPlr->loadout_->GameMapId == GBGameInfo::MAPID_WZ_PVE_Colorado ||*/ targetPlr->PlayerOnVehicle == true || targetPlr->loadout_->Alive <=0 || targetPlr->profile_.ProfileData.isGod || (targetPlr->loadout_->GameFlags & wiCharDataFull::GAMEFLAG_isSpawnProtected) || (targetPlr->loadout_->GameFlags & wiCharDataFull::GAMEFLAG_NearPostBox))
-				return;
+			return;
 			else
-			gServerLogic.ApplyDamage(this, target, GetPosition(), 10.0f, true, storecat_Vehicle, isSpecial);
+			gServerLogic.ApplyDamage(this, target, GetPosition(), 16.0f, true, storecat_Vehicle, isSpecial);
 		}
 		return;
+
+
 	}
 
 	if (target->isObjType(OBJTYPE_Zombie))
